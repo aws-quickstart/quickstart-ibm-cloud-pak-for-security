@@ -2,7 +2,7 @@
 
 #### Required items
 
-- RedHat pull-secret
+- RedHat pull-secret - (for testing place this in the scripts directory with the filename `pull-secret`)
 - IBM private registry (cp.icr.io) password (Entitlement key)
 - Key pair for EC2
 
