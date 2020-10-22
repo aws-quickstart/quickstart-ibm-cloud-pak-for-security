@@ -1,0 +1,40 @@
+{{- $minio := dict "name" "minio" "val" . }}
+apiVersion: isc.ibm.com/v1
+kind: Minio
+metadata:
+  name: "{{ template "udi.minioPrefix" $minio }}"
+  labels:
+    sort: minio
+    instance: "{{ template "udi.minioPrefix" $minio }}"
+    app: {{ .Chart.Name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: 4
+  cluster_domain: {{ .Values.global.minio.clusterDomain }}
+  {{- if .Values.global.minio.requests }}
+  {{- if .Values.global.minio.requests.cpu }}
+  cpu_request: {{ .Values.global.minio.requests.cpu }}
+  {{- end }}
+  {{- if .Values.global.minio.requests.memory }}
+  memory_request: {{ .Values.global.minio.requests.memory }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.global.minio.limits }}
+  {{- if .Values.global.minio.limits.memory }}
+  memory_limit: {{ .Values.global.minio.limits.memory }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.global.minio.storageSize }}
+  storage_size: {{ $.Values.global.minio.storageSize | quote }}
+  storage_dynamic_provisioning: {{ $.Values.global.minio.dynamicProvisioning }}
+  {{- end }}
+  persistence_enabled: true
+  storage_access_mode: "ReadWriteOnce"
+  storage_sub_path: ""
+  default_bucket_enabled: false
+  minio_port: 9000
+  uuid: {{ uuidv4 | quote }}

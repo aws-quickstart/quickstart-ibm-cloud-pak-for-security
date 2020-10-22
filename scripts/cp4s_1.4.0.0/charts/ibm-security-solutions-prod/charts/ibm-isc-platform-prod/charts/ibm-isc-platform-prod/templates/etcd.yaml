@@ -1,0 +1,62 @@
+# Create etcd as an ISCInventory component
+{{- range $k,$v := .Values.global.etcd }}
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: etcd-{{ $k }}
+  labels:
+    sort: etcd
+    instance: {{ $k }}
+    app.kubernetes.io/name: {{ $.Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  labels:
+    sort: etcd
+    instance: {{ $k }}
+  definitions: 
+    name: {{ $k }}
+    {{- $proto := $v.proto | default "https" }}
+    {{- $port := $v.port | default "2379" }}
+    {{- if $v.host }}
+    host: {{ $v.host }}
+    url: {{ $proto }}://{{ $v.host}}:{{ $port }}
+    {{- else }}
+    host: ibm-etcd-{{ $k }}-ibm-etcd
+    url: {{ $proto }}://ibm-etcd-{{$k}}:{{ $port }}
+    {{- end }}
+    port: {{ $port }}
+    proto: {{ $proto }}
+  {{- if $v.installOptions }}
+  installOptions:
+    enabled: true
+    {{- with $v.installOptions.requests }}
+    requests:
+    {{- if .memory }}
+      memory: {{ .memory }}
+    {{- end }}
+    {{- if .cpu }}
+      cpu: {{ .cpu }}
+    {{- end }}
+    {{- end }}
+    {{- with $v.installOptions.limits }}
+    limits:
+    {{- if .memory }}
+       memory: {{ .memory }}
+    {{- end }}
+    {{- if .cpu }}
+       cpu: {{ .cpu }}
+    {{- end }}
+    {{- end }}
+    {{- with $v.installOptions.threads }}
+    threads: {{ . }}
+    {{- end }}
+    {{- include "ibm-isc-platform.storage" (dict "val" $.Values "inst" $v) }}
+    {{- with $v.installOptions.storageSize }}
+    storageSize: {{ . }}
+    {{- end }}
+  {{- end }}
+---
+{{- end }}

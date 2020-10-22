@@ -1,0 +1,15 @@
+{{- $configRoot := $.Values.global.arangodb -}}
+
+apiVersion: isc.ibm.com/v1
+kind: ISCTrust
+metadata:
+  name: arangodb-isctrust
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  secret: {{ $configRoot.deploymentName | default "arangodb" }}-ca
+  field: ca.crt

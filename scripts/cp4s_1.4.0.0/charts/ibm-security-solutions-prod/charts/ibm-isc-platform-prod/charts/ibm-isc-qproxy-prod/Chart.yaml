@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: 1.4.0.0
+description: QRadar Proxy Service for IBM Cloud Pak for Security
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/IBM-Security-icon.png
+keywords:
+- amd64
+- Commercial
+- Security
+- ICPRHOCP
+kubeVersion: '>=1.16.0'
+name: ibm-isc-qproxy-prod
+version: 1.0.8

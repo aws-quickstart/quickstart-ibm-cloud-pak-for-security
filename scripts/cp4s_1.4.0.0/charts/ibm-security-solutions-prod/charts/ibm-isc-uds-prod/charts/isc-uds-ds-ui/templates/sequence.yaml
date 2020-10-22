@@ -1,0 +1,24 @@
+{{- $webui := dict "name" "udswebui" "val" . }}
+apiVersion: isc.ibm.com/v1
+kind: ISCSequence
+metadata:
+  name: "{{ template "udi.prefix" $webui }}"
+  labels:
+    sort: "{{ template "udi.prefix" $webui }}"
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    instance: default
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    generation: {{ uuidv4 | quote }}
+  dependencies:
+     - iscplatform
+     - domain-default
+  actions: 
+    - include: "{{ template "udi.prefix" $webui }}"

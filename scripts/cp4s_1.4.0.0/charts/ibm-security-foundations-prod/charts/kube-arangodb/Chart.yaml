@@ -1,0 +1,12 @@
+appVersion: 3.6.5
+description: ArangoDB Kubernetes Operator for IBM Cloud Pak for Security
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/IBM-Security-icon.png
+keywords:
+- amd64
+- Commercial
+- Security
+- ICPRHOCP
+kubeVersion: '>=1.11.0'
+name: kube-arangodb
+tillerVersion: '>=2.10'
+version: 1.0.6

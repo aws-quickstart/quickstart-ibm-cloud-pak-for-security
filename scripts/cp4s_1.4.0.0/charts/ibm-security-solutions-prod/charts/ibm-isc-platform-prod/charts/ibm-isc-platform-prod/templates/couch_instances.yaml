@@ -1,0 +1,53 @@
+{{- $valuesRoot := . -}}
+# Create Couch instances as an ISCInventory component
+{{- range $k, $v := .Values.global.couchdb }}
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: couch-{{ $k }}
+  labels:
+    sort: couch
+    instance: {{ $k }}
+    app.kubernetes.io/name: {{ $.Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  labels:
+    sort: couch
+    instance: {{ $k }}
+  definitions:
+    name: {{ $k }}
+    {{- if $v.url }}
+    url: {{ $v.url }}
+    {{- else }}
+    url: https://{{ $k }}-couchdbcluster.{{ $.Release.Namespace }}.svc.cluster.local/
+    {{- end }}
+  {{- if $v.installOptions }}
+  installOptions:
+    enabled: true
+    {{- $version := $v.installOptions.version | default "v3" }}
+    {{- $img := index $.Values.couchImages $version }}
+    couchdb_image: {{ $img.image }}
+    couchdb_tag: {{ $img.tag }}
+    {{- with $v.installOptions.storage }}
+    storage: {{ . }}
+    {{- end }}
+    {{- include "ibm-isc-platform.storage" (dict "val" $.Values "inst" $v) }}
+    {{- if $v.installOptions.requests }}
+    requests_cpu: {{ $v.installOptions.requests.cpu | default "100m" }}
+    requests_memory: {{ $v.installOptions.requests.memory | default "128Mi" }}
+    {{- end }}
+    {{- if $v.installOptions.limits }}
+    limits_cpu: {{ $v.installOptions.limits.cpu | default "1" }}
+    limits_memory: {{ $v.installOptions.limits.memory | default "256Mi" }}
+    {{- end }}
+    search_requests_cpu: {{ $v.installOptions.search.requests.cpu | default "100m" }}
+    search_requests_memory: {{ $v.installOptions.search.requests.memory | default "256Mi" }}
+    search_limits_cpu: {{ $v.installOptions.search.limits.cpu | default "250m" }}
+    search_limits_memory: {{ $v.installOptions.search.limits.memory | default "512Mi" }}
+    nodes: {{ $v.installOptions.nodes | default "3" }}
+  {{- end }}
+---
+{{- end }}

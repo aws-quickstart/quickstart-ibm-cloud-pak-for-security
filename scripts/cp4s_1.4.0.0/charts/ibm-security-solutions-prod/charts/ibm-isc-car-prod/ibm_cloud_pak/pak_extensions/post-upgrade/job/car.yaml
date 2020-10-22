@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: car-migration
+spec:
+  template:
+    metadata:
+      labels:
+        job-name: car-migration
+        name: car-migration
+      name: car-migration
+    spec:
+      containers:
+      - name: car-migration
+        image: IMAGENAME
+        command: ["node",  "./src/migration.js"]
+        env:
+        - name: ARANGO_HOST
+          value: ARANGOHOST
+        - name: ARANGO_PASS
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: arangodb-root-password
+        - name: ARANGO_UNAME
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: arangodb-root-password
+        - name: REDIS_HOST
+          value: '@inventory/redis/definitions/host'
+        - name: REDIS_PASS
+          value: '@secret/redis/pass'
+        - name: REDIS_PORT
+          value: '@inventory/redis/definitions/port'
+        - name: REDIS_UNAME
+          value: 'admin' # TODO Redis shouldn't need a username
+        - name: CAR_PLATFORM
+          value: 'OCP'
+        - name: REDIS_SSL
+          value: '@inventory/redis/definitions/ssl'
+        - name: REDIS_SENTINEL
+          value: '@inventory/redis/definitions/sentinel'
+        - name: REDIS_SENTINEL_NAME
+          value: '@inventory/redis/definitions/sentinel_name'
+        - name: OPENSHIFT_ENV
+          value: 'true'
+        - name: EXPECTED_EXPORTER_VERSION
+          value: '1.0.9'
+        - name: NODE_EXTRA_CA_CERTS
+          value: '/etc/config/ca.crt'
+        volumeMounts:
+        - mountPath: /etc/config
+          name: secrets
+          readOnly: true
+        - mountPath: /etc/version
+          name: car-version
+          readOnly: true
+      volumes:
+      - name: secrets
+        secret:
+          defaultMode: 420
+          secretName: cp4s-truststore
+      - configMap:
+          defaultMode: 420
+          optional: true
+          name: car-version
+        name: car-version
+      restartPolicy: Never
+  backoffLimit: 4 

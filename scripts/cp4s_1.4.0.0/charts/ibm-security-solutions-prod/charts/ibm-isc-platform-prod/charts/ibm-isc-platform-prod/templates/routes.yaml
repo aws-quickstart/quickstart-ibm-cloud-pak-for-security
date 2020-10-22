@@ -1,0 +1,27 @@
+# creates the domain for ambassador
+{{- range $k, $v := .Values.global.domain }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: isc-route-{{ $k | default "default" }}
+  labels:
+    app.kubernetes.io/name: {{ $.Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  host: {{ $v.domain }}
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: passthrough
+  to:
+    kind: Service
+    name: ambassador
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+---
+{{- end }}

@@ -1,0 +1,73 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: '{{ template "ibm-isc-cases-operator-prod.name" . }}-delete-cr-{{ .Release.Revision }}'
+  labels:
+    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+    helm.sh/chart: {{ $.Chart.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    delete.on.completion: "true"
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: '{{ template "ibm-isc-cases-operator-prod.name" . }}-delete-cr-{{ .Release.Revision }}'
+        helm.sh/chart: {{ $.Chart.Name }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+      annotations:
+        productMetric: MANAGED_VIRTUAL_SERVER
+    spec:
+      serviceAccountName: {{ template "ibm-isc-cases-operator-prod.name" . }}
+      hostPID: false
+      hostIPC: false
+      hostNetwork: false
+      securityContext:
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+        runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+        runAsNonRoot: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ $.Values.global.arch | default "amd64" }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {{ template "ibm-isc-cases-operator-prod.name" . }}
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: cr-delete
+        {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "operator") | indent 4 }}
+        command: ['bash', '-c', 'if oc get cases cases ; then oc delete cases cases -n {{ .Release.Namespace }}; fi']
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+          runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+          capabilities:
+            drop:
+            - ALL
+{{- if .Values.deleteCRJob.resources }}
+        resources:
+{{ toYaml .Values.deleteCRJob.resources | indent 10 }}
+{{- end }}
+      restartPolicy: Never #if container fails, pod may be restarted on another node. OnFailure would restart just the container

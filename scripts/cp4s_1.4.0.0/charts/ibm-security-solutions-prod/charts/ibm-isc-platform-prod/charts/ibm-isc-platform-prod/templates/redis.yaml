@@ -1,0 +1,78 @@
+# Create each redis instance as an ISCInventory
+{{- range $k,$v := .Values.global.redis }}
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: redis-{{ $k }}
+  labels:
+    sort: redis
+    instance: {{ $k }}
+    app.kubernetes.io/name: {{ $.Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  labels:
+    sort: redis
+    instance: {{ $k }}
+  definitions:
+    name: {{ $k }}
+    {{- if $v.host }}
+    host: {{ $v.host }}
+    {{- else }}
+    host: c-{{ $k }}-redis-p.{{ $.Release.Namespace }}.svc.cluster.local
+    {{- end }}
+    port: {{$v.port | default "16000" }}
+    sentinel_name: {{ $v.sentinel_name | default "mymaster" }}
+    sentinel: false
+    ssl: {{$v.ssl | default "true" }}
+  {{- if $v.installOptions }}
+  installOptions:
+    enabled: true
+    {{- if or $v.installOptions.storageSize $v.installOptions.persistence }}
+    persistence: {{ $v.installOptions.persistence | default "true" }}
+    {{- include "ibm-isc-platform.storage" (dict "val" $.Values "item" $v) }}
+    {{- if $v.installOptions.storageSize }}
+    storage: {{ $v.installOptions.storageSize }}
+    {{- end }}
+    {{- end }}
+    data: {{ $v.installOptions.data | default "2Gi" }}
+    {{- if $v.installOptions.server }}
+    {{- if $v.installOptions.server.requests }}
+    {{- with $v.installOptions.server.requests.memory }}
+    serverReqMemory: {{ . }}
+    {{- end }}
+    {{- with $v.installOptions.server.requests.cpu }}
+    serverReqCPU: {{ . }}
+    {{- end }}
+    {{- end }}
+    {{- if $v.installOptions.server.limits }}
+    {{- with $v.installOptions.server.limits.memory }}
+    serverLimitMemory: {{ . }}
+    {{- end }}
+    {{- with $v.installOptions.server.limits.cpu }}
+    serverLimitCPU: {{ . }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if $v.installOptions.sentinel }}
+    {{- if $v.installOptions.sentinel.request }}
+    {{- with $v.installOptions.sentinel.request.memory }}
+    sentinelReqMemory: {{ . }}
+    {{- end }}
+    {{- with $v.installOptions.sentinel.request.cpu }}
+    sentinelReqCPU: {{ . }}
+    {{- end }}
+    {{- end }}
+    {{- if $v.installOptions.sentinel.limits }}
+    {{- with $v.installOptions.sentinel.limits.memory }}
+    sentinelLimitMemory: {{ . }}
+    {{- end }}
+    {{- with $v.installOptions.sentinel.limits.cpu }}
+    sentinelLimitCPU: {{ . }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}

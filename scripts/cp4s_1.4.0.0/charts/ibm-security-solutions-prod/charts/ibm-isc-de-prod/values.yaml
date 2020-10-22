@@ -1,0 +1,38 @@
+global:
+  imagePullPolicy: ""
+  bindings:
+    debackend:
+      replicas:
+    dewebui:
+      replicas:
+  repository: ""
+  repositoryType: ""
+  resources:
+    de:
+      webui:
+        requests:
+          cpu: 200m
+          memory: 384Mi
+        limits:
+          cpu: 300m
+          memory: 512Mi
+      backend:
+        requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
+          cpu: 1
+          memory: 1024Mi
+  domain:
+    default:
+      domain: ""
+
+# IMAGES
+  images:
+    de:
+      webui:
+        image: isc-investigate-webui
+        tag: Rel_1.4.0.0_a2ef07f70b98eaf826dcdc99f91862d41f44993e_9303
+      backend:
+        image: isc-investigate-backend
+        tag: Rel_1.4.0.0_82e5134b536b04a267bbd7fb84f56ee68aafd016_3083

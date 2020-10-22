@@ -1,0 +1,76 @@
+{{- $image := printf "%s/%s:%s" (include "platform.repository" .) $.Values.global.images.tii.tiiapp.image $.Values.global.images.tii.tiiapp.tag -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tiiapp-test-ready
+  labels:
+    app.kubernetes.io/name: tiiapp-test
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": hook-succeeded
+    productID: 0070760bf12a4857be9f6880f950a894
+    productName: Threat Intelligence Insights
+    productVersion: 1.4.0
+    productMetric: MANAGED_VIRTUAL_SERVER
+    productChargedContainers: All
+    cloudpakName: IBM Cloud Pak for Security
+    cloudpakId: 929bd9017afc410da9dda2dc67c33b75
+    cloudpakVersion: 1.4.0
+    productCloudpakRatio: 1:1
+spec:
+  serviceAccountName: ibm-isc-application
+  imagePullSecrets:
+    - name: ibm-isc-pull-secret
+  containers:
+    - name: tiiapp-test
+      image: {{ $image }}
+      command: ["sh", "-c", "curl -ki https://tiiapp:3004/liveness"]
+      resources:
+        limits:
+          memory: 100Mi
+          cpu:  200m
+        requests:
+          memory: 100Mi
+          cpu: 200m
+      livenessProbe:
+        failureThreshold: 3
+        exec:
+          command:
+            - /usr/bin/true
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      readinessProbe:
+        failureThreshold: 3
+        exec:
+          command:
+            - /usr/bin/true
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+  restartPolicy: Never

@@ -1,0 +1,13 @@
+apiVersion: v2
+appVersion: 1.4.0.0
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/IBM-Security-icon.png
+keywords:
+- amd64
+- Commercial
+- ICPRHOCP
+- Security
+- Extensions
+- Connectors
+kubeVersion: '>=1.16.0'
+name: cp4s-extensions-prod
+version: 1.0.8

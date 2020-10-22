@@ -1,0 +1,76 @@
+{{- $webui := dict "name" "udswebui" "val" . }}
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: "{{ template "udi.prefix" $webui }}"
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  action:
+    name: udswebui install
+    operation: generic-install
+    service:
+      name: "{{ template "udi.prefix" $webui }}"
+      ports:
+        - 3006
+    {{- include "uds.annotations" . }}
+    {{- include "ibm-isc-uds.podcfg" (dict "val" . "app" "udswebui") }}
+    env:
+      - name: API_CONNECT
+        value: '@inventory/domain/definitions/name'
+        format: '{0}/api'
+      - name: APP_FQDN
+        value: '@inventory/domain/definitions/name'
+      - name: UDS_ENTITLEMENTS_TENANT
+        value: '@inventory/domain/definitions/name'
+      - name: UDS_ENTITLEMENTS_URL
+        value: '/api/entitlements/v1.0/entitlements'
+      - name: UDS_ENTITLEMENTS_URL_FULL
+        value: '@inventory/domain/definitions/name'
+        format: 'https://{0}/api/entitlements/v1.0/entitlements'
+      - name: SERVER_BASE_URL
+        value: '@inventory/domain/definitions/name'
+        format: 'https://{0}'
+      - name: UDS_PROFILE_URL
+        value: '/api/profileservice/api/v1/profile'
+      - name: UDS_CONFIGURATIONS
+        value: '/api/{{ template "udi.ingressPrefix" . }}/configurations'
+      - name: UDS_CONNECTIONS
+        value: '/api/{{ template "udi.ingressPrefix" . }}/connections'
+      - name: UDS_CONFIG_LOCATION
+        value: 'conf/udi'
+      - name: UDS_QUEUE_URL
+        value: '/api/{{ template "udi.ingressPrefix" . }}/queries?search_status=queued,running'
+      - name: UDS_QUEUE_URL_CANCEL
+        value: '/api/{{ template "udi.ingressPrefix" . }}/queries'
+      - name: CAR_INGESTION_URL
+        value: '/api/car/v2/ingestion'
+      - name: API_KEY_GENERATION_URL
+        value: '/api/apikey/create'
+      - name: SHELL_HOST
+        value: 'https://clx-shell:3002'
+      - name: OPENSHIFT_ENV
+        value: true
+      - name: PLATFORM
+        value: 'icp'
+      - name: KC_SOURCE_DIR
+        value: '/scp-core'
+
+    liveness_probe:
+      path: /liveness
+      port: 3006  # would the port work?
+    readiness_probe:
+      path: /readiness
+      port: 3006 # would the port work?
+    paths:
+      - ingress: {{ template "udi.uiPrefix" . }}/settings/datasources
+        app: /settings/datasources
+        timeout: 120000
+        noAuth: true

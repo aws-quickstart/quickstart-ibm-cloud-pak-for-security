@@ -1,0 +1,12 @@
+apiVersion: v2
+description: Threat Intelligence Insights for the ISC
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/TII.png
+keywords:
+- amd64
+- Commercial
+- Security
+- ICPRHOCP
+- TII
+kubeVersion: '>=1.16.0'
+name: isc-tii-reports-prod
+version: 1.0.8

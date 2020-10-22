@@ -1,0 +1,44 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: tiisettings
+  labels:
+    app.kubernetes.io/name: ibm-isc-tiisettings
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  action:
+    name: tiisettings install
+    operation: generic-install
+    service:
+      name: tiisettings
+      proto: https
+      ports:
+        - 5002
+    {{- include "tii.annotations" . }}
+    {{- include "ibm-isc-tii.podcfg" (dict "val" . "app" "tiisettings") }}
+    env:
+      - name: PLATFORM
+        value: "icp"
+      - name: APP_FQDN
+        value: "@inventory/domain/definitions/name"
+      - name: DEFAULT_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}"
+      - name: XFE_API_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/app/threat-intelligence-insights/xfe/api/v1"
+      - name: CONFIGSTORE_AUTH_ID
+        value: '@refsec/sysauth-tiisettings/username'
+      - name: CONFIGSTORE_AUTH_KEY
+        value: '@refsec/sysauth-tiisettings/password'
+    liveness_probe:
+      path: /liveness
+    readiness_probe:
+      path: /readiness
+    paths:
+      - ingress: /app/threat-intelligence-insights/settings
+        app: /app/threat-intelligence-insights/settings
+        timeout: 120000

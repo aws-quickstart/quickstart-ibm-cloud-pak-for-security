@@ -1,0 +1,16 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cp4s-pgoperator
+  labels:
+    app.kubernetes.io/name: ibm-isc-cases
+    app.kubernetes.io/instance: ibm-isc-cases
+    app.kubernetes.io/managed-by: ibm-isc-cases
+subjects:
+- kind: ServiceAccount
+  name: cp4s-pgoperator
+  namespace: NAMESPACE
+roleRef:
+  kind: Role
+  name: cp4s-pgoperator
+  apiGroup: rbac.authorization.k8s.io

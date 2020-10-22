@@ -1,0 +1,24 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: consoleapp-qproxy
+  labels:
+    sort: consoleapp
+    instance: consoleapp-qproxy
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    sort: consoleapp
+    instance: consoleapp-qproxy
+  definitions:
+    text: "Connect to a QRadar deployment to allow IBM Cloud Pak for Security to connect to QRadar apps and API from that deployment."
+    title: "QRadar proxy"
+    applicationId: "qproxy"
+    showInHomepage: false
+    excludeFromMenu: true
+    launchUrl: "/app/qproxy"
+    imageUrl: "/app/qproxy/static/IBM_Security_logo_grd_rev_RGB_96.png"

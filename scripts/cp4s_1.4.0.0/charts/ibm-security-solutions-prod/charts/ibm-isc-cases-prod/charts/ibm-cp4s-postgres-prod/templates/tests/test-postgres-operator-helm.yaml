@@ -1,0 +1,53 @@
+{{- $image := printf "%s/%s:%s" $.Values.global.repository $.Values.global.images.cases.application.image $.Values.global.images.cases.application.tag -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: isc-pgo-test-ready
+  labels:
+    app.kubernetes.io/name: isc-pgo-test
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  serviceAccountName: {{ template "ibm-cp4s-postgres-prod.name" . }}
+  imagePullSecrets:
+    - name: {{- include "ibm-cp4s-postgres-prod.imagePullSecret" (dict "val" .Values) | indent 1 }}
+  containers:
+    - name: isc-pgo-test
+      {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "postgresOperator") | indent 2 }}
+      command: ["sh", "-c", "nc -v -z postgres-operator 8443"]
+      resources:
+        limits:
+          memory: 100Mi
+          cpu:  200m
+        requests:
+          memory: 100Mi
+          cpu: 200m
+      securityContext:
+        privileged: false
+        readOnlyRootFilesystem: false
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: {{ .Values.runAsUser }}
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+  restartPolicy: Never

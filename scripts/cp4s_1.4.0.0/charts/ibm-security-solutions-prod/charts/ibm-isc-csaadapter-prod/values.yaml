@@ -1,0 +1,25 @@
+global:
+  ibmIscCsaAdapter:
+    enabled: true
+  imagePullPolicy: "IfNotPresent"
+  flagTls: true
+  maxFindingsPerSource: 1
+  replicaCount: 1
+  repository: ""
+  repositoryType: ""
+  resources:
+    csa:
+      csaadapter:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+        limits:
+          cpu: 1
+          memory: 512Mi
+
+# IMAGES
+  images:
+    csa:
+      csaadapter:
+        image: isc-csaadapter
+        tag: Rel_1.4.0.0_98b0b96ed49017df327b1fb35ac297d73285c004_1778

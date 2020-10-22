@@ -1,0 +1,24 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCSequence
+metadata:
+  name: tiscoordinator
+  labels:
+    sort: tiscoordinator
+    app.kubernetes.io/instance: default
+    name: {{ .Chart.Name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    generation: {{ uuidv4 | quote }}
+  dependencies:
+     - iscplatform
+     - domain-default
+  actions: 
+    - name: configure couchdb
+      dependencies:
+        - couchdb-tis-coordinator
+      operation: couchdb-init
+    - include: tiscoordinator

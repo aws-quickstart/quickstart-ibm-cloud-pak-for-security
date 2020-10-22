@@ -1,0 +1,146 @@
+################################################################################
+#
+# GLOBAL SETTINGS
+#
+################################################################################
+
+global:
+  __metadata:
+    label: "Global Settings"
+    description: "Global settings for all components"
+  repository:
+    __metadata:
+        label: "Data Explorer image Repository"
+        description: "Docker registry to pull Data Explorer images from"
+        type: "string"
+        required: true
+        hidden: true
+  repositoryType:
+    __metadata:
+      label: "Image Repository Type"
+      description: "Repository type: entitled or local registry"
+      type: "string"
+      required: true
+      hidden: false
+      options:
+      - label: "Entitled registry"
+        value: "entitled"
+      - label: "Local registry"
+        value: "local"
+  imagePullPolicy:
+    __metadata:
+      name: "pullPolicy"
+      label: "Docker image pull policy"
+      description: "Always, Never, or IfNotPresent. Defaults to IfNotPresent"
+      type: "string"
+      required: true
+      options:
+      - label: "IfNotPresent"
+        value: "IfNotPresent"
+      - label: "Always"
+        value: "Always"
+      - label: "Never"
+        value: "Never"
+  resources:          
+    de:
+      webui:
+        requests:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:    
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true 
+              hidden: true
+        limits:  
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:    
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+      backend:
+        requests:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:    
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true 
+              hidden: true
+        limits:  
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:    
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+  domain:
+    default:
+      domain:
+        __metadata:
+            label: "Cluster Domain"
+            description: "FQDN for the Cloud Pak for Security application domain"
+            type: "string"
+            required: true
+  bindings:
+    dewebui:
+      replicas:
+        __metadata:
+          label: "replicas for dewebui"
+          description: "Number of replicas for dewebui"
+          type: "string"
+          required: false
+    debackend:
+      replicas:
+        __metadata:
+          label: "replicas for debackend"
+          description: "Number of replicas for debackend"
+          type: "string"
+          required: false
+  images:
+     de:
+      webui:
+        image: 
+            __metadata:
+              hidden: true
+        tag: 
+            __metadata:
+              hidden: true
+      backend:
+        image: 
+            __metadata:
+              hidden: true
+        tag: 
+            __metadata:
+              hidden: true

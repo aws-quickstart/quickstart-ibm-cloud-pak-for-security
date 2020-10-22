@@ -1,0 +1,26 @@
+# Create a default instance of couchdb
+{{- if not .Values.global.couchdb }}
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: couch-default
+  labels:
+    sort: couch
+    instance: default
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    sort: couch
+    instance: default
+  definitions: 
+    name: default
+    url: http://default-svc-couchdb.{{$.Release.Namespace}}:5984/
+  installOptions:
+    enabled: true
+    {{- include "ibm-isc-platform.storageDefault" . }}
+---
+{{- end }}

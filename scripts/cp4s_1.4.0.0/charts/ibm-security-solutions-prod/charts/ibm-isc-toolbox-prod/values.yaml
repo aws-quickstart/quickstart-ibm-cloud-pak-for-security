@@ -1,0 +1,22 @@
+global: 
+  repository: ""
+  toolbox:
+    size: 
+    storageClass: 
+
+  resources:
+    serviceability:
+      toolbox:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 300m
+          memory: 256Mi
+          
+  #IMAGES:
+  images:
+    serviceability:
+      toolbox:
+        image: cp4s-toolbox
+        tag: Rel_1.4.0.0_28f7dcd0f429224e1a4a13264aaf660522c72f95_37

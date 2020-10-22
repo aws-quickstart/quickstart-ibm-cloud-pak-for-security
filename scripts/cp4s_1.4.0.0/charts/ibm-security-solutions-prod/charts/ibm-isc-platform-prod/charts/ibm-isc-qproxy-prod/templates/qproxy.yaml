@@ -1,0 +1,53 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: qproxy
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  action:
+    name: qproxy install
+    operation: generic-install
+    service:
+      name: qproxy
+      ports:
+        - 3065
+    {{- include "platform.annotate" . }}
+    {{- include "ibm-isc-platform.podcfg" (dict "val" . "app" "qproxy") }}
+    env:
+      - name: APP_FQDN
+        value: "@inventory/domain/definitions/name"
+      - name: CIPHER_KEY
+        value: "@refsec/qproxy-secrets/cipherkey"
+      - name: DEFAULT_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}"
+      - name: OPENSHIFT_ENV
+        value: true
+      - name: SYSAUTH_USER
+        value: '@refsec/sysauth-qproxy/username'
+      - name: SYSAUTH_PASS
+        value: '@refsec/sysauth-qproxy/password'
+      - name: CONFIGSTORE_API_ENDPOINT
+        value: '@inventory/platform/definitions/configstore/url'
+      - name: ENTITLEMENTS_API
+        value: '@inventory/platform/definitions/entitlementsapi/url'
+    liveness_probe:
+      path: /liveness
+    readiness_probe:
+      path: /readiness
+    paths:
+      - ingress: /app/qproxy
+        app: /app/qproxy
+        noAuth: true
+        timeout: 60000
+      - ingress: /app/qproxy/proxy/api
+        app: /app/qproxy/proxy/api
+        timeout: 60000
+      - ingress: /app/qproxy/qconfig/validate
+        app: /app/qproxy/qconfig/validate
+        timeout: 60000

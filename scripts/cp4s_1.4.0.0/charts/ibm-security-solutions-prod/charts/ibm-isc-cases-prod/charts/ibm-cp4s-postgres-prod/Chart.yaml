@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: 1.4.0.0
+description: CP4S Postgres Deployment
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/Cases-icon.png
+keywords:
+- amd64
+- Commercial
+- Security
+- ICPRHOCP
+kubeVersion: '>=1.16.0'
+name: ibm-cp4s-postgres-prod
+version: 1.0.8

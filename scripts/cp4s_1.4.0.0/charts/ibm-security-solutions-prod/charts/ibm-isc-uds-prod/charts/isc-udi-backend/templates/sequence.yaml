@@ -1,0 +1,31 @@
+{{- $sequence := dict "name" "backend" "val" . }}
+{{- $udiendpoints := dict "name" "udiendpoints" "val" . }}
+{{- $udiworkers := dict "name" "udiworkers" "val" . }}
+apiVersion: isc.ibm.com/v1
+kind: ISCSequence
+metadata:
+  name: "{{ template "udi.prefix" $sequence }}"
+  labels:
+    sort: "{{ template "udi.prefix" $sequence }}"
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    instance: default
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    generation: {{ uuidv4 | quote }}
+  dependencies:
+     - iscplatform
+     - domain-default
+     - redis-default
+  actions: 
+    - name: system auth for UDI
+      operation: system-auth
+      keyname: {{ .Values.global.prefix }}
+    - include: "{{ template "udi.prefix" $udiendpoints }}"
+    - include: "{{ template "udi.prefix" $udiworkers }}"

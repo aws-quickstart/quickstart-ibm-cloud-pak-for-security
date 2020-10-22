@@ -1,0 +1,91 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: isc-entitlements-migration
+spec:
+  template:
+    metadata:
+      labels:
+        job-name: isc-entitlements-migration
+        name: isc-entitlements-migration
+      name: isc-entitlements-migration
+    spec:
+      containers:
+      - name: isc-entitlements-migration
+        image: IMAGENAME
+        imagePullPolicy: Always
+        command: ["/bin/bash",  "start_migration.sh"]
+        env:
+        - name: BOM_PATH
+          value: /etc/entitlements/bom.json
+        - name: DB_HOSTNAME
+          value: DBHOSTNAME
+        - name: DB_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: couchdb-secret-entitlements
+        - name: DB_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: couchdb-secret-entitlements
+        - name: CLUSTER_URL
+          value: CLUSTERURL
+        - name: INTERNAL_IAM_URL
+          value: INTERNALIAM
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: CLIENT_ID
+              name: ibm-isc-oidc-credentials
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: CLIENT_SECRET
+              name: ibm-isc-oidc-credentials
+        - name: IAM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: apikey
+              name: connect-idmgmt-apikey
+        - name: CLUSTER_ADMIN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: admin
+              name: platform-secret-default
+        - name: CLUSTER_ADMIN_PWD
+          valueFrom:
+            secretKeyRef:
+              key: key
+              name: platform-secret-default
+        - name: IAM_TIMEOUT
+          value: "30000"
+        volumeMounts:
+        - mountPath: /etc/config
+          name: secrets
+          readOnly: true
+        - mountPath: /etc/version
+          name: isc-entitlements-version
+          readOnly: true
+        - mountPath: /etc/entitlements
+          name: isc-entitlements-bom
+          readOnly: true
+      serviceAccountName: ibm-isc-application
+      volumes:
+      - name: secrets
+        secret:
+          defaultMode: 420
+          secretName: isc-entitlements-tls
+      - configMap:
+          defaultMode: 420
+          optional: true
+          name: isc-entitlements-version
+        name: isc-entitlements-version
+      - configMap:
+          defaultMode: 420
+          name: isc-entitlements-bom
+          optional: true
+        name: isc-entitlements-bom
+      restartPolicy: Never
+  backoffLimit: 4

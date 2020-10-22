@@ -1,0 +1,23 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCSequence
+metadata:
+  name: tiisettings
+  labels:
+    sort: tiisettings
+    instance: default
+    app.kubernetes.io/name: ibm-isc-tiisettings
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  labels:
+    generation: {{ uuidv4 | quote }}
+  dependencies:
+     - iscplatform
+     - domain-default
+  actions:
+    - name: creation of APIKey for Microservice tiisettings
+      operation: system-auth
+      keyname: tiisettings
+    - include: tiisettings

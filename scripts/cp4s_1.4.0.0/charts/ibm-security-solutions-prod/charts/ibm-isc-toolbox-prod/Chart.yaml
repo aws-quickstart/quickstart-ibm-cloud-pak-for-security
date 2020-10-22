@@ -1,0 +1,18 @@
+apiVersion: v2
+appVersion: 1.4.0.0
+description: "IBM Cloud Pak for Security - Shared Operators & Infrastructural Services\nDocumentation\n
+  \nIBM Cloud Pak for Security - Shared Operators & Infrastructural Services\nLicense\n\"The
+  translated license terms can be viewed here: http://www14.software.ibm.com/cgi-bin/weblap/lap.pl?li_formnum=L-GBLK-BNGLB3\""
+home: https://www.ibm.com/security
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/IBM-Security-icon.png
+keywords:
+- amd64
+- Commercial
+- Security
+- ICPRHOCP
+- Other
+kubeVersion: '>=1.16.0'
+maintainers:
+- name: IBM
+name: ibm-isc-toolbox-prod
+version: 1.0.8

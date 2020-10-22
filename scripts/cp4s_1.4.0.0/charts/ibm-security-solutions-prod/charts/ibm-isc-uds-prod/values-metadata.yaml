@@ -1,0 +1,298 @@
+################################################################################
+#
+# GLOBAL SETTINGS
+#
+################################################################################
+
+global:
+  __metadata:
+    label: "Global Settings"
+    description: "Global settings for all components"
+  license:
+    __metadata:
+      label: "License Acceptance"
+      description: "Used to accept the license of this product"
+      type: "string"
+      required: true
+      immutable: true
+      hidden: false
+  licenseFileName:
+    __metadata:
+      label: "License File Name"
+      description: "Product license file to display the user"
+      type: "string"
+      required: true
+      immutable: true
+      hidden: true
+  storageClass:
+    __metadata:
+      label: "Default Storage Class"
+      description: "Default storage class for persistence"
+      type: "string"
+      required: true
+  repository:
+    __metadata:
+      label: "Path to registry containing isc-uds docker images"
+      description: "Docker registry to pull isc-uds images"
+      type: "string"
+      required: true
+      hidden: true
+  repositoryType:
+    __metadata:
+      label: "Image Repository Type"
+      description: "Repository type: entitled or local registry"
+      type: "string"
+      required: true
+      hidden: false
+      options:
+      - label: "Entitled registry"
+        value: "entitled"
+      - label: "Local registry"
+        value: "local"
+
+  rabbitmqReplicas:
+    __metadata:
+      label: "rabbitmq Replicas"
+      description: "how many replicas for rabbit"
+      type: "string"
+      required: true
+      immutable: true
+      hidden: false
+
+  prefix:
+    __metadata:
+      label: "udi prefix"
+      description: "pod prefix"
+      type: "string"
+      required: true
+      immutable: true
+      hidden: false
+
+  ingressPrefix:
+    __metadata:
+      label: "udi svc prefix"
+      description: "service prefix"
+      type: "string"
+      required: true
+      immutable: true
+      hidden: false
+
+  uiPrefix:
+    __metadata:
+      label: "uiPrefix pod"
+      description: "ui pod prefix"
+      type: "string"
+      required: true
+      immutable: true
+      hidden: false
+
+  minio:
+    prefix:
+      __metadata:
+        label: "minio prefix"
+        description: "pre fix"
+        type: "string"
+        required: true
+        hidden: true
+    clusterDomain:
+      __metadata:
+        label: "Cluster Domain"
+        description: "Cluster Domain Value"
+        type: "string"
+        required: true
+        hidden: true
+    storageSize:
+      __metadata:
+        label: "Minio Storage Size"
+        description: "The size of storage for minio"
+        type: "string"
+        required: true
+        hidden: true
+    dynamicProvisioning:
+      __metadata:
+        label: "Minio Storage Size"
+        description: "The size of storage for minio"
+        type: "boolean"
+        required: true
+        hidden: true
+    limits:
+      memory:
+        label: "Minio Memory"
+        description: "Minio Memory Limit"
+        type: "string"
+        required: true
+        hidden: true
+    requests:
+      cpu:
+        label: "Minio CPU"
+        description: "Minio CPU request"
+        type: "string"
+        required: true
+        hidden: true
+      memory:
+        label: "Minio memory request"
+        description: "Minio memory request value"
+        type: "string"
+        required: true
+        hidden: true
+
+  resources:
+    uds:
+      udswebui:
+        requests:
+          cpu:
+            label: "UDS Web UI CPU request"
+            description: "UDS Web UI CPU request value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "UDS Web UI Memory request"
+            description: "UDS Web UI Memory request value"
+            type: "string"
+            required: true
+            hidden: true
+        limits:
+          cpu:
+            label: "UDS Web UI CPU limit"
+            description: "UDS Web UI CPU limit value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "UDS Web UI memory limit"
+            description: "UDS Web UI memory limit"
+            type: "string"
+            required: true
+            hidden: true
+      udiendpoints:
+        requests:
+          cpu:
+            label: "udiendpoints CPU request"
+            description: "udiendpoints CPU request value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "udiendpoints Memory request"
+            description: "udiendpoints Memory request value"
+            type: "string"
+            required: true
+            hidden: true
+        limits:
+          cpu:
+            label: "udiendpoints CPU limit"
+            description: "udiendpoints CPU limit value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "udiendpoints memory limit"
+            description: "udiendpoints memory limit"
+            type: "string"
+            required: true
+            hidden: true
+      udiworkers:
+        requests:
+          cpu:
+            label: "udiworkers CPU request"
+            description: "UDS udiworkers CPU request value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "udiworkers Memory request"
+            description: "udiworkers Memory request value"
+            type: "string"
+            required: true
+            hidden: true
+        limits:
+          cpu:
+            label: "udiworkers CPU limit"
+            description: "udiworkers CPU limit value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "udiworkers memory limit"
+            description: "udiworkers memory limit"
+            type: "string"
+            required: true
+            hidden: true
+  images:
+    uds:
+      udswebui:
+        image:
+          __metadata:
+            label: "UDS Web UI image"
+            description: "The name of the UDS web UI image"
+            type: "string"
+            required: true
+            hidden: true
+        tag:
+          __metadata:
+            label: "UDS Web UI image tag"
+            description: "The tag version of the UDS web UI image"
+            type: "string"
+            required: true
+            hidden: true
+      udiendpoints:
+        image:
+          __metadata:
+            label: "UDS udiendpoints image"
+            description: "The name of the UDS udiendpoints image"
+            type: "string"
+            required: true
+            hidden: true
+        tag:
+          __metadata:
+            label: "UDS udiendpoints image tag"
+            description: "The tag version of the UDS udiendpoints image"
+            type: "string"
+            required: true
+            hidden: true
+      udiworkers:
+        image:
+          __metadata:
+            label: "UDS udiworkers image"
+            description: "The name of the UDS udiworkers image"
+            type: "string"
+            required: true
+            hidden: true
+        tag:
+          __metadata:
+            label: "UDS udiworkers image tag"
+            description: "The tag version of the UDS udiworkers image"
+            type: "string"
+            required: true
+            hidden: true
+
+  bindings:
+    uds:
+      redis:
+        __metadata:
+          label: "Redis"
+          description: "Redis Setup"
+          type: "string"
+          required: false
+    udswebui:
+      replicas:
+        __metadata:
+          label: "udswebui replicas"
+          description: "Number of udswebui replicas"
+          type: "string"
+          required: false
+    udiendpoints:
+      replicas:
+        __metadata:
+          label: "udiendpoints replicas"
+          description: "Number of udiendpoints replicas"
+          type: "string"
+          required: false
+    udiworkers:
+      replicas:
+        __metadata:
+          label: "udiworkers replicas"
+          description: "Number of udiworkers replicas"
+          type: "string"
+          required: false

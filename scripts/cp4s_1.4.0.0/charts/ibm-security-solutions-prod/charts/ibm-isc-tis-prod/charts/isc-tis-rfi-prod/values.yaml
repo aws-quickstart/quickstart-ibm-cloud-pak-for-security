@@ -1,0 +1,6 @@
+
+# Declare variables to be passed into your templates.
+bindings:
+- name: tisrfi
+  debug: false
+  

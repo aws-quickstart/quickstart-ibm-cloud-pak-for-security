@@ -1,0 +1,36 @@
+# Deploys Configstore, a middleware that sits between the database and the system/user trying to read/write data
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: configstore
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  action:
+    name: configstore install
+    operation: generic-install
+    service:
+        name: inf-configstore
+        ports:
+        - 8443
+    {{- include "platform.annotate" . }}
+    {{- include "ibm-isc-platform.podcfg" (dict "val" . "app" "configstore") }}
+    env:
+      - name: DB_HOSTNAME
+        value: '@inventory/couch/definitions/url'
+      - name: DB_CLIENT_ID
+        value: '@secret/couchdb/username'
+      - name: DB_CLIENT_SECRET
+        value: '@secret/couchdb/password'
+    liveness_probe:
+        path: /ping
+    readiness_probe:
+        path: /ping
+    internal_entry: true
+    paths:
+      - ingress: /api/configstore/v1
+        app: /configstore/v1

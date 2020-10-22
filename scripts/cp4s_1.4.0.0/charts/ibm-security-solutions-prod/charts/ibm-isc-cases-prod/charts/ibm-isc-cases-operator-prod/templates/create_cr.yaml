@@ -1,0 +1,233 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: '{{ template "ibm-isc-cases-operator-prod.name" . }}-create-cr-{{ .Release.Revision }}'
+  labels:
+    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+    helm.sh/chart: {{ $.Chart.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    delete.on.completion: "true"
+spec:
+  template:
+    metadata:
+      labels:
+        name: {{ template "ibm-isc-cases-operator-prod.name" . }}-create-cr-{{ .Release.Revision }}
+        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+        helm.sh/chart: {{ $.Chart.Name }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+      annotations:
+        productMetric: MANAGED_VIRTUAL_SERVER
+    spec:
+      serviceAccountName: {{ template "ibm-isc-cases-operator-prod.name" . }}
+      hostPID: false
+      hostIPC: false
+      hostNetwork: false
+      securityContext:
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+        runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+        runAsNonRoot: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ $.Values.global.arch | default "amd64" }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {{ template "ibm-isc-cases-operator-prod.name" . }}
+              topologyKey: kubernetes.io/hostname
+      initContainers:
+      - name: crd-wait
+        {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "operator") | indent 4 }}
+        command: ["bash", "-c", "until oc get crd cases.isc.ibm.com; do echo waiting for crd to register; sleep 2; done;"]
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+          runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+          capabilities:
+            drop:
+              - ALL
+{{- if .Values.createCRJob.initContainer.resources }}
+        resources:
+{{ toYaml .Values.createCRJob.initContainer.resources | indent 10 }}
+{{- end }}
+      containers:
+      - name: cr-create
+        {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "operator") | indent 4 }}
+        command:
+          - 'bash'
+          - '-c'
+          - |
+            cat <<EOF | oc apply --validate=true -f -
+            apiVersion: isc.ibm.com/v1
+            kind: Cases
+            metadata:
+              name: cases
+              labels:
+                app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+                app.kubernetes.io/instance: {{ $.Release.Name }}
+                app.kubernetes.io/managed-by: {{ $.Release.Service }}
+            spec:
+              cases:
+                postgres:
+                  crunchy_image_tag: {{ .Values.global.images.cases.crunchyPgo.tag }}
+                  metrics: {{ .Values.global.postgres.cases.installOptions.metrics }}
+                  primary:
+                    resources:
+                      requests:
+                        cpu: {{ .Values.global.postgres.cases.installOptions.primary.requests.cpu | quote }}
+                        memory: {{ .Values.global.postgres.cases.installOptions.primary.requests.memory }}
+                      limits:
+                        cpu: {{ .Values.global.postgres.cases.installOptions.primary.limits.cpu | quote }}
+                        memory: {{ .Values.global.postgres.cases.installOptions.primary.limits.memory }}
+                  backrest:
+                    resources:
+                      requests:
+                        cpu: {{ .Values.global.postgres.cases.installOptions.backrest.requests.cpu | quote }}
+                        memory: {{ .Values.global.postgres.cases.installOptions.backrest.requests.memory }}
+                      limits:
+                        cpu: {{ .Values.global.postgres.cases.installOptions.backrest.limits.cpu | quote }}
+                        memory: {{ .Values.global.postgres.cases.installOptions.backrest.limits.memory }}
+                databaseInit:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "databaseInit") | indent 14 }}
+                databaseUpgrade:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "databaseUpgrade") | indent 14 }}
+                imagePullSecret: {{- include "ibm-isc-cases.imagePullSecret" (dict "val" .Values) | indent 1 }}
+                activemq:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "activemq") | indent 14 }}
+                  replicas: {{ .Values.global.bindings.cases.activemq.replicas }}
+                  resources:
+                    limits:
+                      memory: "{{ .Values.global.resources.cases.activemq.limits.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.activemq.limits.cpu }}"
+                    requests:
+                      memory: "{{ .Values.global.resources.cases.activemq.requests.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.activemq.requests.cpu }}"
+                app_manager:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "app_manager") | indent 14 }}
+                  replicas: {{ .Values.global.bindings.cases.app_manager.replicas }}
+                  resources:
+                    limits:
+                      memory: "{{ .Values.global.resources.cases.app_manager.limits.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.app_manager.limits.cpu }}"
+                    requests:
+                      memory: "{{ .Values.global.resources.cases.app_manager.requests.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.app_manager.requests.cpu }}"
+                application:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "application") | indent 14 }}
+                  replicas: {{ .Values.global.bindings.cases.application.replicas}}
+                  resources:
+                    limits:
+                      memory: "{{ .Values.global.resources.cases.application.limits.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.application.limits.cpu }}"
+                    requests:
+                      memory: "{{ .Values.global.resources.cases.application.requests.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.application.requests.cpu }}"
+                resutil:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "resutil") | indent 14 }}
+                  resources:
+                    limits:
+                      memory: "{{ .Values.global.resources.cases.resutil.limits.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.resutil.limits.cpu }}"
+                    requests:
+                      memory: "{{ .Values.global.resources.cases.resutil.requests.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.resutil.requests.cpu }}"
+                logging_sidecars:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "loggingSidecar") | indent 14 }}
+                  resources:
+                    limits:
+                      memory: "{{ .Values.global.resources.cases.loggingsidecars.limits.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.loggingsidecars.limits.cpu }}"
+                    requests:
+                      memory: "{{ .Values.global.resources.cases.loggingsidecars.requests.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.loggingsidecars.requests.cpu }}"
+                amq_logging_sidecar:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "activemqLoggingSidecar") | indent 14 }}
+                  resources:
+                    limits:
+                      memory: "{{ .Values.global.resources.cases.loggingsidecars.limits.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.loggingsidecars.limits.cpu }}"
+                    requests:
+                      memory: "{{ .Values.global.resources.cases.loggingsidecars.requests.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.loggingsidecars.requests.cpu }}"
+                scripting:
+                  {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "scripting") | indent 14 }}
+                  resources:
+                    limits:
+                      memory: "{{ .Values.global.resources.cases.scripting.limits.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.scripting.limits.cpu }}"
+                    requests:
+                      memory: "{{ .Values.global.resources.cases.scripting.requests.memory }}"
+                      cpu: "{{ .Values.global.resources.cases.scripting.requests.cpu }}"
+
+                elastic:
+                  client:
+                    replicas: {{ .Values.global.bindings.cases.elastic.client.replicas}}
+                    heap_size: "{{ .Values.global.resources.cases.elastic.client.heapSize }}"
+                    resources:
+                      limits:
+                        memory: "{{ .Values.global.resources.cases.elastic.client.limits.memory }}"
+                        cpu: "{{ .Values.global.resources.cases.elastic.client.limits.cpu }}"
+                      requests:
+                        memory: "{{ .Values.global.resources.cases.elastic.client.requests.memory }}"
+                        cpu: "{{ .Values.global.resources.cases.elastic.client.requests.cpu }}"
+                  master:
+                    replicas: {{ .Values.global.bindings.cases.elastic.master.replicas}}
+                    heap_size: "{{ .Values.global.resources.cases.elastic.master.heapSize }}"
+                    resources:
+                      limits:
+                        memory: "{{ .Values.global.resources.cases.elastic.master.limits.memory }}"
+                        cpu: "{{ .Values.global.resources.cases.elastic.master.limits.cpu }}"
+                      requests:
+                        memory: "{{ .Values.global.resources.cases.elastic.master.requests.memory }}"
+                        cpu: "{{ .Values.global.resources.cases.elastic.master.requests.cpu }}"
+                  data:
+                    replicas: {{ .Values.global.bindings.cases.elastic.data.replicas}}
+                    heap_size: "{{ .Values.global.resources.cases.elastic.data.heapSize }}"
+                    resources:
+                      limits:
+                        memory: "{{ .Values.global.resources.cases.elastic.data.limits.memory }}"
+                        cpu: "{{ .Values.global.resources.cases.elastic.data.limits.cpu }}"
+                      requests:
+                        memory: "{{ .Values.global.resources.cases.elastic.data.requests.memory }}"
+                        cpu: "{{ .Values.global.resources.cases.elastic.data.requests.cpu }}"
+                  kibana:
+                    replicas: {{ .Values.global.bindings.cases.elastic.kibana.replicas }}
+                  dynamic_provisioning: {{- include "ibm-isc-cases.dynamicProvisioning" (dict "val" .Values) | indent 1 }}
+                  storage_size: "{{ .Values.global.elastic.cases.installOptions.storageSize }}"
+                  storage_class_name:{{- include "ibm-isc-cases.storageClassName" (dict "val" .Values) | indent 1 }}
+            
+            EOF
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+          runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+          capabilities:
+            drop:
+            - ALL
+{{- if .Values.createCRJob.resources }}
+        resources:
+{{ toYaml .Values.createCRJob.resources | indent 10 }}
+{{- end }}
+      restartPolicy: Never #if container fails, pod may be restarted on another node. OnFailure would restart just the container

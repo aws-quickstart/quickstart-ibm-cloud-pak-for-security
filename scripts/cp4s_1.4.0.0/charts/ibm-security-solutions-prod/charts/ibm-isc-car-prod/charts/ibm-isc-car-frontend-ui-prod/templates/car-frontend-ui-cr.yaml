@@ -1,0 +1,47 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: car-frontend-ui
+  labels:
+    app.kubernetes.io/name: ibm-isc-car-frontend-ui
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  action:
+    name: car-frontend-ui install
+    operation: generic-install
+    service:
+      name: car-frontend-ui
+      ports:
+        - 3000
+    {{- include "car.annotations" . }}
+    {{- include "ibm-isc-car.podcfg" (dict "val" . "app" "carFrontendUi") }}
+    env:
+      - name: PLATFORM
+        value: "icp"
+      - name: CP4S
+        value: true
+      - name: APP_FQDN
+        value: "@inventory/domain/definitions/name"
+      - name: DEFAULT_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}"
+      - name: OPENSHIFT_ENV
+        value: true
+      - name: CAR_API
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/api/car/v3"
+
+
+    liveness_probe:
+      path: /liveness
+    readiness_probe:
+      path: /readiness
+    paths:
+      - ingress: /app/car
+        app: /app/car
+        noAuth: true
+        idle_timeout: 600000
+        timeout: 600000

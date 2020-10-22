@@ -1,0 +1,23 @@
+
+couchImages:
+  v3:
+    image: ibmcom/couchdb3
+    tag: 3.1.0
+
+global:
+  oidc:
+    redirect_uris: []
+    post_logout_redirect_uris: []
+  knowledgecenter:
+    url: ""
+    basepath: ""
+  walkme:
+    url: ""
+  system_apps: {}
+  user_apps: {}
+  pulse: ""
+  pulse_restricted: ""
+  cases_playbooks: ""
+  xforce: ""
+  xforceweb: ""
+  pseudotranslation: ""

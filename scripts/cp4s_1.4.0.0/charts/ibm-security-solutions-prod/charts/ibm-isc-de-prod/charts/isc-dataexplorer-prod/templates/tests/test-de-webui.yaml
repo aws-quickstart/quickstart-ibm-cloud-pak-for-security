@@ -1,0 +1,63 @@
+{{- $ndx := $.Values.global.images.de.webui -}}
+{{- $image := printf "%s/%s:%s" (include "platform.repository" .) $ndx.image $ndx.tag -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dewebui-test-ready
+  labels:
+    app: dewebui-test
+    app.kubernetes.io/name: dewebui-test
+    helm.sh/chart: dewebui
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  annotations:
+     "helm.sh/hook": test-success
+spec:
+  serviceAccountName: ibm-isc-application
+  imagePullSecrets:
+    - name: ibm-isc-pull-secret
+  containers:
+    - name: dewebui-test
+      image: {{ $image }}
+      command: ["sh", "-c", "curl --cacert /etc/config/ca.crt https://dewebui:3000/liveness"]
+      resources:
+        limits:
+          memory: 100Mi
+          cpu:  200m
+        requests:
+          memory: 100Mi
+          cpu: 200m
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+      volumeMounts:
+        - mountPath: /etc/config
+          name: secrets
+          readOnly: true
+  volumes:
+    - name: secrets
+      secret:
+        defaultMode: 420
+        secretName: dewebui-tls
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+  restartPolicy: Never

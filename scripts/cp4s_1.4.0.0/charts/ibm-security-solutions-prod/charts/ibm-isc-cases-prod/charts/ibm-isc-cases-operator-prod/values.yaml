@@ -1,0 +1,83 @@
+# Default values for ibm-isc-cases-operator-prod.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+runAsUser: 1001
+
+nameOverride: isc-cases-operator
+
+global:
+  postgres:
+    cases:
+      installOptions:
+        metrics: false
+        primary:
+          requests:
+            cpu: 300m
+            memory: 512Mi
+          limits:
+            cpu: 750m
+            memory: 1Gi
+        backrest:
+          requests:
+            cpu: 20m
+            memory: 48Mi
+          limits:
+            cpu: 500m
+            memory: 200Mi
+  
+casesOperator:
+  annotations:
+    cloudpakId: 929bd9017afc410da9dda2dc67c33b75
+    cloudpakName: IBM Cloud Pak for Security
+    cloudpakVersion: 1.4.0
+    productID: ba8a0bb687d041058f000562376dd04a
+    productName: Cases
+    productVersion: 1.4.0
+    productMetric: MANAGED_VIRTUAL_SERVER
+
+  operator:
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1
+        memory: 384Mi
+      requests:
+        cpu: 100m
+        memory: 384Mi
+
+  ansible:
+    resources:
+      limits:
+        cpu: 1
+        memory: 256Mi
+      requests:
+        cpu: 10m
+        memory: 100Mi
+
+createCRJob:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+  initContainer:
+    resources:
+      limits:
+        cpu: 200m
+        memory: 200Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+
+deleteCRJob:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi

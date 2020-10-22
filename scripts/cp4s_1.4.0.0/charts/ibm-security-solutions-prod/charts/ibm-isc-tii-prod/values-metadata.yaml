@@ -1,0 +1,312 @@
+################################################################################
+#
+# GLOBAL SETTINGS
+#
+################################################################################
+
+global:
+  __metadata:
+    label: "Global Settings"
+    description: "Global Settings for all Components"
+  repository:
+    __metadata:
+        label: "TII Search Image Repository"
+        description: "Docker Repository to pull TII Search Images from"
+        type: "string"
+        required: true
+        hidden: true
+  bindings:
+    tiisearch:
+      replicas:
+        __metadata:
+          label: "Replicas for TII Search"
+          description: "Number of Replicas for TII Search"
+          type: "string"
+          required: false
+    tiiapp:
+      replicas:
+        __metadata:
+          label: "Replicas for TII App"
+          description: "Number of Replicas for TII App"
+          type: "string"
+          required: false
+    tiireports:
+      replicas:
+        __metadata:
+          label: "Replicas for TII Reports"
+          description: "Number of Replicas for TII Reports"
+          type: "string"
+          required: false
+    tiithreats:
+      replicas:
+        __metadata:
+          label: "Replicas for TII Threats"
+          description: "Number of Replicas for TII Threats"
+          type: "string"
+          required: false
+    tiisettings:
+      replicas:
+        __metadata:
+          label: "Replicas for TII Settings"
+          description: "Number of Replicas for TII Settings"
+          type: "string"
+          required: false
+
+  resources:
+    tii:
+      tiisearch:
+        requests:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+        limits:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+      tiiapp:
+        requests:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+        limits:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+      tiireports:
+        requests:
+          cpu:
+            __metadata:
+              label: "Csprint_10/3838_TII_clusterPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+        limits:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+      tiithreats:
+        requests:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+        limits:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+      tiisettings:
+        requests:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+        limits:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+      tiixfeproxy:
+        requests:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Requests"
+              type: "string"
+              required: true
+              hidden: true
+        limits:
+          cpu:
+            __metadata:
+              label: "CPU Specifications"
+              description: "CPU specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+          memory:
+            __metadata:
+              label: "Memory Specifications"
+              description: "Memory specifications for Limits"
+              type: "string"
+              required: false
+              hidden: true
+  repositoryType:
+    __metadata:
+        label: "Image Repository Type"
+        description: "Repository type: entitled or local registry"
+        type: "string"
+        required: true
+        hidden: false
+        options:
+        - label: "Entitled registry"
+          value: "entitled"
+        - label: "Local registry"
+          value: "local"
+  imagePullPolicy:
+    __metadata:
+      name: "pullPolicy"
+      label: "Docker image pull policy"
+      description: "Always, Never, or IfNotPresent. Defaults to IfNotPresent"
+      type: "string"
+      required: true
+      options:
+      - label: "IfNotPresent"
+        value: "IfNotPresent"
+      - label: "Always"
+        value: "Always"
+      - label: "Never"
+        value: "Never"
+  images:
+    tii:
+     tiisearch:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     tiiapp:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     tiireports:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     tiithreats:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     tiisettings:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     tiixfeproxy:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true

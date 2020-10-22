@@ -1,0 +1,75 @@
+{{- $image := printf "%s/%s:%s" (include "platform.repository" .) $.Values.global.images.platform.entitlements.image $.Values.global.images.platform.entitlements.tag -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: entitlements-test-ready
+  labels:
+    app.kubernetes.io/name: entitlements-test
+    helm.sh/chart: entitlements
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  annotations:
+    productID: 0da6423dbe774a44bb34266c525d3809
+    productName: Platform
+    productVersion: 1.4.0
+    productMetric: MANAGED_VIRTUAL_SERVER
+    productChargedContainers: ""
+    cloudpakName: IBM Cloud Pak for Security
+    cloudpakId: 929bd9017afc410da9dda2dc67c33b75
+    cloudpakVersion: 1.4.0
+    productCloudpakRatio: ""
+    "helm.sh/hook": test
+spec:
+  serviceAccountName: ibm-isc-application
+  imagePullSecrets:
+    - name: ibm-isc-pull-secret
+  containers:
+    - name: entitlements-test
+      image: {{ $image }}
+      command: ["sh", "-c", "curl -ki https://isc-entitlements:8443/entitlements/v1.0/health/status"]
+      resources:
+        limits:
+          memory: 100Mi
+          cpu:  200m
+        requests:
+          memory: 100Mi
+          cpu: 200m
+      livenessProbe:
+        failureThreshold: 3
+        exec:
+          command: 
+          - /usr/bin/true
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      readinessProbe:
+        failureThreshold: 3
+        exec:
+          command: 
+          - /usr/bin/true
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+  restartPolicy: Never

@@ -1,0 +1,22 @@
+apiVersion: v2
+appVersion: 1.4.0.0
+description: |-
+  Threat Intelligence Insights for the ISC
+  Documentation
+  License
+   "The translated license terms can be viewed here: http://www14.software.ibm.com/cgi-bin/weblap/lap.pl?li_formnum=L-GBLK-BNGLB3"
+home: https://www.ibm.com/security
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/TII.png
+keywords:
+- amd64
+- Commercial
+- OCP
+- ICPRHOCP
+- Security
+- RHOCP
+- Other
+kubeVersion: '>=1.16.0'
+maintainers:
+- name: IBM
+name: ibm-isc-tii-prod
+version: 1.0.8

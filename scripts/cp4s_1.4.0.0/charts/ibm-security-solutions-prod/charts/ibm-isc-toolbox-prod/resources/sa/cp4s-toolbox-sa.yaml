@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cp4s-toolbox-sa
+imagePullSecrets:
+ - name: ibm-isc-pull-secret
+ 

@@ -1,0 +1,25 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: couchdb-tiithreats
+  labels:
+    sort: couchdb
+    instance: tiithreats
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    sort: couchdb
+    instance: couchdb-tiithreats
+  references:
+    sort: couch
+    {{- include "ibm-isc-tii.couch_db_instance" (dict "val" .Values "app" "tii-threats") }}
+  definitions:
+    databases:
+    - tii-threats
+  installOptions:
+    {{- include "ibm-isc-tii.couch_db_opts" (dict "val" .Values "app" "tii-threats") }}
+---

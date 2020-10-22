@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ibm-isc-cases-operator-prod.name" . }}
+  labels:
+    name: {{ template "ibm-isc-cases-operator-prod.name" . }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+    helm.sh/chart: {{ $.Chart.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+{{- if .Values.casesOperator.annotations }}
+  annotations:
+{{ toYaml .Values.casesOperator.annotations | indent 4 }}
+{{- end }}
+spec:
+  replicas: {{ .Values.casesOperator.operator.replicas }}
+  selector:
+    matchLabels:
+      name: {{ template "ibm-isc-cases-operator-prod.name" . }}
+  template:
+    metadata:
+      labels:
+        heritage: {{ .Release.Service }}
+        name: {{ template "ibm-isc-cases-operator-prod.name" . }}
+        release: {{ .Release.Name }}
+        chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+        helm.sh/chart: {{ $.Chart.Name }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+{{- if .Values.casesOperator.annotations }}
+      annotations:
+{{ toYaml .Values.casesOperator.annotations | indent 8 }}
+{{- end }}
+    spec:
+      serviceAccountName: {{ template "ibm-isc-cases-operator-prod.name" . }}
+      hostPID: false
+      hostIPC: false
+      hostNetwork: false
+      dnsConfig:
+        options:
+          - name: single-request-reopen
+      securityContext:
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+        runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+        runAsNonRoot: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ $.Values.global.arch | default "amd64" }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {{ template "ibm-isc-cases-operator-prod.name" . }}
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: operator
+          {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "operator") | indent 6 }}
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: {{ template "ibm-isc-cases-operator-prod.name" . }}
+            - name: ANSIBLE_GATHERING
+              value: explicit
+          securityContext:
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+            runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            exec:
+              command:
+              - /scripts/liveness-script.sh
+          readinessProbe:
+            exec:
+              command:
+              - /usr/bin/true
+{{- if .Values.casesOperator.operator.resources }}
+          resources:
+{{ toYaml .Values.casesOperator.operator.resources | indent 12 }}
+{{- end }}
+      volumes:
+        - name: runner
+          emptyDir: {}

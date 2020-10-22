@@ -1,0 +1,23 @@
+apiVersion: v2
+appVersion: 1.4.0.0
+description: |-
+  Cases enables teams collaborate, investigate and address security threats.
+  Documentation
+  For additional details regarding install parameters check the CP4S Helm Chart ReadMe.
+  License
+     "The translated license terms can be viewed here: http://www14.software.ibm.com/cgi-bin/weblap/lap.pl?li_formnum=L-GBLK-BNGLB3"
+home: https://www.ibm.com/security
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/Cases-icon.png
+keywords:
+- amd64
+- Commercial
+- OCP
+- Security
+- ICPRHOCP
+- RHOCP
+- Other
+kubeVersion: '>=1.16.0'
+maintainers:
+- name: IBM
+name: ibm-isc-cases-prod
+version: 1.0.8

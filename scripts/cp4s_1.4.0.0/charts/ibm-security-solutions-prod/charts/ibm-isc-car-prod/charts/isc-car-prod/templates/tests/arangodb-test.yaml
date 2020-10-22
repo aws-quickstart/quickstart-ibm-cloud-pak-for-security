@@ -1,0 +1,88 @@
+{{- $arangoConfigRoot := $.Values.global.arangodb -}}
+{{- $arangoUrl := printf "https://%s.%s.svc:8529" $arangoConfigRoot.deploymentName .Release.Namespace -}}
+{{- $testPodImage := printf "%s/%s:%s" (include "platform.repository" .) $.Values.global.images.car.car.image $.Values.global.images.car.car.tag -}}
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: arangodb-test
+  labels:
+    app.kubernetes.io/name: arangodb-test
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  serviceAccountName: ibm-isc-application
+  imagePullSecrets:
+    - name: ibm-isc-pull-secret
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+  containers:
+    - name: arangodb-test
+      image: {{ $testPodImage }}
+      command: ["bash", "-c"]
+      args:
+        - echo "Helm test arangodb";
+          echo $CP4S_ARANGODB_ENDPOINT_BASE;
+          assert(){ echo $3; if [[ $1 == $2 ]]; then echo "good"; return 0; else echo "$1 NOT MATCH $2"; exit 1; fi };
+          availability_code=$(curl -sk ${CP4S_ARANGODB_ENDPOINT_BASE}/_admin/server/availability -u root:${CP4S_ARANGODB_PASSWORD} | jq -r ".code");
+          assert ${availability_code} 200 "Testing _admin/server/availability";
+          current_version=$(curl -sk ${CP4S_ARANGODB_ENDPOINT_BASE}/_api/version -u root:${CP4S_ARANGODB_PASSWORD} | jq -r ".version");
+          assert ${current_version} ${EXPECTED_VERSION} "Testing _api/version";
+          curl -sk -u root:${CP4S_ARANGODB_PASSWORD} --request DELETE "${CP4S_ARANGODB_ENDPOINT_BASE}/_api/database/helm_test";
+          echo;
+          db_creation_code=$(curl -sk -u root:${CP4S_ARANGODB_PASSWORD} --request POST "${CP4S_ARANGODB_ENDPOINT_BASE}/_api/database" --data-raw "{\"name\":\"helm_test\"}" | jq -r ".code");
+          assert ${db_creation_code} 201 "Testing DB creation";
+          sleep 5s;
+          curl -sk -u root:${CP4S_ARANGODB_PASSWORD} --request GET "${CP4S_ARANGODB_ENDPOINT_BASE}/_api/database" | jq -r ".result" | grep "helm_test" ;
+          assert "$?" 0 "Check if test DB is created";
+          deletion_code=$(curl -sk -u root:${CP4S_ARANGODB_PASSWORD} --request DELETE "${CP4S_ARANGODB_ENDPOINT_BASE}/_api/database/helm_test" | jq -r ".code");
+          assert ${deletion_code} 200 "Delete test DB";
+      env:
+      - name: EXPECTED_VERSION
+        value: {{ $arangoConfigRoot.version | quote}}
+      - name: CP4S_ARANGODB_ENDPOINT_BASE
+        value: {{ $arangoUrl | quote }}
+      - name: CP4S_ARANGODB_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: arangodb-root-password
+            key: username
+      - name: CP4S_ARANGODB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: arangodb-root-password
+            key: password
+      resources:
+        limits:
+          memory: 100Mi
+          cpu:  200m
+        requests:
+          memory: 100Mi
+          cpu: 200m
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+        runAsUser: 1001
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+  restartPolicy: Never

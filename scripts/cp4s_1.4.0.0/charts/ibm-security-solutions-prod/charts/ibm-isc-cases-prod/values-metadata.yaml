@@ -1,0 +1,465 @@
+################################################################################
+#
+# GLOBAL SETTINGS
+#
+################################################################################
+global:
+  __metadata:
+    label: "Global Settings"
+    description: "Global settings for all components"
+  repository:
+    __metadata:
+      label: "Path to registry containing isc-cases docker images"
+      description: "Docker registry to pull images"
+      type: "string"
+      required: true
+      hidden: true
+  repositoryType:
+    __metadata:
+      label: "Image Repository Type"
+      description: "Repository type: entitled or local registry"
+      type: "string"
+      required: true
+      hidden: false
+      options:
+        - label: "Entitled registry"
+          value: "entitled"
+        - label: "Local registry"
+          value: "local"
+  imagePullPolicy:
+    __metadata:
+      name: "pullPolicy"
+      label: "Docker image pull policy"
+      description: "Always, Never, or IfNotPresent. Defaults to IfNotPresent"
+      type: "string"
+      required: true
+      options:
+        - label: "IfNotPresent"
+          value: "IfNotPresent"
+        - label: "Always"
+          value: "Always"
+        - label: "Never"
+          value: "Never"
+  replicas:
+    __metadata:
+      label: "Number of application replicas"
+      description: "Number of application replicas running"
+      type: "number"
+      required: true
+      hidden: true
+  arch:
+    __metadata:
+      label: "Architecture"
+      description: "The worker node architecture on which to deploy ISC"
+      type: "string"
+      options:
+        - label: 'amd64'
+          value: 'amd64'
+      required: true
+      hidden: true
+  postgres:
+    cases:
+      installOptions:
+        primary:
+          label: "Install Options"
+          description: "Install Options for cases postgres primary instance"
+          storageSize:
+            __metadata:
+              required: false
+              hidden: true
+          storageClassName:
+            __metadata:
+              label: "Postgres Storage Class"
+              description: "Postgres Storage Class"
+              required: false
+              hidden: true
+          fsGroup:
+            __metadata:
+              label: "Filesystem Group"
+              description: "Filesystem groups that should be added to security contexts "
+              required: false
+              hidden: true
+          supplementalGroups:
+            __metadata:
+              label: "Supplemental Groups"
+              description: "Supplemental groups that should be added to security contexts"
+              required: false
+              hidden: true
+          requests:
+            memory:
+              __metadata:
+                label: "Memory Required for Postgres"
+                description: "Memory Required for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+            cpu:
+              __metadata:
+                label: "CPU Required for Postgres"
+                description: "Memory Required for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+          limits:
+            memory:
+              __metadata:
+                label: "Memory Limit for Postgres"
+                description: "Memory Limit for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+            cpu:
+              __metadata:
+                label: "CPU Limit for Postgres"
+                description: "CPU Required for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+        backrest:
+          label: "Install Options"
+          description: "Install Options for cases postgres backrest"
+          storageSize:
+            __metadata:
+              required: false
+              hidden: true
+          storageClassName:
+            __metadata:
+              label: "Postgres Storage Class"
+              description: "Postgres Storage Class"
+              required: false
+              hidden: true
+          fsGroup:
+            __metadata:
+              label: "Filesystem Group"
+              description: "Filesystem groups that should be added to security contexts "
+              required: false
+              hidden: true
+          supplementalGroups:
+            __metadata:
+              label: "Supplemental Groups"
+              description: "Supplemental groups that should be added to security contexts"
+              required: false
+              hidden: true
+          requests:
+            memory:
+              __metadata:
+                label: "Memory Required for Postgres"
+                description: "Memory Required for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+            cpu:
+              __metadata:
+                label: "CPU Required for Postgres"
+                description: "Memory Required for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+          limits:
+            memory:
+              __metadata:
+                label: "Memory Limit for Postgres"
+                description: "Memory Limit for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+            cpu:
+              __metadata:
+                label: "CPU Limit for Postgres"
+                description: "CPU Required for Postgres"
+                type: "string"
+                required: false
+                hidden: true
+  elastic:
+    cases:
+      installOptions:
+        storageSize:
+          __metadata:
+            hidden: true
+        storageClassName:
+          __metadata:
+            hidden: true
+
+  bindings:
+    cases:
+      application:
+        replicas:
+          __metadata:
+            hidden: true
+      activemq:
+        replicas:
+          __metadata:
+            hidden: true
+      app_manager:
+        replicas:
+          __metadata:
+            hidden: true
+      elastic:
+        client:
+          replicas:
+            __metadata:
+              hidden: true
+        master:
+          replicas:
+            __metadata:
+              hidden: true
+        data:
+          replicas:
+            __metadata:
+              hidden: true
+        kibana:
+          replicas:
+            __metadata:
+              hidden: true
+
+  resources:
+    cases:
+      application:
+        limits:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+        requests:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+      activemq:
+        limits:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+        requests:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+      app_manager:
+        limits:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+        requests:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+      resutil:
+        limits:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+        requests:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+      scripting:
+        limits:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+        requests:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+      loggingsidecars:
+        limits:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+        requests:
+          memory:
+            __metadata:
+              hidden: true
+          cpu:
+            __metadata:
+              hidden: true
+      elastic:
+        client:
+          heapSize:
+            __metadata:
+              hidden: true
+          limits:
+            memory:
+              __metadata:
+                hidden: true
+            cpu:
+              __metadata:
+                hidden: true
+          requests:
+            memory:
+              __metadata:
+                hidden: true
+            cpu:
+              __metadata:
+                hidden: true
+        master:
+          heapSize:
+            __metadata:
+              hidden: true
+          limits:
+            memory:
+              __metadata:
+                hidden: true
+            cpu:
+              __metadata:
+                hidden: true
+          requests:
+            memory:
+              __metadata:
+                hidden: true
+            cpu:
+              __metadata:
+                hidden: true
+        data:
+          heapSize:
+            __metadata:
+              hidden: true
+          limits:
+            memory:
+              __metadata:
+                hidden: true
+            cpu:
+              __metadata:
+                hidden: true
+          requests:
+            memory:
+              __metadata:
+                hidden: true
+            cpu:
+              __metadata:
+                hidden: true
+
+  images:
+    cases:
+      operator:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      activemq:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      app_manager:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      activemqLoggingSidecar:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      application:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      databaseInit:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      databaseUpgrade:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      loggingSidecar:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      resutil:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      scripting:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+      postgresOperator:
+        image:
+          __metadata:
+            hidden: true
+        tag:
+          __metadata:
+            hidden: true
+
+  poddisruptionbudget:
+    enabled:
+      __metadata:
+        label: "Enable Pod Disruption Budget"
+        description: "Enables application protection availability during a cluster node maintenance. Administrator role or higher required to enable PDB."
+        type: "boolean"
+        required: false
+    minAvailable:
+      __metadata:
+        label: "Minimum number of replicas"
+        description: "Minimum number of probe replicas that must be available during pod eviction"
+        type: "string"
+        required: false

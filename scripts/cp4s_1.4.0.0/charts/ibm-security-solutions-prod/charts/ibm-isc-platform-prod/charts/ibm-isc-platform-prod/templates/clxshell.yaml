@@ -1,0 +1,114 @@
+# Deploys CLX-Shell, Core UI shell service for User Profile, Navigation, Breadcrumbs and Side Panel
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: clxshell
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  action:
+    name: clx-shell install
+    operation: generic-install
+    service:
+      name: clx-shell
+      ports:
+        - 3002
+    jwtKey: true
+    {{- include "platform.annotate" . }}
+    {{- include "ibm-isc-platform.podcfg" (dict "val" . "app" "shell") }}
+    env:
+        - name: APP_FQDN
+          value: '@inventory/domain/definitions/name'
+        - name: API_CONNECT
+          value: '@inventory/domain/definitions/name'
+          format: '{0}/api'
+        - name: COOKIE_DOMAIN
+          value: '@inventory/domain/definitions/name'
+        - name: DEMO_MODE
+          value: '@inventory/platform/definitions/demomode'
+        - name: DEV_MODE
+          value: '@inventory/platform/definitions/devmode'
+        - name: ENTITLEMENTS_API
+          value: '@inventory/platform/definitions/entitlementsapi/url'
+        - name: FLAG_SEGMENT
+          value: '@inventory/platform/definitions/featureflags/segment'
+        - name: FLAG_NOTIFICATIONS
+          value: '@inventory/platform/definitions/featureflags/notifications'
+        - name: FLAG_EDIT_PROFILE
+          value: '@inventory/platform/definitions/featureflags/editprofile'
+        - name: FLAG_CATALOG
+          value: '@inventory/platform/definitions/featureflags/catalog'
+        - name: FLAG_ASK_WATSON
+          value: '@inventory/platform/definitions/featureflags/askwatson'
+        - name: FLAG_FOOTER_LINKS
+          value: '@inventory/platform/definitions/featureflags/footerlinks'
+        - name: FLAG_PLAYBOOKS
+          value: '@inventory/platform/definitions/featureflags/playbooks'
+        - name: IBM_ID_HOST
+          value: '@inventory/platform/definitions/ibmid/host'
+        - name: PROFILE_SERVICE_HOST
+          value: '@inventory/platform/definitions/profileservicehost/url'
+        - name: KC_LOCATION
+          value: '@inventory/platform/definitions/knowledgecenter/url'
+        - name: KC_BASE_PATH
+          value: '@inventory/platform/definitions/knowledgecenter/basepath'
+        - name: SIGN_UP_URL
+          value: '@inventory/platform/definitions/urxform/url'
+        - name: SUPPORT_FORUM_URL
+          value: '@inventory/platform/definitions/supportforum/url'
+        - name: WALKME_URL
+          value: '@inventory/platform/definitions/walkme/url'
+        - name: IDEAS_PORTAL_URL
+          value: '@inventory/platform/definitions/ideasportal/url'
+        - name: REDIS_HOST
+          value: '@inventory/redis/definitions/host'
+        - name: REDIS_PORT
+          value: '@inventory/redis/definitions/port'
+        - name: REDIS_PASS
+          value: '@secret/redis/pass'
+        - name: REDIS_CERT_PATH
+          value: '/etc/config'
+        - name: REDIS_SENTINEL
+          value: ''
+        - name: REDIS_SENTINEL_NAME
+          value: '@inventory/redis/definitions/sentinel_name'
+        - name: REDIS_SENTINEL_PORT
+          value: '@inventory/redis/definitions/port'
+        - name: CLIENT_ID
+          value: '@refsec/ibm-isc-oidc-credentials/CLIENT_ID'
+        - name: CLIENT_SECRET
+          value: '@refsec/ibm-isc-oidc-credentials/CLIENT_SECRET'
+        - name: OIDC_SP
+          value: '@inventory/platform/definitions/oidc/tenant'
+        - name: OIDC_TOKEN_URL
+          value: '@inventory/platform/definitions/oidc/tokenurl'
+        - name: OIDC_AUTHORIZATION_URL
+          value: '@inventory/platform/definitions/oidc/authorizationurl'
+        - name: OIDC_REVOCATION_URL
+          value: '@inventory/platform/definitions/oidc/revokeurl'
+        - name: PSEUDO_TRANSLATION
+          value: '@inventory/platform/definitions/pseudotranslation'
+        - name: SHELL_APP_DATA
+          value: '@inventory/platform/definitions/shellappdata/apps'
+        - name: COUCHDB_HOSTNAME
+          value: '@inventory/couch/definitions/url'
+        - name: COUCHDB_USERNAME
+          value: '@secret/couchdb/username'
+        - name: COUCHDB_PASSWORD
+          value: '@secret/couchdb/password'
+    liveness_probe:
+        path: /liveness
+    readiness_probe:
+        path: /readiness
+    paths:
+        - ingress: /shell/oidc/callback
+          app: /shell/oidc/callback
+          noAuth: true
+          timeout: 60000
+        - ingress: /shell
+          app: /shell
+          noAuth: true

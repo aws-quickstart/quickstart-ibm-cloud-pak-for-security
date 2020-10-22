@@ -1,0 +1,29 @@
+# Create a couchdb instance for Pulse
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: couchdb-pulse
+  labels:
+    sort: couchdb
+    instance: pulse
+    app.kubernetes.io/name: {{ $.Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  labels:
+    sort: couchdb
+    instance: pulse
+  references:
+    sort: couch
+    {{- include "ibm-isc-platform.couch_db_instance" (dict "val" .Values "app" "pulse") }}
+  definitions:
+    databases:
+    - pulsebackend
+    - pulse-search-tasks
+    - pulse-search-results
+    - pulse-search-rejected
+  installOptions:
+    {{- include "ibm-isc-platform.couch_db_opts" (dict "val" .Values "app" "pulse") }}
+---

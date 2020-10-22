@@ -1,0 +1,63 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: tiixfeproxy
+  labels:
+    app.kubernetes.io/name: ibm-isc-tii-xfe-proxy
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  action:
+    name: tii-xfe-proxy install
+    operation: generic-install
+    service:
+      name: tii-xfe-proxy
+      proto: https
+      ports:
+        - 5005
+    {{- include "tii.annotations" . }}
+    {{- include "ibm-isc-tii.podcfg" (dict "val" . "app" "tiixfeproxy") }}
+    env:
+      - name: PLATFORM
+        value: "icp"
+      - name: PORT
+        value: "5005"
+      - name: CLUSTER_HOSTNAME
+        value: "@inventory/platform/definitions/cluster_hostname"
+      - name: APP_FQDN
+        value: "@inventory/domain/definitions/name"
+      - name: DEFAULT_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}"
+      - name: XFE_API_HOST
+        value: "@inventory/platform/definitions/xforce"
+      - name: XFE_WEB_HOST
+        value: "@inventory/platform/definitions/xforceweb"
+      - name: APPX_BASE_PATH
+        value: "@inventory/platform/definitions/xforceweb"
+        format: "{0}/hub"
+      - name: DB_URI
+        value: '@inventory/couch/definitions/url'
+      - name: DB_CLIENT_ID
+        value: '@secret/couchdb/username'
+      - name: DB_CLIENT_SECRET
+        value: '@secret/couchdb/password'
+      - name: SYSAUTH_USER
+        value: '@refsec/sysauth-tiixfeproxy/username'
+      - name: SYSAUTH_PASS
+        value: '@refsec/sysauth-tiixfeproxy/password'
+      - name: REPO_URL
+        value: {{ $.Values.global.repository }}
+    liveness_probe:
+      path: /liveness
+    readiness_probe:
+      path: /readiness
+    paths:
+      - ingress: /app/threat-intelligence-insights/xfe/api/v1/dataplan/changes
+        app: /app/threat-intelligence-insights/xfe/api/v1/dataplan/changes
+        timeout: 900000
+      - ingress: /app/threat-intelligence-insights/xfe
+        app: /app/threat-intelligence-insights/xfe
+        timeout: 300000

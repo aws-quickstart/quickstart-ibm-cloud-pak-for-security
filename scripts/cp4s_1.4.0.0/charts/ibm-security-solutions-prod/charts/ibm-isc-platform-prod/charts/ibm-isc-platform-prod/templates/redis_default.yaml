@@ -1,0 +1,28 @@
+# Create a default redis component as an ISCInventory
+{{ if not .Values.global.redis }}
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: redis-default
+  labels:
+    sort: redis
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    sort: redis
+    instance: default
+  definitions: 
+    name: default
+    host: c-default-redis-p
+    port: 16000
+    ssl: true
+    sentinel: false
+    sentinel_name: mymaster
+  installOptions:
+    persistence: false  
+    {{- include "ibm-isc-platform.storageDefault" . }}
+{{- end }}

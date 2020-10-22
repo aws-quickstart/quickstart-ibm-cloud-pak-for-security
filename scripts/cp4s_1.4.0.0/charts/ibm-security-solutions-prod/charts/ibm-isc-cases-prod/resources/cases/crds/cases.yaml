@@ -1,0 +1,636 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: cases.isc.ibm.com
+  labels:
+    app.kubernetes.io/name: ibm-isc-cases
+    app.kubernetes.io/instance: ibm-isc-cases
+    app.kubernetes.io/managed-by: ibm-isc-cases
+spec:
+  group: isc.ibm.com
+  names:
+    kind: Cases
+    listKind: CasesList
+    plural: cases
+    singular: cases
+  scope: Namespaced
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            type: object
+            required:
+              - cases
+            properties:
+              cases:
+                type: object
+                required:
+                  - postgres
+                  - databaseInit
+                  - databaseUpgrade
+                  - imagePullSecret
+                  - activemq
+                  - application
+                  - app_manager
+                  - logging_sidecars
+                  - amq_logging_sidecar
+                  - scripting
+                  - elastic
+                properties:
+                  postgres:
+                    type: object
+                    required:
+                      - crunchy_image_tag
+                      - metrics
+                      - primary
+                      - backrest
+                    properties:
+                      crunchy_image_tag:
+                        type: string
+                        description: "Crunchy image tag"
+                      metrics:
+                        type: boolean
+                        description: "pgcluster metrics are enabled"
+                      primary:
+                        type: object
+                        required:
+                          - resources
+                        properties:
+                          resources:
+                            type: object
+                            required:
+                              - requests
+                              - limits
+                            properties:
+                              requests:
+                                type: object
+                                required:
+                                  - cpu
+                                  - memory
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Requests"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Requests"
+                              limits:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Limit"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Limit"
+                      backrest:
+                        type: object
+                        required:
+                          - resources
+                        properties:
+                          resources:
+                            type: object
+                            required:
+                              - requests
+                              - limits
+                            properties:
+                              requests:
+                                type: object
+                                required:
+                                  - cpu
+                                  - memory
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Requests"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Requests"
+                              limits:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Limit"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Limit"
+                  databaseInit:
+                    type: object
+                    required:
+                      - image
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                  databaseUpgrade:
+                    type: object
+                    required:
+                      - image
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                  imagePullSecret:
+                    type: string
+                  activemq:
+                    type: object
+                    required:
+                      - image
+                      - replicas
+                      - resources
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                      replicas:
+                        type: integer
+                        description: "Number of replicas"
+                      resources:
+                        type: object
+                        required:
+                          - limits
+                          - requests
+                        properties:
+                          limits:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Limit"
+                              cpu:
+                                type: string
+                                description: "Container CPU Limit"
+                          requests:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Requests"
+                              cpu:
+                                type: string
+                                description: "Container CPU Requests"
+                  application:
+                    type: object
+                    required:
+                      - image
+                      - replicas
+                      - resources
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                      replicas:
+                        type: integer
+                        description: "Number of replicas"
+                      resources:
+                        type: object
+                        required:
+                          - limits
+                          - requests
+                        properties:
+                          limits:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Limit"
+                              cpu:
+                                type: string
+                                description: "Container CPU Limit"
+                          requests:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Requests"
+                              cpu:
+                                type: string
+                                description: "Container CPU Requests"
+                  app_manager:
+                    type: object
+                    required:
+                      - image
+                      - replicas
+                      - resources
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                      replicas:
+                        type: integer
+                        description: "Number of replicas"
+                      resources:
+                        type: object
+                        required:
+                          - limits
+                          - requests
+                        properties:
+                          limits:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Limit"
+                              cpu:
+                                type: string
+                                description: "Container CPU Limit"
+                          requests:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Requests"
+                              cpu:
+                                type: string
+                                description: "Container CPU Requests"
+                  resutil:
+                    type: object
+                    required:
+                      - image
+                      - resources
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                      resources:
+                        type: object
+                        required:
+                          - limits
+                          - requests
+                        properties:
+                          limits:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Limit"
+                              cpu:
+                                type: string
+                                description: "Container CPU Limit"
+                          requests:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Requests"
+                              cpu:
+                                type: string
+                                description: "Container CPU Requests"
+                  logging_sidecars:
+                    type: object
+                    required:
+                      - image
+                      - resources
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                      resources:
+                        type: object
+                        required:
+                          - limits
+                          - requests
+                        properties:
+                          limits:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Limit"
+                              cpu:
+                                type: string
+                                description: "Container CPU Limit"
+                          requests:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Requests"
+                              cpu:
+                                type: string
+                                description: "Container CPU Requests"
+                  amq_logging_sidecar:
+                    type: object
+                    required:
+                      - image
+                      - resources
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                      resources:
+                        type: object
+                        required:
+                          - limits
+                          - requests
+                        properties:
+                          limits:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Limit"
+                              cpu:
+                                type: string
+                                description: "Container CPU Limit"
+                          requests:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Requests"
+                              cpu:
+                                type: string
+                                description: "Container CPU Requests"
+                  scripting:
+                    type: object
+                    required:
+                      - image
+                      - resources
+                    properties:
+                      image:
+                        type: string
+                        description: "Image Location"
+                      imagePullPolicy:
+                        type: string
+                        description: "Image Pull Policy"
+                      resources:
+                        type: object
+                        required:
+                          - limits
+                          - requests
+                        properties:
+                          limits:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Limit"
+                              cpu:
+                                type: string
+                                description: "Container CPU Limit"
+                          requests:
+                            type: object
+                            required:
+                              - memory
+                              - cpu
+                            properties:
+                              memory:
+                                type: string
+                                description: "Container Memory Requests"
+                              cpu:
+                                type: string
+                                description: "Container CPU Requests"
+                  elastic:
+                    type: object
+                    required:
+                      - client
+                      - master
+                      - data
+                      - kibana
+                      - dynamic_provisioning
+                      - storage_size
+                      - storage_class_name
+                    properties:
+                      client:
+                        type: object
+                        required:
+                          - replicas
+                          - heap_size
+                          - resources
+                        properties:
+                          replicas:
+                            type: integer
+                            description: "Number of replicas"
+                          heap_size:
+                            type: string
+                            description: "Heap Size of Container"
+                          resources:
+                            type: object
+                            required:
+                              - limits
+                              - requests
+                            properties:
+                              limits:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Limit"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Limit"
+                              requests:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Requests"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Requests"
+                      master:
+                        type: object
+                        required:
+                          - replicas
+                          - heap_size
+                          - resources
+                        properties:
+                          replicas:
+                            type: integer
+                            description: "Number of replicas"
+                          heap_size:
+                            type: string
+                            description: "Heap Size of Container"
+                          resources:
+                            type: object
+                            required:
+                              - limits
+                              - requests
+                            properties:
+                              limits:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Limit"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Limit"
+                              requests:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Requests"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Requests"
+                      data:
+                        type: object
+                        required:
+                          - replicas
+                          - heap_size
+                          - resources
+                        properties:
+                          replicas:
+                            type: integer
+                            description: "Number of replicas"
+                          heap_size:
+                            type: string
+                            description: "Heap Size of Container"
+                          resources:
+                            type: object
+                            required:
+                              - limits
+                              - requests
+                            properties:
+                              limits:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Limit"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Limit"
+                              requests:
+                                type: object
+                                required:
+                                  - memory
+                                  - cpu
+                                properties:
+                                  memory:
+                                    type: string
+                                    description: "Container Memory Requests"
+                                  cpu:
+                                    type: string
+                                    description: "Container CPU Requests"
+                      kibana:
+                        type: object
+                        required:
+                          - replicas
+                        properties:
+                          replicas:
+                            type: integer
+                            description: "Number of replicas"
+                      dynamic_provisioning:
+                        type: string
+                        description: "Elastic Dynamic Provisioning"
+                      storage_size:
+                        type: string
+                        description: "Elastic Storage Size"
+                      storage_class_name:
+                        type: string
+                        description: "Elastic Storage Class Name"
+          status:
+            description: Cases Operator status
+            properties:
+              conditions:
+                description: Status of the custom resource
+                items:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                type: array
+            required:
+              - conditions
+            type: object
+    subresources:
+      status: {}

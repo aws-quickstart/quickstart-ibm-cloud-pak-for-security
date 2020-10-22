@@ -1,0 +1,94 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: tisdatagateway
+  labels:
+    app.kubernetes.io/name: ibm-isc-tisdatagateway
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  action:
+    name: tisdatagateway install
+    operation: generic-install
+    service:
+      name: tis-data-gateway
+      proto: https
+      ports:
+        - 3000
+  {{- include "tis.annotations" . }}
+  {{- include "ibm-isc-tis.podcfg" (dict "val" . "app" "tisdatagateway") }}
+    env:
+      - name: API_BASE
+        value: "/tis/gateway"
+      - name: CERT_PATH
+        value: "/etc/config/ca.crt"
+      - name: PUBLIC_KEY_FILE
+        value: "/etc/config/jwt.public.pem"
+      - name: SERVICE_NAME
+        value: "tis-data-gateway"
+      - name: REDIS_TOTAL_RETRY_TIME_SECONDS
+        value: "5"
+      - name: REDIS_SENTINEL
+        value: "@inventory/redis/definitions/sentinel"
+      - name: REDIS_HOST
+        value: "@inventory/redis/definitions/host"
+      - name: REDIS_PORT
+        value: "@inventory/redis/definitions/port"
+      - name: REDIS_SSL
+        value: "@inventory/redis/definitions/ssl"
+      - name: REDIS_SENTINEL_PORT
+        value: "@inventory/redis/definitions/port"
+      - name: REDIS_SENTINEL_NAME
+        value: "@inventory/redis/definitions/sentinel_name"
+      - name: REDIS_PASS
+        value: "@secret/redis/pass"
+      - name: XFE_PROXY_URL
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/app/threat-intelligence-insights/"
+      - name: CLOUDANT_URL
+        value: "@inventory/couch/definitions/url"
+      - name: CLOUDANT_USERNAME
+        value: "@secret/couchdb/username"
+      - name: CLOUDANT_PASSWORD
+        value: "@secret/couchdb/password"
+      - name: USER_STORE_REMOTE_URL
+        value: "@inventory/couch/definitions/url"
+      - name: USER_STORE_USER_NAME
+        value: "@secret/couchdb/username"
+      - name: USER_STORE_PASSWORD
+        value: "@secret/couchdb/password"
+      - name: USER_DATABASE_NAME
+        value: "tis-users"
+      - name: ACCOUNT_CONFIG_DB
+        value: "tis-configurations"
+      - name: AIA_URL
+        value: "https://tis-aia:3000/tis/ami/v2"
+      - name: PURGED_PAGE_SIZE
+        value: "25"
+      - name: XFE_CACHE_DURATION
+        value: "600"
+      - name: TIS_MAX_COUCHDB_POOL
+        value: "25"
+      - name: TIS_ES_URL
+        value: "https://tis-cortex-es-http:9200"
+      - name: TIS_CONNECTOR_MANAGER_URL
+        value: "https://tis-connector-manager:3000/tis/connectors/v1"
+      - name: ELASTIC_USERNAME
+        value: "elastic"
+      - name: ES_CERT_PATH
+        value: "/etc/config/ca.crt"
+      - name: TIS_FEATURE_DB_NAME
+        value: "tis-configurations"
+    liveness_probe:
+      path: /tis/gateway/v2/health/liveness
+    readiness_probe:
+      path: /tis/gateway/v2/health/readiness
+    paths:
+      - ingress: /tis/gateway
+        app: /tis/gateway
+        idle_timeout: 600000
+        timeout: 600000
+    sysctls:
+      somaxconn: true

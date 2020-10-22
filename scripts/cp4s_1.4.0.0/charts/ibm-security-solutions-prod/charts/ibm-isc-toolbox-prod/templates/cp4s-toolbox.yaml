@@ -1,0 +1,49 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: cp4s-toolbox
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  action:
+    env:
+    - name: NAMESPACE
+      value: {{ .Release.Namespace  }}
+    - name: CASES_BACKUP_DIR
+      value: /opt/data/backup/cases
+    - name: COUCHDB_ADMIN
+      value: '@refsec/couch-secret-default/username'
+    - name: COUCHDB_PASSWORD
+      value: '@refsec/couch-secret-default/password'
+    - name: CP4S_ARANGODB_USERNAME
+      value:  '@refsec/arangodb-root-password/username'
+    - name: CP4S_ARANGODB_PASSWORD
+      value:  '@refsec/arangodb-root-password/password'
+    - name: CP4S_ARANGODB_BACKUP_DIR
+      value: /opt/data/backup/arangodb
+    - name: POSTGRES_PASSWORD
+      value: '@refsec/isc-cases-postgres-postgres-secret/password'
+    - name: NODE_EXTRA_CA_CERTS
+      value: /etc/config/ca.crt
+    - name: MOUNTPOINT
+      value: /opt/data
+    fsWrite: false
+    name: cp4s-toolbox
+    operation: pod
+    {{- include "cp4s-toolbox.podcfg" (dict "val" . "app" "toolbox") }}
+    serviceAccountName: cp4s-toolbox-sa
+    storage:
+      access: ReadWriteOnce
+      mountPath: /opt/data
+      name: cp4s-backup-pv-claim
+      size: {{ .Values.global.toolbox.size | default "100Gi" }}
+      storageClass: {{ .Values.global.toolbox.storageClass | default .Values.global.storageClass }}
+      label: backup
+    tempdir: /opt/temp

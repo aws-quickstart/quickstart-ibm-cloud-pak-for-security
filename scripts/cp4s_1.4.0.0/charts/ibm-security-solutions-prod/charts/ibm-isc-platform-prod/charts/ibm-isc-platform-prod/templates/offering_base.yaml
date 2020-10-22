@@ -1,0 +1,86 @@
+# Used by the entitlements operator to construct the bill of materials
+apiVersion: entitlements.extensions.platform.cp4s.ibm.com/v1
+kind: Offering
+metadata:
+  name: cp4s-v1-4-base
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  offeringId: CP4S_V1_4_base
+  name: CloudPak for Security, Gen 2, base offering, part number xxmmmmmmm
+  description: The basic CP4S version 1.4 offering. Contains all applications
+  vendor: IBM CP4S
+  vendorPartNumber: CP4S_GEN_2
+  grantSpecification:
+    applications:
+    - applicationId: ServiceProvider
+      labels:
+        - PLATFORM_MANDATORY
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: ""
+    - applicationId: Platform
+      labels:
+        - PLATFORM_MANDATORY
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: "User"
+      prerequisites:
+      - mvsMultiplier: 1
+        mvsQuantity: 0
+        type: MVSREQUIRED
+        enforcement: ADVISE_ON_INCLUDE_IN_SUBSCRIPTION
+    - applicationId: Licensing
+      labels:
+        - PLATFORM_MANDATORY
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: "Viewer"
+    - applicationId: UserManagement
+      labels:
+        - PLATFORM_MANDATORY
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: ""
+    - applicationId: CaseManagement
+      labels:
+        - PLATFORM_MANDATORY
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: "User"
+    - applicationId: UDS
+      labels:
+        - PLATFORM_MANDATORY
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: "User"
+    - applicationId: Spotlight
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: "User"
+    - applicationId: qproxy
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: "User"
+    - applicationId: TII
+      initialRoleAssignment: 
+        installationRole: "DEFAULT"
+        applicationRole: "User"
+      prerequisites:
+      - mvsMultiplier: 10
+        mvsQuantity: 0
+        type: MVSREQUIRED
+        enforcement: ADVISE_ON_INCLUDE_IN_SUBSCRIPTION
+    - applicationId: SOAR
+      initialRoleAssignment:
+        installationRole: DEFAULT
+        applicationRole: ''
+      prerequisites:
+      - mvsMultiplier: 10
+        mvsQuantity: 0
+        type: MVSREQUIRED
+        enforcement: ADVISE_ON_INCLUDE_IN_SUBSCRIPTION

@@ -1,0 +1,121 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: '{{ template "ibm-cp4s-postgres-prod.name" . }}-create-cr-{{ .Release.Revision }}'
+  labels:
+    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+    helm.sh/chart: {{ $.Chart.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    delete.on.completion: "true"
+spec:
+  template:
+    metadata:
+      labels:
+        name: {{ template "ibm-cp4s-postgres-prod.name" . }}-create-cr-{{ .Release.Revision }}
+        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+        helm.sh/chart: {{ $.Chart.Name }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+      annotations:
+        productMetric: MANAGED_VIRTUAL_SERVER
+    spec:
+      serviceAccountName: {{ template "ibm-cp4s-postgres-prod.name" . }}
+      hostPID: false
+      hostIPC: false
+      hostNetwork: false
+      securityContext:
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+        runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+        runAsNonRoot: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ $.Values.global.arch | default "amd64" }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {{ template "ibm-cp4s-postgres-prod.name" . }}
+              topologyKey: kubernetes.io/hostname
+      initContainers:
+      - name: crd-wait
+        {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "postgresOperator") | indent 4 }}
+        command: ["bash", "-c", "until oc get crd postgresqloperators.isc.ibm.com; do echo waiting for crd to register; sleep 2; done;"]
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+          runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+          capabilities:
+            drop:
+              - ALL
+{{- if .Values.createCRJob.initContainer.resources }}
+        resources:
+{{ toYaml .Values.createCRJob.initContainer.resources | indent 10 }}
+{{- end }}
+      containers:
+      - name: cr-create
+        {{- include "ibm-isc-cases.podcfg" (dict "val" .Values "app" "postgresOperator") | indent 4 }}
+        command:
+          - 'bash'
+          - '-c'
+          - |
+            cat <<EOF | oc apply --validate=true -f -
+            apiVersion: isc.ibm.com/v1
+            kind: PostgresqlOperator
+            metadata:
+              name: crunchy-pgo
+              labels:
+                app.kubernetes.io/name: {{.Chart.Name}}-{{.Chart.Version}}
+                app.kubernetes.io/instance: {{ $.Release.Name }}
+                app.kubernetes.io/managed-by: {{ $.Release.Service }}
+            spec:
+              crunchy_image_repo: {{- include "ibm-isc-cases.repoUrl" (dict "val" .Values) | indent 1 }}
+              crunchy_image_tag: {{ .Values.global.images.cases.crunchyPgo.tag }}
+              crunchy_image_pull_secret: {{- include "ibm-isc-cases.imagePullSecret" (dict "val" .Values) | indent 1 }}
+              crunchy_pgo:
+                metrics: {{ .Values.global.postgres.cases.installOptions.metrics }}
+              postgres:
+                primary:
+                  storage_size: {{ .Values.global.postgres.cases.installOptions.primary.storageSize }}
+                  storage_class_name: {{- include "ibm-isc-cases.pg.primary.storageClassName" (dict "val" .Values) | indent 1 }}
+                  fs_group: {{ .Values.global.postgres.cases.installOptions.primary.fsGroup | default "" | quote }}
+                  supplemental_groups: {{ .Values.global.postgres.cases.installOptions.primary.supplementalGroups | default "" | quote }}
+                backrest:
+                  storage_size: {{ .Values.global.postgres.cases.installOptions.backrest.storageSize }}
+                  storage_class_name: {{- include "ibm-isc-cases.pg.backrest.storageClassName" (dict "val" .Values) | indent 1 }}
+                  fs_group: {{ .Values.global.postgres.cases.installOptions.backrest.fsGroup | default "" | quote }}
+                  supplemental_groups: {{ .Values.global.postgres.cases.installOptions.backrest.supplementalGroups | default "" | quote }}
+                dynamic_provisioning: {{- include "ibm-isc-cases.dynamicProvisioning" (dict "val" .Values) | indent 1 }}
+            EOF
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }}
+          runAsUser: {{ .Values.runAsUser }}
+{{- end }}
+          capabilities:
+            drop:
+              - ALL
+{{- if .Values.createCRJob.resources }}
+        resources:
+{{ toYaml .Values.createCRJob.resources | indent 10 }}
+{{- end }}
+      restartPolicy: Never #if container fails, pod may be restarted on another node. OnFailure would restart just the container

@@ -1,0 +1,102 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: tisrfi
+  labels:
+    app.kubernetes.io/name: ibm-isc-tisrfi
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  action:
+    name: tisrfi install
+    operation: generic-install
+    service:
+      name: tis-rfi
+      proto: https
+      ports:
+        - 3000
+  {{- include "tis.annotations" . }}
+  {{- include "ibm-isc-tis.podcfg" (dict "val" . "app" "tisrfi") }}
+    env:
+      - name: SERVICE_NAME 
+        value: "tis-rfi"
+      - name: API_BASE
+        value: "/tis"
+      - name: REQUEST_MAX_CONTENT_LENGTH
+        value: "9765625"
+      - name: APP_FQDN
+        value: "@inventory/domain/definitions/name"
+      - name: AIA_URL
+        value: "https://tis-aia:3000/tis/ami/v2"
+      - name: SCORING_CONTROLLER_URL
+        value: "https://tis-scoring-controller:3000/tis/scoring/v2"
+      - name: ENTITLEMENTS_URL
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/api/entitlements/v1.0/entitlements/"
+      - name: TOP_THREATS_QUANTITY
+        value: "20"
+      - name: RECENT_DAYS_BACK
+        value: {{ $.Values.global.tisvars.recentdays }}
+      - name: REDIS_TOTAL_RETRY_TIME_SECONDS
+        value: "5"
+      - name: REDIS_SENTINEL
+        value: "@inventory/redis/definitions/sentinel"
+      - name: REDIS_HOST
+        value: "@inventory/redis/definitions/host"
+      - name: REDIS_PORT
+        value: "@inventory/redis/definitions/port"
+      - name: REDIS_SSL
+        value: "@inventory/redis/definitions/ssl"
+      - name: REDIS_SENTINEL_PORT
+        value: "@inventory/redis/definitions/port"
+      - name: REDIS_SENTINEL_NAME
+        value: "@inventory/redis/definitions/sentinel_name"
+      - name: REDIS_PASS
+        value: "@secret/redis/pass"
+      - name: MAX_MEM
+        value: "80"
+      - name: MANUAL_PUBLIC_COLLECTIONS_TIMEOUT
+        value: "3000"
+      - name: DATAGATEWAY_URL
+        value: "https://tis-data-gateway:3000/tis/gateway/v2"
+      - name: XFE_PROXY_URL
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/app/threat-intelligence-insights/"
+      - name: DATAGATEWAY_HEALTH_URL
+        value: "https://tis-data-gateway:3000/tis/gateway/v2/health"
+      - name: CERT_PATH
+        value: "/etc/config/ca.crt"
+      - name: PUBLIC_KEY_FILE
+        value: "/etc/config/jwt.public.pem"
+      - name: CACHE_DURATION
+        value: "600"
+      - name: ANALYZERS_CONNECTOR_URL
+        value: "https://tis-connector-manager:3000/tis/connectors/v1"
+      - name: SETTINGS_API_URL
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/app/threat-intelligence-insights/settings"
+      - name: COORDINATOR_API_URL 
+        value: "https://tis-coordinator:3000/tis/coordinator/v2"
+      - name: USER_PROFILE_TTL 
+        value: "300"
+      - name: DATA_STORE_URL
+        value: "https://tis-data-gateway:3000/tis/gateway/v2/features"
+      - name: USE_DATA_GATEWAY
+        value: "true"
+    liveness_probe:
+       path: /private/v2/health/liveness
+    readiness_probe:
+       path: /private/v2/health/readiness
+    paths:
+      - ingress: /tis/v2
+        app: /tis/v2
+        idle_timeout: 600000
+        timeout: 600000
+      - ingress: /api/tis/v2
+        app: /tis/v2
+        idle_timeout: 600000
+        timeout: 600000
+    sysctls:
+      somaxconn: true

@@ -1,0 +1,12 @@
+apiVersion: v2
+description: Threat Intelligence Service RFI for the ISC
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/IBM-Security-icon.png
+keywords:
+- amd64
+- Commercial
+- ICPRHOCP
+- Security
+- TIS RFI
+kubeVersion: '>=1.16.0'
+name: isc-tis-rfi-prod
+version: 1.0.8

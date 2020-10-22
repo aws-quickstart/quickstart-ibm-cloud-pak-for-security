@@ -1,0 +1,57 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: tiisearch
+  labels:
+    app.kubernetes.io/name: ibm-isc-tiisearch
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  action:
+    name: tiisearch install
+    operation: generic-install
+    service:
+      name: tiisearch
+      proto: https
+      ports:
+        - 5005
+    {{- include "tii.annotations" . }}
+    {{- include "ibm-isc-tii.podcfg" (dict "val" . "app" "tiisearch") }}
+    env:
+      - name: PLATFORM
+        value: "icp"
+      - name: APP_FQDN
+        value: "@inventory/domain/definitions/name"
+      - name: DEFAULT_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}"
+      - name: XFE_API_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/app/threat-intelligence-insights/xfe/api/v1"
+      - name: XFE_WEB_HOST
+        value: "@inventory/platform/definitions/xforceweb"
+      - name: REPO_URL
+        value: {{ $.Values.global.repository }}
+    liveness_probe:
+      path: /liveness
+    readiness_probe:
+      path: /readiness
+    paths:
+      # API
+      - ingress: /api/tii/v1/search
+        app: /api/tii/v1/search
+        timeout: 120000
+      - ingress: /api/tii/v1/dashboard
+        app: /api/tii/v1/dashboard
+        timeout: 120000
+      # Endpoints that are still used by other teams
+      - ingress: /app/threat-intelligence-insights/search/dashboard
+        app: /api/tii/v1/dashboard
+        timeout: 120000
+      # UI
+      - ingress: /app/threat-intelligence-insights/search
+        app: /app/threat-intelligence-insights/search
+        timeout: 120000
+        noAuth: true

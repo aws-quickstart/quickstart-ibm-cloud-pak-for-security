@@ -1,0 +1,80 @@
+{{- $image := printf "%s/%s:%s" (include "platform.repository" .) $.Values.global.images.csa.csaadapter.image $.Values.global.images.csa.csaadapter.tag -}}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: csaadapter-test-ready
+  labels:
+    app: csaadapter-test
+    app.kubernetes.io/name: csaadapter-test
+    helm.sh/chart: csaadapter
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  annotations:
+    productID: c05e4910c294498eb1bfd1f8aa0ea189
+    productName: CSA Adapter
+    productVersion: 1.4.0
+    productMetric: MANAGED_VIRTUAL_SERVER
+    productChargedContainers: ""
+    cloudpakName: IBM Cloud Pak for Security
+    cloudpakId: 929bd9017afc410da9dda2dc67c33b75
+    cloudpakVersion: 1.4.0
+    productCloudpakRatio: ""
+    "helm.sh/hook": test
+spec:
+  serviceAccountName: ibm-isc-application
+  imagePullSecrets:
+    - name: ibm-isc-pull-secret
+  containers:
+    - name: csaadapter-test
+      image: {{ $image }}
+      imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+      command: ["sh", "-c", "curl -ki https://isc-csaadapter:5000/api/csaadapter/v1/liveness"]
+      env:
+        - name: DEBUG
+          value: "false"
+      resources:
+        limits:
+          memory: 100Mi
+          cpu:  200m
+        requests:
+          memory: 100Mi
+          cpu: 200m
+      livenessProbe:
+        failureThreshold: 3
+        exec:
+          command: 
+          - /usr/bin/true
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      readinessProbe:
+        failureThreshold: 3
+        exec:
+          command: 
+          - /usr/bin/true
+        initialDelaySeconds: 5
+        periodSeconds: 10
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+  restartPolicy: Never

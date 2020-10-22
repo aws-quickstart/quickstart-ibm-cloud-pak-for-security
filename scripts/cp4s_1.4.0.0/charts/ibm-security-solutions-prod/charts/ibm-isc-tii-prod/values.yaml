@@ -1,0 +1,82 @@
+
+
+global:
+  bindings:
+    tiisearch:
+      replicas:
+    tiiapp:
+      replicas:
+    tiireports:
+      replicas:
+    tiithreats:
+      replicas:
+    tiisettings:
+      replicas:
+  repository: ""
+  repositoryType: ""
+  imagePullPolicy: ""
+  resources:
+    tii:
+      tiisearch:
+        requests:
+          cpu: 100m
+          memory: 150Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      tiiapp:
+        requests:
+          cpu: 100m
+          memory: 150Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      tiireports:
+        requests:
+          cpu: 100m
+          memory: 150Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      tiithreats:
+        requests:
+          cpu: 100m
+          memory: 150Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      tiisettings:
+        requests:
+          cpu: 100m
+          memory: 150Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      tiixfeproxy:
+        requests:
+          cpu: 100m
+          memory: 150Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+# IMAGES:
+  images:
+    tii:
+      tiisearch:
+        image: isc-common-xfeplus-search-service
+        tag: Rel_1.4.0.0_82a0e0596b4f7f33af6cb7667d66b793771909b6_7607
+      tiiapp:
+        image: isc-common-xfeplus-threat-intelligence-app
+        tag: Rel_1.4.0.0_82a0e0596b4f7f33af6cb7667d66b793771909b6_7607
+      tiireports:
+        image: isc-common-xfeplus-reports
+        tag: Rel_1.4.0.0_a8fec8e2132992faff19d3a7fd154282317b2956_7610
+      tiithreats:
+        image: isc-common-xfeplus-threat-cards
+        tag: Rel_1.4.0.0_05f5999a7ddd26fbf8f3f117fedfdc1ebabbf686_7608
+      tiisettings:
+        image: isc-common-xfeplus-settings
+        tag: Rel_1.4.0.0_82a0e0596b4f7f33af6cb7667d66b793771909b6_7607
+      tiixfeproxy:
+        image: isc-common-xfeplus-xfe-proxy
+        tag: Rel_1.4.0.0_82a0e0596b4f7f33af6cb7667d66b793771909b6_7607

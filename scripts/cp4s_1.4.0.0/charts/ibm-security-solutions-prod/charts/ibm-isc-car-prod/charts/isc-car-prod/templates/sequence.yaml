@@ -1,0 +1,30 @@
+{{- $arangoConfigRoot := $.Values.global.arangodb -}}
+{{- $arangoHost := printf "%s.%s.svc:8529" $arangoConfigRoot.deploymentName .Release.Namespace -}}
+
+apiVersion: isc.ibm.com/v1
+kind: ISCSequence
+metadata:
+  name: car
+  labels:
+    sort: car
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    generation: {{ uuidv4 | quote }}
+  dependencies:
+     - iscplatform
+     - domain-default
+  actions: 
+{{- include "ibm-isc-car.redis_init" (dict "val" .Values "app" "car") }}
+    - name: wait for ArangoDB deployment to complete
+      operation: waiturl
+      url: https://{{ $arangoHost }}/_admin/server/availability
+      delay: 10
+      retries: 24
+    - include: car
+      dependencies:
+{{- include "ibm-isc-car.redis_dep" (dict "val" .Values "app" "car") }}

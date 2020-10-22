@@ -1,0 +1,35 @@
+# sets up the client redirects for login
+apiVersion: oidc.security.ibm.com/v1
+kind: Client
+metadata:
+  name: ibm-isc-oidc-credentials
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  secret: ibm-isc-oidc-credentials
+  oidcLibertyClient:
+    redirect_uris:
+      - "https://{{ .Values.global.domain.default.domain }}/shell/oidc/callback"
+      {{- if .Values.global.oidc }}
+      {{- if .Values.global.oidc.redirect_uris }}
+      {{- range .Values.global.oidc.redirect_uris }}
+      - {{ . | quote }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+    trusted_uri_prefixes: []
+    post_logout_redirect_uris:
+      - "https://{{ .Values.global.domain.default.domain }}/console"
+      - "https://{{ .Values.global.domain.default.domain }}/console/missingaccount"
+      - "https://{{ .Values.global.domain.default.domain }}/console/signinerror?statusCode=500"
+      {{- if .Values.global.oidc }}
+      {{- if .Values.global.oidc.post_logout_redirect_uris }}
+      {{- range .Values.global.oidc.post_logout_redirect_uris }}
+      - {{ . | quote }}
+      {{- end }}
+      {{- end }}
+      {{- end }}

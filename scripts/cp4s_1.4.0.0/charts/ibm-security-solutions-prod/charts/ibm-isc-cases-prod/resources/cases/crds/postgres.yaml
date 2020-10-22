@@ -1,0 +1,115 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: postgresqloperators.isc.ibm.com
+  labels:
+    app.kubernetes.io/name: ibm-isc-cases
+    app.kubernetes.io/instance: ibm-isc-cases
+    app.kubernetes.io/managed-by: ibm-isc-cases
+spec:
+  group: isc.ibm.com
+  names:
+    kind: PostgresqlOperator
+    listKind: PostgresqlOperatorList
+    plural: postgresqloperators
+    singular: postgresqloperator
+  scope: Namespaced
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            type: object
+            required:
+              - crunchy_image_repo
+              - crunchy_image_tag
+              - crunchy_image_pull_secret
+              - postgres
+              - crunchy_pgo
+            properties:
+              crunchy_image_repo:
+                type: string
+                description: "Crunchy image repository"
+              crunchy_image_tag:
+                type: string
+                description: "Crunchy image tag"
+              crunchy_image_pull_secret:
+                type: string
+                description: "Crunchy image pull secret"
+              crunchy_pgo:
+                type: object
+                required:
+                  - metrics
+                properties:
+                  metrics:
+                    type: boolean
+                    description: "Crunchy metrics are enabled"  
+              postgres:
+                type: object
+                required:
+                  - primary
+                  - backrest
+                  - dynamic_provisioning
+                properties:
+                  dynamic_provisioning:
+                    type: string
+                    description: "Dynamic Provisioning"
+                  primary:
+                    type: object
+                    required:
+                      - storage_size
+                    properties:
+                      storage_size:
+                        type: string
+                        description: "Storage Size"
+                      storage_class_name:
+                        type: string
+                        description: "Storage class name"
+                      fs_group:
+                        type: string
+                        description: "FS Group"
+                      supplemental_groups:
+                        type: string
+                        description: "Supplemental Groups"
+                  backrest:
+                    type: object
+                    required:
+                      - storage_size
+                    properties:
+                      storage_size:
+                        type: string
+                        description: "Storage Size"
+                      storage_class_name:
+                        type: string
+                        description: "Storage class name"
+                      fs_group:
+                        type: string
+                        description: "FS Group"
+                      supplemental_groups:
+                        type: string
+                        description: "Supplemental Groups"
+          status:
+            description: PostgresqlOperator status
+            properties:
+              conditions:
+                description: Status of the custom resource
+                items:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                type: array
+            required:
+              - conditions
+            type: object
+    subresources:
+      status: {}

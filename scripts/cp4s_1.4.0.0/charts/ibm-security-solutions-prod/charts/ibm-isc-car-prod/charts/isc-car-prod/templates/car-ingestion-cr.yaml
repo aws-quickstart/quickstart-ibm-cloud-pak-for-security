@@ -1,0 +1,74 @@
+{{- $ndx := $.Values.global.images.car.car -}}
+{{- $image := printf "%s:%s" $ndx.image $ndx.tag -}}
+{{- $arangoConfigRoot := $.Values.global.arangodb -}}
+{{- $arangoRootSecret := printf "%s-%s" $arangoConfigRoot.deploymentName "root-password" -}}
+{{- $arangoHost := printf "%s.%s.svc:8529" $arangoConfigRoot.deploymentName .Release.Namespace -}}
+{{- $carIngressUrl := $.Values.global.bindings.car.ingressUrl -}}
+
+
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: car
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  action:
+    name: car install
+    operation: generic-install
+    internal_entry: true
+    service:
+      name: car
+      ports:
+       - 3000
+  {{- include "car.annotations" . }}
+  {{- include "ibm-isc-car.podcfg" (dict "val" . "app" "car") }}
+    env:
+      - name: ARANGO_HOST
+        value: {{ $arangoHost }}
+      - name: ARANGO_PASS
+        value: '@refsec/{{ $arangoRootSecret }}/password'
+      - name: ARANGO_UNAME
+        value: '@refsec/{{ $arangoRootSecret }}/username'
+      - name: ENTITLEMENTS_API
+        value: '@inventory/domain/definitions/name'
+        format: 'https://{0}/api/entitlements/v1.0/entitlements'
+      - name: REDIS_HOST
+        value: '@inventory/redis/definitions/host'
+      - name: REDIS_PASS
+        value: '@secret/redis/pass'
+      - name: REDIS_PORT
+        value: '@inventory/redis/definitions/port'
+      - name: REDIS_UNAME
+        value: 'admin' # TODO Redis shouldn't need a username
+      - name: CAR_PLATFORM
+        value: 'OCP'
+      - name: REDIS_SSL
+        value: '@inventory/redis/definitions/ssl'
+      - name: REDIS_SENTINEL
+        value: '@inventory/redis/definitions/sentinel'
+      - name: REDIS_SENTINEL_NAME
+        value: '@inventory/redis/definitions/sentinel_name'
+      - name: OPENSHIFT_ENV
+        value: 'true'
+      - name: EXPECTED_EXPORTER_VERSION
+        value: '1.0.9'
+      - name: NODE_ENV
+        value: 'production'
+      - name: NODE_EXTRA_CA_CERTS
+        value: '/etc/config/ca.crt'
+    liveness_probe:
+      path: /liveness
+    readiness_probe:
+      path: /readiness
+    paths:
+      - ingress: /api/car/v3
+        app: /car/api/v3
+      - ingress: {{ $carIngressUrl }}
+        app: /car/api
+        idle_timeout: 600000
+        timeout: 600000

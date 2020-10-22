@@ -1,0 +1,19 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  labels:
+    instance: pulsedashboard
+    sort: pulsetemplate
+    app.kubernetes.io/name: ibm-isc-tiiapp
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  name: pulsedashboard
+spec:
+  definitions:
+    templateId: tii_pulse_dashboard_1
+    templateJson: {{ .Files.Get "json_files/pulse_dashboard.json" | toJson }}
+labels:
+  instance: pulsedashboard
+  sort: pulsetemplate

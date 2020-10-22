@@ -1,0 +1,120 @@
+################################################################################
+#
+# GLOBAL SETTINGS
+#
+################################################################################
+
+global:
+  __metadata:
+    label: "Global Settings"
+    description: "Global settings for all components"
+  ibmIscCsaAdapter:
+    enabled:
+      __metadata:
+        label: "condition check variable for requirements.yaml"
+        description: "enable condition check variable for requirements.yaml"
+        type: "boolean"
+        required: true
+        hidden: true
+  flagTls:
+    __metadata:
+      label: "flagTls variable"
+      description: "set flagTls variable"
+      type: "boolean"
+      required: true
+      hidden: false
+  maxFindingsPerSource:
+    __metadata:
+      label: "maxFindingsPerSource variable"
+      description: "set maxFindingsPerSource variable"
+      type: "number"
+      required: true
+      hidden: false
+  replicaCount:
+    __metadata:
+      label: "Pod replica count"
+      description: "Number of Pod replicas to deploy. Defaults to 1"
+      type: "number"
+      required: true
+      hidden: true
+  repository:
+    __metadata:
+      label: "IBM Cloud Security Advisor Adapter image Repository"
+      description: "Docker registry to pull Data Explorer images from"
+      type: "string"
+      required: true
+      hidden: true
+  imagePullPolicy:
+    __metadata:
+      name: "pullPolicy"
+      label: "Docker image pull policy"
+      description: "Always, Never, or IfNotPresent. Defaults to IfNotPresent"
+      type: "string"
+      required: true
+      options:
+        - label: "IfNotPresent"
+          value: "IfNotPresent"
+        - label: "Always"
+          value: "Always"
+        - label: "Never"
+          value: "Never"
+
+  resources:
+    csa:
+      csaadapter:
+        requests:
+          cpu:
+            label: "CSA Adapter CPU request"
+            description: "CSA Adapter CPU request value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "CSA Adapter Memory request"
+            description: "CSA Adapter Memory request value"
+            type: "string"
+            required: true
+            hidden: true
+        limits:
+          cpu:
+            label: "CSA Adapter CPU limit"
+            description: "CSA Adapter CPU limit value"
+            type: "string"
+            required: true
+            hidden: true
+          memory:
+            label: "CSA Adapter memory limit"
+            description: "CSA Adapter memory limit"
+            type: "string"
+            required: true
+            hidden: true
+  repositoryType:
+    __metadata:
+       label: "Image Repository Type"
+       description: "Repository type: entitled or local registry"
+       type: "string"
+       required: true
+       hidden: false
+       options:
+       - label: "Entitled registry"
+         value: "entitled"
+       - label: "Local registry"
+         value: "local"
+
+  images:
+    csa:
+      csaadapter:
+        image:
+          __metadata:
+            label: "CSA Adapter image"
+            description: "The name of the CSA Adapter image"
+            type: "string"
+            required: true
+            hidden: true
+        tag:
+          __metadata:
+            label: "CSA Adapter image tag"
+            description: "The tag version of the CSA Adapter image"
+            type: "string"
+            required: true
+            hidden: true

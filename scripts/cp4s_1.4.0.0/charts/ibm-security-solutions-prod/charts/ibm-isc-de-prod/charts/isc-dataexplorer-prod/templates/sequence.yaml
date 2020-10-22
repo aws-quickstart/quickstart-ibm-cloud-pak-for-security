@@ -1,0 +1,34 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCSequence
+metadata:
+  name: de
+  labels:
+    sort: de
+    app.kubernetes.io/instance: default
+    name: {{ .Chart.Name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    generation: {{ uuidv4 | quote }}
+  dependencies:
+     - iscplatform
+     - domain-default
+  actions:
+    - name: wait for Minio deployment to complete
+      operation: waiturl
+      url: http://ibm-minio-ow-minio-ibm-minio-svc:9000/minio/health/live
+      delay: 1
+      retries: 1
+    - include: dewebui
+    - name: configure couchdb for debackend
+      dependencies:
+      - couchdb-de
+      operation: couchdb-init
+{{- include "ibm-isc-de.redis_init" (dict "val" .Values "app" "de") }}
+    - include: debackend
+      dependencies:
+      - couchdb-de
+{{- include "ibm-isc-de.redis_dep" (dict "val" .Values "app" "de") }}

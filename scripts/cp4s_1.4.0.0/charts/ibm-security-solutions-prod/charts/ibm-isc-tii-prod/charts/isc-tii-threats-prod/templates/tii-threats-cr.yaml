@@ -1,0 +1,95 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: tiithreats
+  labels:
+    app.kubernetes.io/name: ibm-isc-tiithreats
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  action:
+    name: tiithreats install
+    operation: generic-install
+    service:
+      name: tiithreats
+      proto: https
+      ports:
+        - 5000
+    {{- include "tii.annotations" . }}
+    {{- include "ibm-isc-tii.podcfg" (dict "val" . "app" "tiithreats") }}
+    env:
+      - name: PLATFORM
+        value: "icp"
+      - name: APP_FQDN
+        value: "@inventory/domain/definitions/name"
+      - name: DEFAULT_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}"
+      - name: XFE_API_HOST
+        value: "@inventory/domain/definitions/name"
+        format: "https://{0}/app/threat-intelligence-insights/xfe/api/v1"
+      - name: XFE_WEB_HOST
+        value: "@inventory/platform/definitions/xforceweb"
+      - name: DB_URI
+        value: '@inventory/couch/definitions/url'
+      - name: DB_CLIENT_ID
+        value: '@secret/couchdb/username'
+      - name: DB_CLIENT_SECRET
+        value: '@secret/couchdb/password'
+      - name: REPO_URL
+        value: {{ $.Values.global.repository }}
+      - name: CATALOG_ID
+        value: "10000"
+      - name: APPX_BASE_PATH
+        value: "@inventory/platform/definitions/xforceweb"
+        format: "{0}/hub"
+      - name: KC_LOCATION
+        value: ""
+      - name: KC_BASE_PATH
+        value: ""
+    liveness_probe:
+      path: /liveness
+    readiness_probe:
+      path: /readiness
+    paths:
+      # API
+      - ingress: /api/tii/v1/threats
+        app: /api/tii/v1/threats
+        timeout: 120000
+      - ingress: /api/tii/v1/scans
+        app: /api/tii/v1/scans
+        timeout: 120000
+      # Endpoints that are still used by other teams
+      - ingress: /app/threat-intelligence-insights/threats/api/v1/threats
+        app: /api/tii/v1/threats
+        timeout: 120000
+      - ingress: /app/threat-intelligence-insights/threats/scan/result
+        app: /api/tii/v1/scans/result
+        timeout: 120000
+      # Endpoints that might be removed
+      - ingress: /app/threat-intelligence-insights/threats/fragment
+        app: /app/threat-intelligence-insights/threats/fragment
+        timeout: 120000
+      - ingress: /app/threat-intelligence-insights/threats/fragments
+        app: /app/threat-intelligence-insights/threats/fragments
+        timeout: 120000
+      - ingress: /app/threat-intelligence-insights/threats/__static__
+        app: /app/threat-intelligence-insights/threats/__static__
+        timeout: 120000
+      - ingress: /app/threat-intelligence-insights/threats/static
+        app: /app/threat-intelligence-insights/threats/static
+        timeout: 120000
+      - ingress: /app/threat-intelligence-insights/threats/scanHistory
+        app: /app/threat-intelligence-insights/threats/scanHistory
+        timeout: 120000
+      - ingress: /app/threat-intelligence-insights/threats/scan
+        app: /app/threat-intelligence-insights/threats/scan
+        timeout: 120000
+      # UI
+      - ingress: /app/threat-intelligence-insights/threats
+        app: /app/threat-intelligence-insights/threats
+        timeout: 120000
+        noAuth: true
+

@@ -1,0 +1,96 @@
+# Used by the entitlements operator to construct the bill of materials
+apiVersion: entitlements.extensions.platform.cp4s.ibm.com/v1
+kind: AppEntitlements
+metadata:
+  name: app-tii
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  applicationId: TII
+  allPermissions:
+    - AllUserPermissions
+    - All
+    - AdministerTIICapabilities
+    - AIAManualScans
+    - AIAAutomaticScans
+    - CanCreateCollections
+    - CanAccessCollections
+    - CanAccessXFEReports
+    - DNSResearchPlatform
+    - RiskScoreDeterministic
+    - RiskScoreCognitive
+    - ThreatActivityReportsSummariesOnly
+    - ThreatActivityReportsIBMChosen
+    - ThreatActivityReportsFull
+    - MalwareAnalysisReportsIBMChosen
+    - MalwareAnalysisReportsQuan20
+    - ManageAccounts
+    - ThreatGroupAnalysisReportsQuan5
+    - ThreatGroupAnalysisReportsUnlimited
+    - ThreatGroupAnalysisReportsIBMChosen
+    - ThreatIndustryAnalysisReportsQuan1
+    - ThreatIndustryAnalysisReportsUnlimited
+    - AIAMonitor
+    - AIANotifications
+    - MalwareAnalysisReportsUnlimited
+    - XFEPlusAll
+    - XFEPlusSome
+  roles:
+    - roleId: Admin
+      permissions:
+        - AllUserPermissions
+        - All
+        - AdministerTIICapabilities
+        - AIAManualScans
+        - AIAAutomaticScans
+        - CanCreateCollections
+        - CanAccessCollections
+        - CanAccessXFEReports
+        - DNSResearchPlatform
+        - RiskScoreDeterministic
+        - RiskScoreCognitive
+        - ThreatActivityReportsSummariesOnly
+        - ThreatActivityReportsIBMChosen
+        - ThreatActivityReportsFull
+        - MalwareAnalysisReportsIBMChosen
+        - MalwareAnalysisReportsQuan20
+        - ManageAccounts
+        - ThreatGroupAnalysisReportsQuan5
+        - ThreatGroupAnalysisReportsUnlimited
+        - ThreatGroupAnalysisReportsIBMChosen
+        - ThreatIndustryAnalysisReportsQuan1
+        - ThreatIndustryAnalysisReportsUnlimited
+        - AIAMonitor
+        - AIANotifications
+        - MalwareAnalysisReportsUnlimited
+        - XFEPlusAll
+        - XFEPlusSome
+    - roleId: User
+      permissions: 
+        - AllUserPermissions
+        - AIAManualScans
+        - AIAAutomaticScans
+        - CanCreateCollections
+        - CanAccessCollections
+        - CanAccessXFEReports
+        - DNSResearchPlatform
+        - RiskScoreDeterministic
+        - RiskScoreCognitive
+        - ThreatActivityReportsSummariesOnly
+        - ThreatActivityReportsIBMChosen
+        - ThreatActivityReportsFull
+        - MalwareAnalysisReportsIBMChosen
+        - MalwareAnalysisReportsQuan20
+        - ThreatGroupAnalysisReportsQuan5
+        - ThreatGroupAnalysisReportsUnlimited
+        - ThreatGroupAnalysisReportsIBMChosen
+        - ThreatIndustryAnalysisReportsQuan1
+        - ThreatIndustryAnalysisReportsUnlimited
+        - AIAMonitor
+        - AIANotifications
+        - MalwareAnalysisReportsUnlimited
+        - XFEPlusSome

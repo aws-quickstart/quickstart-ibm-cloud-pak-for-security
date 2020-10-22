@@ -1,0 +1,33 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCInventory
+metadata:
+  name: couchdb-tis-coordinator
+  labels:
+    sort: couchdb
+    instance: tis-coordinator
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  labels:
+    sort: couchdb
+    instance: tis-coordinator
+  references:
+    sort: couch
+    {{- include "ibm-isc-tis.couch_db_instance" (dict "val" .Values "app" "tis-coordinator") }}
+  definitions:
+    databases:
+    - tis-analyzer-definitions
+    - tis-configurations
+    - tis-connector-queue
+    - tis-cortex-configs
+    - tis-cortex-jobs
+    - tis-cortex-users
+    - tis-scans
+    - tis-scores
+    - tis-users
+  installOptions:
+    {{- include "ibm-isc-tis.couch_db_opts" (dict "val" .Values "app" "tis-coordinator") }}
+---

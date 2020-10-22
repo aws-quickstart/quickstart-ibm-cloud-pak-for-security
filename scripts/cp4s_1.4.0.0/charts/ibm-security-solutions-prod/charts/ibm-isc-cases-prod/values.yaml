@@ -1,0 +1,193 @@
+global:
+  arch: amd64
+  repository: ""
+  repositoryType: ""
+  imagePullPolicy: ""
+  replicas: 1
+
+  postgres:
+    cases:
+      installOptions:
+        primary:
+          storageSize: 100Gi
+          storageClassName:
+          fsGroup: 26
+          supplementalGroups:
+          requests:
+            cpu: 300m
+            memory: 512Mi
+          limits:
+            cpu: 750m
+            memory: 1Gi
+        backrest:
+          storageSize: 50Gi
+          storageClassName:
+          fsGroup: 26
+          supplementalGroups:
+          requests:
+            cpu: 20m
+            memory: 48Mi
+          limits:
+            cpu: 500m
+            memory: 200Mi
+  elastic:
+    cases:
+      installOptions:
+        storageSize: 25Gi
+        storageClassName:
+
+  bindings:
+    cases:
+      application:
+        replicas: 1
+      activemq:
+        replicas: 1
+      app_manager:
+        replicas: 1
+      elastic:
+        client:
+          replicas: 1
+        master:
+          replicas: 1
+        data:
+          replicas: 1
+        kibana:
+          replicas: 0
+
+  resources:
+    cases:
+      application:
+        limits:
+          memory: "3584Mi"
+          cpu: "2000m"
+        requests:
+          memory: "3072Mi"
+          cpu: "250m"
+      activemq:
+        limits:
+          memory: "1024Mi"
+          cpu: "1000m"
+        requests:
+          memory: "768Mi"
+          cpu: "100m"
+      app_manager:
+        limits:
+          memory: "1024Mi"
+          cpu: "1000m"
+        requests:
+          memory: "128Mi"
+          cpu: "50m"
+      resutil:
+        limits:
+          memory: "200Mi"
+          cpu: "200m"
+        requests:
+          memory: "10Mi"
+          cpu: "10m"
+      scripting:
+        limits:
+          memory: "1024Mi"
+          cpu: "1000m"
+        requests:
+          memory: "768Mi"
+          cpu: "250m"
+      loggingsidecars:
+        limits:
+          memory: "200Mi"
+          cpu: "200m"
+        requests:
+          memory: "100Mi"
+          cpu: "10m"
+      elastic:
+        client:
+          heapSize: "1024m"
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+          requests:
+            memory: "1Gi"
+            cpu: "50m"
+        master:
+          heapSize: "1024m"
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+          requests:
+            memory: "1Gi"
+            cpu: "50m"
+        data:
+          heapSize: "1024m"
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+          requests:
+            memory: "1Gi"
+            cpu: "50m"
+
+  poddisruptionbudget:
+    enabled: false
+    minAvailable: 1
+
+  # IMAGES:
+  images:
+    cases:
+      activemq:
+        image: isc-cases-activemq
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      activemqLoggingSidecar:
+        image: isc-cases-activemq-logging-sidecar
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      application:
+        image: isc-cases-application
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      app_manager:
+        image: apps-manager 
+        tag: Rel_1.4.0.0_980f68c_133
+      databaseInit:
+        image: isc-cases-database-init
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      databaseUpgrade:
+        image: isc-cases-database-upgrade
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      loggingSidecar:
+        image: isc-cases-logging-sidecar
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      operator:
+        image: isc-cases-operator
+        tag: Rel_1.4.0.0_3fe62bb_668
+      resutil:
+        image: isc-cases-resutil
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      scripting:
+        image: isc-cases-scripting
+        tag: Rel_1.4.0.0_39bb630-9c1d7f9_6510
+      postgresOperator:
+        image: isc-postgresql-operator
+        tag: Rel_1.4.0.0_3fe62bb_145
+      crunchyPgo:
+        image: postgres-operator
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPgoApiServer:
+        image: pgo-apiserver
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPgoScheduler:
+        image: pgo-scheduler
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPgoEvent:
+        image: pgo-event
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPgoBackrestRepo:
+        image: pgo-backrest-repo
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPgoBackrest:
+        image: pgo-backrest
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPgoRmdata:
+        image: pgo-rmdata
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPgoBackrestRestore:
+        image: pgo-backrest-restore
+        tag: Rel_1.4.0.0_4.3.3_2
+      crunchyPostgresHa:
+        image: crunchy-postgres96-ha
+        tag: Rel_1.4.0.0_4.3.3_2

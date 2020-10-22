@@ -1,0 +1,910 @@
+global:
+  __metadata:
+    label: "Global Settings"
+    description: "Global settings for all components"
+  arch:
+    __metadata:
+      label: "Worker node architecture"
+      description: "Worker node architecture to deploy to. The helm chart will try to detect the architecture based on the master node."
+      type: "string"
+      options:
+      - label: 'AMD64 platform'
+        value: 'amd64'
+      required: true
+      hidden: true
+  affinity:
+    __metadata:
+      label: "Component node anti-affinity"
+      description: "Enforcing distribution of the components per cluster nodes."
+      type: "string"
+      options:
+      - label: 'None'
+        value: 'none'
+      - label: 'Soft'
+        value: 'soft'
+      - label: 'Hard'
+        value: 'hard'
+      required: false
+  replicas:
+    __metadata:
+      label: "Pod replica count"
+      description: "Number of Pod replicas to deploy. Defaults to 2"
+      type: "number"
+      required: true
+  storageClass:
+    __metadata:
+      label: "Default Storage Class"
+      description: "Default storage class for persistence"
+      type: "string"
+      required: true
+  cluster:
+    hostname:
+      __metadata:
+        label: "Hostname of Master Node in Cluster"
+        description: "Hostname of Master Node in Cluster"
+        type: "string"
+        required: true
+  domain:
+    default:
+      domain:
+        __metadata:
+           label: "Cluster Domain"
+           description: "Cluster Domain"
+           type: "string"
+           required: true
+      secret:
+        __metadata:
+          label: "TLS Secret"
+          description: "TLS Secret (default isc-ingress-default-secret)"
+          type: "string"
+          required: false
+  somaxconn:
+    __metadata:
+      label: "Change default net.core.somaxconn"
+      description: "Increase net.core.somaxconn settings for ingress"
+      type: "boolean"
+      required: true
+      hidden: true
+  aitk:
+    activeJobsLimit:
+      __metadata:
+        label: "Change default active AITK jobs"
+        description: "Change default active AITK jobs allowed"
+        type: "number"
+        required: false
+        hidden: false
+    analyticsImageTag:
+      __metadata:
+        label: "Change image tag used for analytic and etl images"
+        description: "Change image tag used for analytic and etl images"
+        type: "string"
+        required: false
+        hidden: true
+  redis:
+    default:
+      host:
+        __metadata:
+          description: "Enter Redis Host"
+          label: "Redis Host"
+          required: false
+          type: "string"
+      port:
+        __metadata:
+          description: "Enter Redis Port"
+          label: "Redis Port"
+          required: false
+          type: "number"
+      ssl:
+        __metadata:
+          hidden: true
+      sentinel:
+        __metadata:
+          description: "Use connection through sentinel"
+          label: "Redis or Sentinel"
+          required: false
+          type: "boolean"
+      installOptions:
+        persistence:
+          __metadata:
+            label: "Redis Persistence"
+            description: "Persistence for Redis instance"
+            required: false
+            type: "boolean"
+        storageClass:
+          __metadata:
+            label: "Redis StorageClass"
+            description: "StorageClass for Redis instance"
+            required: false
+            type: "string"
+        storageSize:
+          __metadata:
+            label: "Redis storage size"
+            description: "Storage size for Redis instance"
+            required: false
+            type: "string"
+        data:
+          __metadata:
+            label: "Redis Data Size"
+            description: "Data size for Redis instance"
+            required: false
+            type: "string"
+        server:
+          requests:
+            cpu:
+              __metadata:
+                description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+                label: "CPU request"
+                required: false
+                type: "string"
+            memory:
+              __metadata:
+                description: "The minimum memory in bytes. Specify integers with one of these suffixes- E, P, T, G, M, K, or power-of-two equivalents- Ei, Pi, Ti, Gi, Mi, Ki."
+                label: "Memory request"
+                required: false
+                type: "string"
+          limits:
+            cpu:
+              __metadata:
+                label: "CPU limit"
+                description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+                type: "string"
+                required: false
+            memory:
+              __metadata:
+                label: "Memory limit"
+                description: "The memory upper limit in bytes. Specify integers with suffixes- E, P, T, G, M, K, or power-of-two equivalents- Ei, Pi, Ti, Gi, Mi, Ki."
+                type: "string"
+                required: false
+        sentinel:
+          requests:
+            cpu:
+              __metadata:
+                description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+                label: "CPU request"
+                required: false
+                type: "string"
+            memory:
+              __metadata:
+                description: "The minimum memory in bytes. Specify integers with one of these suffixes- E, P, T, G, M, K, or power-of-two equivalents- Ei, Pi, Ti, Gi, Mi, Ki."
+                label: "Memory request"
+                required: false
+                type: "string"
+          limits:
+            cpu:
+              __metadata:
+                label: "CPU limit"
+                description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+                type: "string"
+                required: false
+            memory:
+              __metadata:
+                label: "Memory limit"
+                description: "The memory upper limit in bytes. Specify integers with suffixes- E, P, T, G, M, K, or power-of-two equivalents- Ei, Pi, Ti, Gi, Mi, Ki."
+                type: "string"
+                required: false
+  etcd:
+    default:
+      host:
+        __metadata:
+          description: "Enter Etcd Host"
+          label: "etcd Host"
+          required: false
+          type: "string"
+      proto:
+        __metadata:
+          description: "Enter Protocol"
+          label: "Transaction Protocol"
+          required: false
+          type: "boolean"
+          hidden: true
+      port:
+        __metadata:
+          description: "Enter Etcd Port"
+          label: "Etcd Port"
+          required: false
+          type: "number"
+      user:
+        __metadata:
+          description: "Enter Etcd Username"
+          label: "Etcd Username"
+          required: false
+          type: "string"
+      pass:
+        __metadata:
+          description: "Enter Etcd Password"
+          label: "Etcd Pasword"
+          required: false
+          type: "password"
+      installOptions:
+        label: "Install Options"
+        description: "Install Options for Etcd"
+        requests:
+          cpu:
+            __metadata:
+              description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+              label: "CPU request"
+              required: false
+              type: "string"
+          memory:
+            __metadata:
+              description: "The minimum memory in bytes. Specify integers with one of these suffixes- E, P, T, G, M, K, or power-of-two equivalents- Ei, Pi, Ti, Gi, Mi, Ki."
+              label: "Memory request"
+              required: false
+              type: "string"
+        limits:
+          cpu:
+            __metadata:
+              label: "CPU limit"
+              description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+              type: "string"
+              required: false
+          memory:
+            __metadata:
+              label: "Memory limit"
+              description: "The memory upper limit in bytes. Specify integers with suffixes- E, P, T, G, M, K, or power-of-two equivalents- Ei, Pi, Ti, Gi, Mi, Ki."
+              type: "string"
+              required: false
+        threads:
+          __metadata:
+            label: "Max Etcd Threads"
+            description: "Maximum number of threads Etcd will use, reccomended 2 as to not kill container with high CPU"
+            type: "string"
+            required: true
+        storageClass:
+          __metadata:
+            label: "Default Storage Class"
+            description: "Default storage class for persistence"
+            type: "string"
+            required: true
+        storageSize:
+          __metadata:
+            label: "Default Storage Class Size"
+            description: "Default storage class Size for persistence"
+            type: "string"
+            required: true
+  couchdb:
+    default:
+      url:
+        __metadata:
+          description: "Enter Couch URL"
+          label: "couchdb url"
+          required: false
+          type: "string"
+      user:
+        __metadata:
+          description: "Enter Couchdb Username"
+          label: "Couchdb Username"
+          required: false
+          type: "string"
+      pass:
+        __metadata:
+          description: "Enter Couchdb Password"
+          label: "Couchdb Pasword"
+          required: false
+          type: "password"
+      installOptions:
+        label: "Install Options"
+        description: "Install Options for Couchdb"
+        storageClass:
+          __metadata:
+            label: "Default Storage Class"
+            description: "Default storage class for persistence"
+            type: "string"
+            required: false
+        storage:
+          __metadata:
+            label: "Default Storage"
+            description: "Default Storage for persistence"
+            type: "string"
+            required: false
+  resources:
+    _metadata:
+       labels: "Resource requests and limits for CP4S microservices"
+    platform:
+      _metadata:
+        labels: "CP4S Microservices"
+      iscauth:
+        _metadata:
+          labels: "CP4S Authorization Service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+      iscprofile:
+        _metadata:
+          labels: "CP4S Profile Service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+      authsvc:
+        _metadata:
+          labels: "CP4S API Requests Authorization Service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+      shell:
+        _metadata:
+          labels: "CP4S shell services"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+      console:
+        _metadata:
+          labels: "CP4S Console Service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+    qproxy:
+        _metadata:
+          labels: "CP4S QRadar Proxy Service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+    pulse:
+        _metadata:
+          labels: "CP4S Pulse Service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+      aitkwebui:
+        _metadata:
+          labels: "ISC aitkwebui service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU request"
+              type: "string"
+          memory:
+            _metadata:
+              labels: "Memory request"
+              type: "string"
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limit"
+              type: "string"
+          memory:
+            _metadata:
+              labels: "Memory limit"
+              type: "string"
+      configstore:
+        _metadata:
+          labels: "CP4S configstore service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU request"
+              type: "string"
+          memory:
+            _metadata:
+              labels: "Memory request"
+              type: "string"
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limit"
+              type: "string"
+          memory:
+            _metadata:
+              labels: "Memory limit"
+              type: "string"
+      orchestrator:
+        _metadata:
+          labels: "CP4S orchestrator service"
+        orchestrator:
+          _metadata:
+            labels: "Orchestrator container for Orchestrator service"
+          requests:
+            _metadata:
+              hidden: true
+            cpu:
+              _metadata:
+                labels: "CPU request"
+                type: "string"
+            memory:
+              _metadata:
+                labels: "Memory request"
+                type: "string"
+          limits:
+            _metadata:
+              hidden: true
+            cpu:
+              _metadata:
+                labels: "CPU limit"
+                type: "string"
+            memory:
+              _metadata:
+                labels: "Memory limit"
+                type: "string"
+        celery:
+          _metadata:
+            labels: "Celery container for Orchestrator service"
+          requests:
+            _metadata:
+              hidden: true
+            cpu:
+              _metadata:
+                labels: "CPU request"
+                type: "string"
+            memory:
+              _metadata:
+                labels: "Memory request"
+                type: "string"
+          limits:
+            _metadata:
+              hidden: true
+            cpu:
+              _metadata:
+                labels: "CPU limit"
+                type: "string"
+            memory:
+              _metadata:
+                labels: "Memory limit"
+                type: "string"
+        celerybeat:
+          _metadata:
+            labels: "Celerybeat container for Orchestrator service"
+          requests:
+            _metadata:
+              hidden: true
+            cpu:
+              _metadata:
+                labels: "CPU request"
+                type: "string"
+            memory:
+              _metadata:
+                labels: "Memory request"
+                type: "string"
+          limits:
+            _metadata:
+              hidden: true
+            cpu:
+              _metadata:
+                labels: "CPU limit"
+                type: "string"
+            memory:
+              _metadata:
+                labels: "Memory limit"
+                type: "string"
+      entitlements:
+        _metadata:
+          labels: "CP4S Entitlements Service"
+        requests:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU requests"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory requests"
+              type: "string"
+              hidden: true
+        limits:
+          _metadata:
+            hidden: true
+          cpu:
+            _metadata:
+              labels: "CPU limits"
+              type: "string"
+              hidden: true
+          memory:
+            _metadata:
+              labels: "Memory limits"
+              type: "string"
+              hidden: true
+  bindings:
+    authsvc:
+      replicas:
+        __metadata:
+          label: "authsvc replicas"
+          description: "Number of authsvc replicas"
+          type: "string"
+          required: false
+    configstore:
+      replicas:
+        __metadata:
+          label: "configstore replicas"
+          description: "Number of configstore replicas"
+          type: "string"
+          required: false
+    entitlements:
+      replicas:
+        __metadata:
+          label: "entitlements replicas"
+          description: "Number of entitlements replicas"
+          type: "string"
+          required: false
+    shell:
+      replicas:
+        __metadata:
+          label: "shell replicas"
+          description: "Number of shell replicas"
+          type: "string"
+          required: false
+    console:
+      replicas:
+        __metadata:
+          label: "console replicas"
+          description: "Number of console replicas"
+          type: "string"
+          required: false
+    pulse:
+      replicas:
+        __metadata:
+          label: "pulse replicas"
+          description: "Number of pulse replicas"
+          type: "string"
+          required: false
+    iscprofile:
+      replicas:
+        __metadata:
+          label: "iscprofile replicas"
+          description: "Number of iscprofile replicas"
+          type: "string"
+          required: false
+    iscauth:
+      replicas:
+        __metadata:
+          label: "iscauth replicas"
+          description: "Number of iscauth replicas"
+          type: "string"
+          required: false
+    orchestrator:
+      replicas:
+        __metadata:
+          label: "orchestrator replicas"
+          description: "Number of orchestrator replicas"
+          type: "string"
+          required: false
+    aitkwebui:
+      replicas:
+        __metadata:
+          label: "aitkwebui replicas"
+          description: "Number of aitkwebui replicas"
+          type: "string"
+          required: false
+  repository:
+    __metadata:
+        label: "Platform image Repository"
+        description: "Docker registry to pull Platform images from"
+        type: "string"
+        required: true
+        hidden: true
+  repositoryType:
+    __metadata:
+        label: "Image Repository Type"
+        description: "Repository type: entitled or local registry"
+        type: "string"
+        required: true
+        hidden: false
+        options:
+        - label: "Entitled registry"
+          value: "entitled"
+        - label: "Local registry"
+          value: "local"
+  adminUserId:
+    __metadata:
+        label: "Username of initial administrative user"
+        description: "The username of the first user that will be authenticated with the system. This should be a valid username for Common Services login. The user should exist in an LDAP directory which is connected to Common Services. This user will be provisioned as an administrator in the default account."
+        type: "string"
+        required: true
+        hidden: false
+  defaultAccountName:
+    __metadata:
+        label: "Default account name"
+        description: "This account will be created at service startup if it does not already exist, and the user specified in adminUserId will be added to it as an administrator. If no value is provided, the default account name will be 'Cloud Pak For Security'."
+        type: "string"
+        required: true
+        hidden: false
+  csNamespace:
+    __metadata:
+      label: "IBM Common Services namespace"
+      description: "IBM Common Services namespace"
+      type: "string"
+      required: true
+      hidden: false
+      options:
+      - label: "ibm-common-services for Common Services 3.4+"
+        value: "ibm-common-services"
+      - label: "kube-system for Common Services 3.3"
+        value: "kube-system"
+  images:
+     authsvc:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     iscauth:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     infconfigstore:
+       image:
+         __metadata:
+           hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     iscprofile:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     clxshell:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     clxconsole:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     pulsedashboard:
+       image:
+         __metadata:
+           hidden: true
+       tag:
+         __metadata:
+           hidden: true
+     iscentitlements:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     aitkwebui:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     aitkorchestrator:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     aitkuds2file:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     aitkdefeatureanalysis:
+       image:
+          __metadata:
+            hidden: true
+       tag:
+          __metadata:
+            hidden: true
+     aitkcommandinterpreter:
+       image: 
+          __metadata:
+            hidden: true
+       tag: 
+          __metadata:
+            hidden: true
+  oidc:
+    redirect_uris:
+      __metadata:
+        label: "OIDC Redirect URIs"
+        description: "Additional redirect URIs to be included with the default"
+        type: "string"
+        required: false
+        immutable: true
+        hidden: true
+    post_logout_redirect_uris:
+      __metadata:
+        label: "OIDC Post Logout Redirect URIs"
+        description: "Additional post logout redirect URIs to be included with the default"
+        type: "string"
+        required: false
+        immutable: true
+        hidden: true
+  knowledgecenter:
+    url:
+      __metadata:
+        hidden: true
+    basepath:
+      __metadata:
+        hidden: true
+  walkme:
+    url:
+      __metadata:
+        hidden: true
+  xforce:
+    __metadata:
+      hidden: true
+  xforceweb:
+    __metadata:
+      hidden: true
+  pseudotranslation:
+    __metadata:
+      hidden: true

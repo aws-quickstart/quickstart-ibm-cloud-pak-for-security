@@ -1,0 +1,44 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCSequence
+metadata:
+  name: qproxy
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    sort: qproxy
+    instance: default
+spec:
+  labels:
+    generation: {{ uuidv4 | quote }}
+  dependencies:
+     - iscplatform
+     - domain-default
+  actions:
+    - name: creation of APIKey for qproxy
+      operation: system-auth
+      keyname: qproxy
+    - include: qproxy
+    - name: configure couchdb pulse
+      dependencies:
+        - couchdb-pulse
+      operation: couchdb-init
+    - name: update pulse template qproxy_pulse_dashboard_1
+      dependencies:
+        - qproxydashboard
+      operation: pulse-update
+    - name: update pulse template qproxy_pulse_dashboard_2
+      dependencies:
+        - qproxydashboard-2
+      operation: pulse-update
+    - name: configure couchdb clx
+      dependencies:
+        - couchdb-clxregistry
+      operation: couchdb-init
+    - name: add qproxy as a console app
+      dependencies:
+        - consoleapp-qproxy
+      operation: app-install
+    - include: qproxy

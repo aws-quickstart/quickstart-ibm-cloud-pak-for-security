@@ -1,0 +1,64 @@
+apiVersion: isc.ibm.com/v1
+kind: ISCComponent
+metadata:
+  name: csaadapter
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  imagePullSecrets:
+    - name: ibm-isc-pull-secret
+  action:
+    name: csaadapter install
+    operation: generic-install
+    service:
+      name: isc-csaadapter
+      ports:
+      - 5000
+    {{- include "csaadapter.annotations" . }}
+    {{- include "ibm-isc-csaadapter.podcfg" (dict "val" . "app" "csaadapter") }}
+    env:
+      - name: FLAG_TLS
+        value: {{ $.Values.global.flagTls }}
+      - name: release
+        value: "Development"
+      - name: SYSAUTH_USER
+        value: '@refsec/sysauth-csaadapter/username'
+      - name: SYSAUTH_PASS
+        value: '@refsec/sysauth-csaadapter/password'
+      - name: CERT_KEY_PATH
+        value: /etc/config/private.pem
+      - name: CERT_PEM_PATH
+        value: /etc/config/public.pem
+      - name: JWT_SECRET_PATH
+        value: /etc/config/jwt.public.pem
+      - name: UDS_API_ENDPOINT
+        value: '@inventory/domain/definitions/name'
+        format: 'https://{0}/api/uds'
+      - name: CONFIGSTORE_API_ENDPOINT
+        value: '@inventory/domain/definitions/name'
+        format: 'https://{0}/api/configstore'
+      - name: CASE_API_ENDPOINT
+        value: '@inventory/domain/definitions/name'
+        format: 'https://{0}/api/respond'
+      - name: MAX_FINDINGS_PER_SOURCE
+        value: {{ $.Values.global.maxFindingsPerSource }}
+    replicas: {{ $.Values.global.replicaCount }}
+    serviceAccountName: ibm-isc-application
+    tempdir: /tmp
+    containers:
+    - name: isc-csaadapter
+      ports:
+      - 5000
+      command:
+        - /data/csaadapter/start.sh
+      liveness_probe:
+        path: /api/csaadapter/v1/liveness
+      readiness_probe:
+        path: /api/csaadapter/v1/readiness
+    paths:
+      - ingress: /api/csaadapter/v1
+        app: /api/csaadapter/v1
