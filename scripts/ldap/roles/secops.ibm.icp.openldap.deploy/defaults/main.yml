@@ -1,0 +1,6 @@
+---
+
+openldap:
+  userlist: "isc-demo"  
+  initialPassword: "initialpassword"
+  adminPassword: "defaultpassword"

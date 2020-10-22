@@ -1,0 +1,14 @@
+apiVersion: securityenforcement.admission.cloud.ibm.com/v1
+kind: ImagePolicy 
+metadata:
+  name: openldap-policy
+spec:
+   repositories:
+    - name: docker.io/osixia/openldap*
+      policy:
+        va:
+          enabled: false
+    - name: docker.io/osixia/phpldapadmin*
+      policy:
+        va:
+          enabled: false
