@@ -1,0 +1,13 @@
+registry,image_name,tag,digest,mtype,os,arch,variant,insecure,digest_source
+quay.io,opencloudio/icp-platform-header,3.2.5,sha256:5c785b6c4dc2b53af8e0219415388e4bafcfce354c13c6ff62912a9e7c3abb46,LIST,"","","",0,CASE
+quay.io,opencloudio/icp-platform-header,3.2.5-amd64,sha256:850c9c7df842fceb2dca02c81a3ab38788774b347de67cc56f5bcfa9d55e98e2,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/icp-platform-header,3.2.5-ppc64le,sha256:66c7d14ae34f87d980d77ea1631df65dda98fde7dcbc573035f0792d96d00912,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/icp-platform-header,3.2.5-s390x,sha256:82737958baf9a4c18c476ab1f94fc5f26c2e4c0f0abe86107309ae4f513ec6f6,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/ibm-commonui-operator,1.2.4,sha256:b76e915a0e4cab75d9fb460eb13f2eb97d5ab87bb115edd6f40fcef9e3422e47,LIST,"","","",0,CASE
+quay.io,opencloudio/ibm-commonui-operator,1.2.4-amd64,sha256:9d08f98101b9b2f68a1cf7f1af05589082f1802bcab8f19bb744e74dfec928f1,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/ibm-commonui-operator,1.2.4-ppc64le,sha256:af069563e4e76406907dfc16e240f4f8bd274400254fc3570a0595d715823892,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/ibm-commonui-operator,1.2.4-s390x,sha256:8f7e87d436fc25bc5a71864466ccb448181cc2f94e4375e63df738d9cd23bb1b,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/common-web-ui,1.3.0,sha256:41b9522699c5c88bd11e3bbe95bce1014311fe10aa254730bb5fe9eb944d9eb5,LIST,"","","",0,CASE
+quay.io,opencloudio/common-web-ui,1.3.0-amd64,sha256:048328915bcbc4d768c056875a04f40d24ac027aecacc8c3af5bd32edd61d7b6,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/common-web-ui,1.3.0-ppc64le,sha256:78be1afd70b84741b0c8ee273c0aac68c4efb0537c9213bc1c2f52b5ad67bcb2,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/common-web-ui,1.3.0-s390x,sha256:e7b513446d0d79666f77560947e2aedc8bc5f0fb5d0520567c7819b2822e3b15,IMAGE,linux,s390x,"",0,CASE

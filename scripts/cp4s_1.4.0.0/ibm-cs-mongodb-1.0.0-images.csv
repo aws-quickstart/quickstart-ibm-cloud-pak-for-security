@@ -1,0 +1,17 @@
+registry,image_name,tag,digest,mtype,os,arch,variant,insecure,digest_source
+quay.io,opencloudio/ibm-mongodb-operator,1.1.3,sha256:4519e7d4f10f273a5b9ce1f4dc16f05d0deb70350bb489f068120e63d9a95cf3,LIST,"","","",0,CASE
+quay.io,opencloudio/ibm-mongodb-operator,1.1.3-ppc64le,sha256:0c8f704f83f24e56e09520f65fcfafa9faff189a93b0886b76ee17f60fb2a62c,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-operator,1.1.3-amd64,sha256:952967a39b78c1019b9fa7e08ae766f7317ae69fe07350074c9cea6567c2e808,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-operator,1.1.3-s390x,sha256:50cd18d04c4ab00f76efdacc698e967faf003485a6ba14d4b30d206b3acd0cd3,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/ibm-mongodb,4.0.12-build.4,sha256:2c82b4d1025583a5c4c9263b48cd0138b294c33818aaf45b56984bff937080c9,LIST,"","","",0,CASE
+quay.io,opencloudio/ibm-mongodb,4.0.12-build.4-ppc64le,sha256:e03d05c7ceef51b4ca929a0848c695b3c4f2d609aff87729b3a46c727d5d517b,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/ibm-mongodb,4.0.12-build.4-amd64,sha256:9f6f6459d74ed4d14857e26f2a40bc50e292c94e4b3220050a1e048e078d70ef,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/ibm-mongodb,4.0.12-build.4-s390x,sha256:aa51cd12a65a532f16c8fec61ba5baa0eeb0acc818cef5f21d0b88bcfbfe5578,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-install,3.5.0,sha256:34543370cc9fb7095229966376f96df30de067b0b97cbcc6b19017df02339c2f,LIST,"","","",0,CASE
+quay.io,opencloudio/ibm-mongodb-install,3.5.0-ppc64le,sha256:66ca13ccd6380334f637d4aea9a0179b9192c5d6455b3a67448e45a072a6dc11,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-install,3.5.0-amd64,sha256:6787ff56102c9e09bf542588530830fa0d3e3c75f997432534ac4ee72e711d9e,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-install,3.5.0-s390x,sha256:7e719da65d616e416d17720e5662a901b9a7401b8dc5a8df06065d58f55ad1b9,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-exporter,3.5.0,sha256:ea69cc9a41f57d82f4bbaa546e73c09041ad8e44072bba04e188aaa75ac19f06,LIST,"","","",0,CASE
+quay.io,opencloudio/ibm-mongodb-exporter,3.5.0-ppc64le,sha256:b5ae5feffb39efa41a4aaf482f470403f6e4c45c63f1e94e72c84b6fe1f05475,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-exporter,3.5.0-amd64,sha256:b039a07e15d44e096b8121605f8a52a4791b5ca6ec1b6c276144260a2f47400a,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/ibm-mongodb-exporter,3.5.0-s390x,sha256:10752eb9984c3d6c82183c5a9a4fc69eb0b1333d810d58d02e097916021dc559,IMAGE,linux,s390x,"",0,CASE

@@ -1,0 +1,13 @@
+registry,image_name,tag,digest,mtype,os,arch,variant,insecure,digest_source
+quay.io,opencloudio/ibm-healthcheck-operator,3.6.1,sha256:4329c86d329f64c0ac8969e196424a22de18cd63ab4d132f0ab8c53f7ca498f6,LIST,"","","",0,CASE
+quay.io,opencloudio/ibm-healthcheck-operator,3.6.1-amd64,sha256:c01b1bcecb115e50dc6a43892f75ce1fdd5f6672f3322c8a3cfd25d45b43515b,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/ibm-healthcheck-operator,3.6.1-ppc64le,sha256:8a43381321d295c416a8bf74c136bfad51a3673251fc3054498bc55314bf614e,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/ibm-healthcheck-operator,3.6.1-s390x,sha256:cb07426238b9840f5e5f292c589566bba0c209dc67df77160b7915b73db0c80c,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/system-healthcheck-service,3.6.0,sha256:c8651a331bed66ce33a16085d277483e77d57f0d705449e2764c9ea39c8e85f9,LIST,"","","",0,CASE
+quay.io,opencloudio/system-healthcheck-service,3.6.0-amd64,sha256:0fa6bb7f5c6cde9ab6aa2429d45421dbc73985ab782c7f40e1ce9cfecf533471,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/system-healthcheck-service,3.6.0-ppc64le,sha256:0a3827389a6e8eb8a5b9923bcebcd209d303eca2e4d6217913a07a9a24abcf91,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/system-healthcheck-service,3.6.0-s390x,sha256:a313fc94a0e1919b0ffd21442386c778fbabdb6b4124747d89949cf5a60662cf,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/icp-memcached,3.6.0,sha256:8de5389dc4712a1383c55dd5ed20585b6a56747b4e67fd72761546d28b63b30b,LIST,"","","",0,CASE
+quay.io,opencloudio/icp-memcached,3.6.0-amd64,sha256:2383fa554a91e615fb1f2358473f08bcf076bb588aaa68cb15364ef4f8267eda,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/icp-memcached,3.6.0-ppc64le,sha256:4e980c6e43a9574e16fe6a1b7d4da1b5c035fcb0aa9b035761c078f8069c24c2,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/icp-memcached,3.6.0-s390x,sha256:24d97f1d49e83af47e97afe33c5d3d0fe4199e499249e886686cd5f4bbca0009,IMAGE,linux,s390x,"",0,CASE

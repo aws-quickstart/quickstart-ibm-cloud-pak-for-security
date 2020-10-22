@@ -1,0 +1,13 @@
+registry,image_name,tag,digest,mtype,os,arch,variant,insecure,digest_source
+quay.io,opencloudio/ibm-catalog-ui-operator,3.6.1,sha256:11088f8bef7cdc71a304656c9c3180c1070b8cc543c990fc5e4d18bd1ab8ec93,LIST,"","","",0,CASE
+quay.io,opencloudio/ibm-catalog-ui-operator,3.6.1-ppc64le,sha256:a30e537c67d482bb8be62134907b68356a9a9198c78527c281592474c756ebab,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/ibm-catalog-ui-operator,3.6.1-amd64,sha256:512186dd585dc21a10008bb23fa21cf505c89b5849da121a7bbe0e81a209278f,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/ibm-catalog-ui-operator,3.6.1-s390x,sha256:9a54073b03e9e888269b9168efd5df8d0c6ab42b379f7337f8f5b3345d52318c,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/icp-catalog-ui,3.2.6,sha256:dbf31453dbb943a1ddd5a8d72fa89f3136232039f91e990148fdc5a060b75332,LIST,"","","",0,CASE
+quay.io,opencloudio/icp-catalog-ui,3.2.6-ppc64le,sha256:859c8e8dc59b5bce77f14d00f79b0d4bbbb12c699769123e1648bc886690f300,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/icp-catalog-ui,3.2.6-amd64,sha256:e0ae1de617ea4e32e5b8d6cc767f950a02be1001817891737eb22d36382a634e,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/icp-catalog-ui,3.2.6-s390x,sha256:54c2a84188b7ce130f1dc16a084bef3d65ba6eee106a3440ef0a2999dd1e0e41,IMAGE,linux,s390x,"",0,CASE
+quay.io,opencloudio/icp-audit-service,3.4.1,sha256:24a220374c39652f8b031637d852995bfaec5be2601f9e4c41eb1925531f466d,LIST,"","","",0,CASE
+quay.io,opencloudio/icp-audit-service,3.4.1-ppc64le,sha256:41b705f6538aacca8fbb1434b95b4ecd2c8a53e454256f68c194c5c4ae1f5dd8,IMAGE,linux,ppc64le,"",0,CASE
+quay.io,opencloudio/icp-audit-service,3.4.1-amd64,sha256:fa7d416c4b377911972b3018fa1e24c37e225c19043529aee667cbc608ec8cc2,IMAGE,linux,amd64,"",0,CASE
+quay.io,opencloudio/icp-audit-service,3.4.1-s390x,sha256:318b0fed5b4fa43dffbf0fcc181d6b77ef882157ff072d4b60d3657f915533ce,IMAGE,linux,s390x,"",0,CASE
