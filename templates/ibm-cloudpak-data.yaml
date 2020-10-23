@@ -189,8 +189,9 @@ Parameters:
     AllowedPattern: ^[^ \\']+$
     NoEcho: 'true'
   RedhatPullSecret:
-    Description: Your Red Hat Network (RHN) pull secret(e.g., s3://my-bucket/path/to/pull-secret).
+    Description: Your RedHat pull-secret.
     Type: String
+    NoEcho: 'true'
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
@@ -630,6 +631,7 @@ Resources:
             export CPD_SECRET='${CPDSecret}'
             export OCP_SECRET='${OpenshiftSecret}'
             export ICPDArchiveBucket='${ICPDArchiveBucket}'
+            export PULLSERET='${RedhatPullSecret}'
             export ICPDInstallationCompletedURL='${ICPDInstallationCompletedHandle}'
             mkdir -p /quickstart
             mkdir -p /ibm
