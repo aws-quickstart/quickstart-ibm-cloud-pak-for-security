@@ -46,6 +46,16 @@ sudo systemctl enable amazon-ssm-agent
 rm -f ./amazon-ssm-agent.rpm
 cd -
 
+# Store pull-secret for OCP
+echo ${PULLSECRET} > /ibm/pull-secret
+
+# Downloading OpenShift Binaries
+sudo wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.21/openshift-client-linux.tar.gz
+sudo wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.21/openshift-install-linux.tar.gz
+
+sudo tar xvf openshift-client-linux.tar.gz
+sudo tar xvf openshift-install-linux.tar.gz
+
 #  Install and run docker enginer
 echo "INSTALLING DOCKER/ENGINE"
 sudo wget https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz
@@ -135,3 +145,8 @@ echo "START INSTALL"
 touch i.log
 echo ${AWS_REGION} ${AWS_STACKID} 
 python /ibm/ocp_install.py ${AWS_REGION} ${AWS_STACKID} ${CPD_SECRET}
+cfn-signal \
+--success "true" \
+--id "${AWS_STACKID}" \
+--reason "INSTALL_FINISH" \
+"${ICPDInstallationCompletedURL}"

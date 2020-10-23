@@ -127,9 +127,6 @@ class OCPInstall():
 
             logging.info(install_cps)
             logging.info(os.popen(install_cps).read())
-            stdoutdata, stderrdata = process_cps.communicate()
-            logging.info(stdoutdata)
-            logging.info(stderrdata)
             logging.info("INSTALL CP4S COMPLETE")
 
         except Exception as e:
