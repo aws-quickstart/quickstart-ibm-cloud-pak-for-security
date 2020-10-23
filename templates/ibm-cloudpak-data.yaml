@@ -631,7 +631,7 @@ Resources:
             export CPD_SECRET='${CPDSecret}'
             export OCP_SECRET='${OpenshiftSecret}'
             export ICPDArchiveBucket='${ICPDArchiveBucket}'
-            export PULLSERET='${RedhatPullSecret}'
+            export PULLSECRET='${RedhatPullSecret}'
             export ICPDInstallationCompletedURL='${ICPDInstallationCompletedHandle}'
             mkdir -p /quickstart
             mkdir -p /ibm
