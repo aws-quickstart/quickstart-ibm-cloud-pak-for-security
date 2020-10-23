@@ -794,10 +794,6 @@ a img {
 <li><a href="#_planning_the_deployment">Planning the deployment</a>
 <ul class="sectlevel2">
 <li><a href="#_specialized_knowledge">Specialized knowledge</a></li>
-</ul>
-</li>
-<li><a href="#_specialized_knowledge_2">Specialized knowledge</a>
-<ul class="sectlevel2">
 <li><a href="#_aws_account">AWS account</a></li>
 <li><a href="#_technical_requirements">Technical requirements</a></li>
 </ul>
@@ -809,8 +805,8 @@ a img {
 <li><a href="#_deployment_options">Deployment options</a></li>
 </ul>
 </li>
-<li><a href="#_deployment_options_2">Deployment options</a></li>
 <li><a href="#_deployment_steps">Deployment steps</a></li>
+<li><a href="#_parameters">Parameters</a></li>
 <li><a href="#_troubleshooting">Troubleshooting</a></li>
 <li><a href="#_send_us_feedback">Send us feedback</a></li>
 <li><a href="#_quick_start_reference_deployments">Quick Start reference deployments</a></li>
@@ -829,11 +825,24 @@ a img {
 <img src="images/aws-quickstart-graphic.png" alt="QS" width="80" height="80">
 </div>
 </div>
-<div class="paragraph text-center">
+<h3 id="_draft_document_unofficial_guidance" class="discrete text-center">DRAFT DOCUMENT / UNOFFICIAL GUIDANCE</h3>
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/__settings</em>.adoc</code></strong>_</p>
+</div>
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph text-center">
 <p><strong>{doc-month}, {doc-year}</strong><br>
 <em>{quickstart-contributors}</em></p>
-</div>
-<div class="admonitionblock tip text-left">
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
@@ -855,6 +864,15 @@ report bugs, or submit feature ideas for this Quick Start.
 <h2 id="_overview">Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/overview_target_and_usage.adoc</code></strong></em></p>
+</div>
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>This Quick Start deployment guide provides step-by-step instructions for deploying IBM Cloud Pak for Security on a Red Hat OpenShift Container Platform 4.4.22 cluster on the AWS Cloud. With this Quick Start, you can automatically deploy a multi-master, production instance of Cloud Pak for Security.</p>
 </div>
 <div class="paragraph">
@@ -868,13 +886,25 @@ report bugs, or submit feature ideas for this Quick Start.
 </div>
 <div class="paragraph">
 <p>Threat Analysts can leverage the Threat Intel. Insights application to prioritize threats based on relevance, severity, penetration, impact and actual environmental sightings. Threat Intel identifies active threats in your environment and streamlines the response to potential threats.</p>
-</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_partner_product_name_on_aws">{partner-product-name} on AWS</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/product_description.adoc</code></strong></em></p>
+</div>
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Product Description</p>
 </div>
 <div class="paragraph">
@@ -907,7 +937,10 @@ report bugs, or submit feature ideas for this Quick Start.
 </div>
 <div class="paragraph">
 <p>For more information about IBM Cloud Pak for Security, see the <a href="https://www.ibm.com/support/knowledgecenter/en/SSTDPP">IBM Knowledge Center.</a></p>
-</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -942,6 +975,15 @@ After you deploy the Quick Start, enable the <a href="https://docs.aws.amazon.co
 <h2 id="_software_licenses">Software licenses</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/licenses.adoc</code></strong></em></p>
+</div>
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Software Licenses</strong></p>
 </div>
 <div class="paragraph">
@@ -961,13 +1003,25 @@ After you deploy the Quick Start, enable the <a href="https://docs.aws.amazon.co
 </div>
 <div class="paragraph">
 <p>For more information about licensing terms, see the Cloud Pak for Data <a href="https://ibm.biz/BdqSw4">software license agreement.</a></p>
-</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_architecture">Architecture</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/architecture.adoc</code></strong></em></p>
+</div>
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><strong>Architecture</strong></p>
 </div>
 <div class="paragraph">
@@ -1051,7 +1105,10 @@ After you deploy the Quick Start, enable the <a href="https://docs.aws.amazon.co
 </div>
 <div class="paragraph">
 <p>Cloud Pak for Security microservices are preconfigured on compute nodes.</p>
-</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -1068,10 +1125,16 @@ website</a>. These sites provide materials for learning how to design,
 deploy, and operate your infrastructure and applications on the AWS
 Cloud.</p>
 </div>
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/specialized_knowledge.adoc</code></strong></em></p>
 </div>
-</div>
-</div>
-<div class="sect1">
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="sect1">
 <h2 id="_specialized_knowledge_2">Specialized knowledge</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1079,6 +1142,12 @@ Cloud.</p>
 </div>
 <div class="paragraph">
 <p>This Quick Start also assumes familiarity with the OpenShift command line interface and Linux, in addition to a moderate level of familiarity with AWS services. If you’re new to AWS, visit the <a href="https://aws.amazon.com/getting-started/">Getting Started Resource Center</a> and the <a href="https://aws.amazon.com/training/">AWS Training and Certification website</a> for materials and programs that can help you develop the skills to design, deploy, and operate your infrastructure and applications on the AWS Cloud.</p>
+</div>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_aws_account">AWS account</h3>
@@ -1099,6 +1168,10 @@ Cloud.</p>
 <div class="paragraph">
 <p>If necessary, request <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">service quota increases</a> for the following resources. You might need to request increases if your existing deployment currently uses these resources, and this Quick Start deployment could result in exceeding the default quotas. The <a href="https://console.aws.amazon.com/servicequotas/home?region=us-east-2#!/" target="_blank" rel="noopener">Service Quotas console</a> displays your usage and quotas for some aspects of some services. For more information, see the <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html" target="_blank" rel="noopener">AWS documentation</a>.</p>
 </div>
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/service_limits.adoc</code></strong></em></p>
+</div>
+<div class="preview_mode">
 </div>
 </div>
 </div>
@@ -1122,8 +1195,14 @@ Cloud.</p>
 </li>
 </ul>
 </div>
+</div>
 <div class="sect3">
 <h4 id="_supported_regions">Supported Regions</h4>
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/regions.adoc</code></strong></em></p>
+</div>
+<div id="preview_mode">
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -1145,14 +1224,32 @@ Certain Regions are available on an opt-in basis. Refer to the AWS Documentation
 <div class="paragraph">
 <p>The <em>AdministratorAccess</em> managed policy within IAM provides sufficient permissions, although your organization may choose to use a custom policy with more restrictions.</p>
 </div>
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/pre-reqs.adoc</code></strong></em></p>
+</div>
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_deployment_options">Deployment options</h4>
-
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/deployment_options.adoc</code></strong></em></p>
 </div>
-</div>
-</div>
-<div class="sect1">
+<table class="tableblock frame-all grid-all stretch preview_mode">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="sect1">
 <h2 id="_deployment_options_2">Deployment options</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1172,10 +1269,21 @@ Certain Regions are available on an opt-in basis. Refer to the AWS Documentation
 <p>The Quick Start also lets you configure CIDR blocks, instance types, and Cloud Pak for Integration settings, as discussed later in this guide.</p>
 </div>
 </div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div class="sect1">
 <h2 id="_deployment_steps">Deployment steps</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/deploy_steps.adoc</code></strong></em></p>
+</div>
+<div class="preview_mode">
+</div>
 <div class="paragraph">
 <p>In the following tables, parameters are listed by category and described separately for the deployment options. When you finish reviewing and customizing the parameters, choose <strong>Next</strong>.</p>
 </div>
@@ -1192,6 +1300,179 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parameters">Parameters</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 7%;">
+<col style="width: 93%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APIUsername</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The IBM Cloud Pak for Security user name to access IBM
+Container Registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APIKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The IBM Cloud Pak for Security API key to access IBM Container
+Registry.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">KeyPairName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of an existing public/private key pair, which
+allows you to securely connect to your instance after it launches.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PrivateSubnet1ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the private subnet in Availability Zone 1
+for the workload (e.g., subnet-a0246dcd).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PrivateSubnet2ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the private subnet in Availability Zone 2
+for the workload (e.g., subnet-a0246dcd).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PrivateSubnet3ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the private subnet in Availability Zone 3
+for the workload (e.g., subnet-a0246dcd).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PublicSubnet1ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the public subnet in Availability Zone 1 for
+the ELB load balancer (e.g., subnet-9bc642ac).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PublicSubnet2ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the public subnet in Availability Zone 2 for
+the ELB load balancer (e.g., subnet-9bc642ac).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PublicSubnet3ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the public subnet in Availability Zone 3 for
+the ELB load balancer (e.g., subnet-9bc642ac).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QSS3BucketName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quick Start bucket name can include numbers, lowercase
+letters, uppercase letters, and hyphens (-). It cannot start or end with
+a hyphen (-).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QSS3BucketRegion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The AWS Region where the Quick Start S3 bucket
+(QSS3BucketName) is hosted. When using your own bucket, you must specify
+this value.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QSS3KeyPrefix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quick Start key prefix can include numbers, lowercase
+letters, uppercase letters, hyphens (-), and forward slash (/).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BootNodeAccessCIDR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block parameter must be in the form x.x.x.x/x
+Description: The CIDR IP range that is permitted to access boot node
+instance. We recommend that you set this value to a trusted IP range.
+The value <code>0.0.0.0/0</code> permits all IP addresses to access. Additional
+values can be added post-deployment from the Amazon EC2 console.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AdminPassword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The password for the Cloud Pak for Security web client.
+The password must contain at least 8 characters, including letters (with
+a minimum of one capital letter), numbers, and symbols.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RedhatPullSecret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S3 Path to your RedHat pull-secret file. The file
+must be named <code>pull-secret</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPCCIDR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The CIDR block of the existing VPC.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MasterInstanceType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The EC2 instance type for the OpenShift master
+instances.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ComputeInstanceType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The EC2 instance type for the OpenShift compute
+instances.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NumberOfAZs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of Availability Zones to be used for the
+deployment. Keep in mind that some regions may be limited to two
+Availability Zones. For a single IBM Cloud Pak for Security cluster to
+be highly available, three Availability Zones are needed to avoid a
+single point of failure when using three, five, or seven master nodes.
+With fewer than three Availability Zones, one of the AZs will have more
+master nodes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AvailabilityZones</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The list of Availability Zones to use for the
+subnets in the VPC. The Quick Start uses one or three Availability Zones
+and preserves the logical order you specify.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NumberOfMaster</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The desired capacity for the OpenShift master
+instances. Must be an odd number. For a development deployment, 1 is
+sufficient; for production deployments, a minimum of 3 is required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NumberOfCompute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The desired capacity for the OpenShift compute
+instances. Minimum of 3 nodes required. If the number of compute
+instances exceeds your Red Hat entitlement limits or AWS instance
+limits, the stack will fail. Choose a number that is within your limits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ICPDDeploymentLogsBucketName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the S3 bucket where IBM Cloud
+Pak for Security deployment logs are to be exported. The deployment logs
+provide a record of the boot strap scripting actions and are useful for
+problem determination if the deployment fails in some way.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DomainName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon Route53 base domain configured for your OpenShift
+Container Platform cluster. Name must consist of lower case alphanumeric
+characters and must start and end with an alphanumeric character.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPSFQDN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any FQDN Configured for the CP4S Application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ClusterName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom cluster name for kubernetes.io/cluster/tags.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EnableFips</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable Fips for Openshift</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LicenseAgreement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">I have read and agree to the license terms for IBM
+Cloud Pak for Security.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="olist arabic">
 <ol class="arabic" start="5">
 <li>
@@ -1217,6 +1498,14 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </div>
 <div class="title">Figure 1. {partner-product-name} outputs after successful deployment</div>
 </div>
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/additional_info.adoc</code></strong></em></p>
+</div>
+<div class="preview_mode">
+<div class="paragraph">
+<p><em><strong>This portion of the deployment guide is located at <code>docs/partner_editable/faq_troubleshooting.adoc</code></strong></em></p>
+</div>
+<div class="preview_mode">
 </div>
 </div>
 <div class="sect1">
@@ -1276,6 +1565,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="_send_us_feedback">Send us feedback</h2>
 <div class="sectionbody">
@@ -1320,7 +1610,7 @@ and to share your customizations with others.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-10-22 10:32:34 +0200
+Last updated 2020-10-22 03:32:34 -0500
 </div>
 </div>
 </body>
