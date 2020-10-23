@@ -1,0 +1,18 @@
+Product Description
+
+IBM Cloud Pak for Security is a platform to more quickly integrate your existing security teams and tools to generate deeper insights into threats and risks, orchestrate actions and automate responses—all while leaving your data where it is.
+
+Clients with IBM Cloud Pak for Security gain security insights with a unified console that provides visibility and analytics across IBM and 3rd party security tools, data, and clouds. They can take action faster with built-in AI and automation that simplify operations and streamline responses to save time and lower risk.
+
+Security analysts may leverage the Data Explorer application to run federated investigations to fully understand the context and true impact of any security incident, risk, or threat.
+
+Threat Analysts can leverage the Threat Intel. Insights application to prioritize threats based on relevance, severity, penetration, impact and actual environmental sightings, and identify threats active in your environment and streamline the response to potential threats
+
+IBM Cloud Pak for Security can use AWS services and features, including virtual private clouds (VPCs), Availability Zones, security groups, Elastic Block Storage and Elastic Load Balancing to build a reliable and scalable cloud platform.
+
+This reference deployment provides AWS CloudFormation templates to deploy IBM Cloud Pak for Security on a new OpenShift cluster. This cluster includes:
+
+* A Red Hat OpenShift Container Platform cluster created in a new or existing VPC on Red Hat CoreOS (RHCOS) instances, using the https://docs.openshift.com/container-platform/4.3/installing/installing_aws/installing-aws-customizations.html[Redhat OpenShift Installer Provisioned Infrastructure]. See the https://docs.openshift.com/container-platform/4.3/architecture/architecture-installation.html[OpenShift Container Platform Installation overview] for details about the underlying OpenShift deployment architecture.
+* Scalable OpenShift compute nodes running IBM Cloud Pak for Security services.
+
+For more information about IBM Cloud Pak for Security, see the https://www.ibm.com/support/knowledgecenter/en/SSTDPP[IBM Knowledge Center.]
