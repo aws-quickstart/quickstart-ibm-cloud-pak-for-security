@@ -3,6 +3,7 @@ exec > cp4s_install_logs.log
 ENTITLED_REGISTRY_PASSWORD=$1
 CP4S_FQDN=$2
 OCP_URL=$3
+LDAP_PASS=$4
 
 python3 /ibm/pyca/ca.py $CP4S_FQDN
 cloudctl case save --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.9.tgz --outputdir .
@@ -20,7 +21,7 @@ cloudType="aws"
 cp4sapplicationDomain="$CP4S_FQDN"
 
 # e.g ./path-to-cert/cert.crt (Required)
-cp4sdomainCertificatePath="/ibm/domain-cert.crt" 
+cp4sdomainCertificatePath="/ibm/cert.crt" 
 
 ## Path to domain certificate key ./path-to-key/cert.key (Required)
 cp4sdomainCertificateKeyPath="/ibm/private.key"  
@@ -78,15 +79,51 @@ EOF
 cat patch.sh > /ibm/ibm-cp-security/inventory/installProduct/files/launch.sh
 
 cloudctl case launch --case ibm-cp-security --namespace cp4s  --inventory installProduct --action install --args "--license accept --helm3 /usr/local/bin/helm3 --inputDir /ibm" --tolerance 1
-RESULT=${?}
+CP_RESULT=${?}
 
-if [[ ${RESULT} -ne 0 ]]; then
+unzip unzip cp4s-openldap-master.zip
+tar -xvf cp4s-openldap-master.zip
+cd cd cp4s-openldap-master
+
+cat << EOF > playbook.yml
+
+---
+- hosts: local
+  gather_facts: true
+  any_errors_fatal: true
+  roles:
+    - roles/secops.ibm.icp.login
+    - roles/secops.ibm.icp.openldap.deploy
+    - roles/secops.ibm.icp.openldap.register
+
+  vars:
+    icp:        
+        console_url: "${CP_ROUTE}"
+        ibm_cloud_server: "" # Only Applicable for IBMCloud Deployment
+        ibm_cloud_port: ""   # Only Applicable for IBMCloud Deployment
+        username: "admin"
+        password: "${CP_PASSWORD}"
+        account: "id-mycluster-account"
+        namespace: "default"
+
+    
+    openldap:
+        adminPassword: "${LDAP_PASS}"
+        initialPassword: "${LDAP_PASS}"
+        userlist: "isc-demo,isc-test,platform-admin"
+
+EOF
+
+ansible-playbook -i hosts playbook.yml
+
+if [[ ${CP_RESULT} -ne 0 ]]; then
 	echo "INSTALL FAILED"
 	cfn-signal \
 	-s "false" \
 	-e $? \
 	--id "${AWS_STACKID}" \
 	--reason "INSTALL_FINISH" \
+	--data "CLOUDCTL FAILED TO INSTALL CP4S"
 	"${ICPDInstallationCompletedURL}"
 else
 	echo "INSTALL FINISH"
@@ -95,7 +132,6 @@ else
 	-e 0 \
 	--id "${AWS_STACKID}" \
 	--reason "INSTALL_FINISH" \
+	--data "LOG INTO CLUSTER USING USERNAME platform-admin and CP4S PASSWORD"
 	"${ICPDInstallationCompletedURL}"
 fi
-
-aws s3 /ibm/cp4s_install_logs.log s3://aws-cp4s-test/

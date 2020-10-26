@@ -125,7 +125,8 @@ class OCPInstall():
                            secrets_dict["apikey"] + " " +
                            self.stack_params["CPSFQDN"] + " " +
                            "api." + stack_params["ClusterName"] + "." +
-                           stack_params["DomainName"] + ":6443")
+                           stack_params["DomainName"] + ":6443" +
+                           secrets_dict["adminPassword"])
 
             logging.info(install_cps)
             logging.info(os.popen(install_cps).read())

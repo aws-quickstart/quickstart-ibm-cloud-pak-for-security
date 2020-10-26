@@ -102,8 +102,8 @@ echo "INSTALLING CERTAUTH"
 pip3 install certauth
 
 #  Install Ansible / Paramiko
-python -m pip install --user ansible
-python -m pip install --user paramiko
+echo "INSTALLING ANSIBLE"
+pip3 install ansible
 
 #  Configure CLI tools for OpenShift / Kubernetes
 cp /ibm/oc /usr/local/bin/oc
