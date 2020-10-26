@@ -5,9 +5,7 @@ CP4S_FQDN=$2
 OCP_URL=$3
 
 python3 /ibm/pyca/ca.py $CP4S_FQDN
-
 cloudctl case save --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.9.tgz --outputdir .
-
 tar xvf ibm-cp-security-1.0.9.tgz
 
 cat << EOF  > ibm-cp-security/inventory/installProduct/files/values.conf
@@ -77,4 +75,27 @@ toolboxStorageSize="100Gi"
 
 EOF
 
-cloudctl case launch --case ibm-cp-security --namespace cp4s  --inventory installProduct --action install --args "--license accept --helm3 /usr/local/bin/helm3 --inputDir ." --tolerance 1
+cat patch.sh > /ibm/ibm-cp-security/inventory/installProduct/files/launch.sh
+
+cloudctl case launch --case ibm-cp-security --namespace cp4s  --inventory installProduct --action install --args "--license accept --helm3 /usr/local/bin/helm3 --inputDir /ibm" --tolerance 1
+RESULT=${?}
+
+if [[ ${RESULT} -ne 0 ]]; then
+	echo "INSTALL FAILED"
+	cfn-signal \
+	-s "false" \
+	-e $? \
+	--id "${AWS_STACKID}" \
+	--reason "INSTALL_FINISH" \
+	"${ICPDInstallationCompletedURL}"
+else
+	echo "INSTALL FINISH"
+	cfn-signal \
+	-s "true" \
+	-e 0 \
+	--id "${AWS_STACKID}" \
+	--reason "INSTALL_FINISH" \
+	"${ICPDInstallationCompletedURL}"
+fi
+
+aws s3 /ibm/cp4s_install_logs.log s3://aws-cp4s-test/
