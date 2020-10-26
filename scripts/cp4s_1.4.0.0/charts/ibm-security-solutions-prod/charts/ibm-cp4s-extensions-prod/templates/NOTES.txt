@@ -1,8 +1,0 @@
-################################################################################
-#                                                                              #
-#         Congratulations on installing CP4S EXTENSIONS CRs!                               #
-#                                                                              #
-################################################################################
-
-  - You should verify that the ibm-cp4s-extensions-prod CRs are installed:
-  - kubectl get Connector

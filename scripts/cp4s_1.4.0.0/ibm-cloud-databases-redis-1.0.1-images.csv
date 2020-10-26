@@ -1,9 +1,0 @@
-registry,image_name,tag,digest,mtype,os,arch,variant,insecure,digest_source
-docker.io,ibmcom/ibm-cloud-databases-redis-operator,1.0.0,sha256:2907ff46fc0ac70334d7a09a5227e75ec9cf9504b0641b1bcd928dc737087584,IMAGE,linux,amd64,"",0,CASE
-docker.io,ibmcom/ibm-cloud-databases-redis-operator-bundle,1.0.0,sha256:9c1759737379ccdb4d61498e7307bf10187af5f794346980636a0a4d262e1e6f,IMAGE,linux,amd64,"",0,CASE
-docker.io,ibmcom/ibm-cloud-databases-redis-catalog,latest,sha256:7954986f37cfdfef0ae0316f43d7d40c6640104e15ad06d89222574fbff28a24,IMAGE,linux,amd64,"",0,CASE
-cp.icr.io,cp/redis-db-5.0.5,latest,sha256:978cf09ee9ffcf4317a0a4d99f0332735f988ba04735b0169461f40a41d9e672,IMAGE,linux,amd64,"",0,CASE
-cp.icr.io,cp/redis-mgmt-5.0.5,latest,sha256:16827306b60e1e3d76cca8daee0f16c43119f714cd89c37ca3a9b37628747b45,IMAGE,linux,amd64,"",0,CASE
-cp.icr.io,cp/redis-telemetry-5.0.5,latest,sha256:8e5f8f394240e77b2be7767492dc0f51bf49a84f36edfbeb9e712df934ce3ea0,IMAGE,linux,amd64,"",0,CASE
-cp.icr.io,cp/redis-proxy-5.0.5,latest,sha256:dd5234b95376f974fa9845a066b0fe8b80e64c7a6df9e2f7c6da21c9156a7d75,IMAGE,linux,amd64,"",0,CASE
-cp.icr.io,cp/redis-proxylog-5.0.5,latest,sha256:c9494a21a2e0bbdd5abc070eb418e159e0ac5c40ee9b64d82c50bd4442138a7e,IMAGE,linux,amd64,"",0,CASE

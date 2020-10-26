@@ -1,8 +1,0 @@
-# change to have unique public endpoints
-# preserve "uds" prefix since it is a part of our API path
-# ingressPrefix: "misha-test"
-
-# change the below prefixes to have a unique deployment
-# preserve "ow-minio" name for minio so that minio references same PVCs when upgrading
-# minioPrefix: "misha-test"
-# prefix: "misha-test"

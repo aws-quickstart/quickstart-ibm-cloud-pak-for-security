@@ -1,2 +1,0 @@
-      allowed-unsafe-sysctls:
-      - "net.core.somaxconn"

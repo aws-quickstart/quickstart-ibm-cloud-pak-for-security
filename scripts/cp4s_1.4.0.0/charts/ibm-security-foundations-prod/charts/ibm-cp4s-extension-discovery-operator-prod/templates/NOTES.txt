@@ -1,4 +1,0 @@
-Congratuations! You've successfully installed IBM Cloud Pak for Security Extension Discovery Operator.
-  
-To check the extension discovery operator:
-kubectl get pods -lname=cp4s-extension --watch
