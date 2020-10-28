@@ -1,6 +1,4 @@
 .DS_Store
-cp4i-deployment/cp4i-subscription.yaml
-cp4i-deployment/operators-group.yaml
 *.txt
 .taskcat-eu-west-2.yml
 .taskcat-us-west-2.yml
@@ -10,4 +8,3 @@ taskcat_outputs/
 index.html
 docs/index.html
 docs/generated/*
-.taskcat_overrides.yml
