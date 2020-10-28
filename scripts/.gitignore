@@ -1,0 +1,6 @@
+cp4i-subscription.yaml
+operators-group.yaml
+*.txt
+aspera-key
+run.sh
+.DS_Store
