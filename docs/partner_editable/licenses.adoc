@@ -1,5 +1,5 @@
 // Include details about the license and how they can sign up. If no license is required, clarify that.
 
-To use Cloud Pak for Security on AWS, you need to use your existing {partner-product-short-name} entitlement. Amazon will charge directly to your account, depending on your usage of Amazon EBS gp2 volume usage.
+To use {partner-product-name} on AWS, you need to use your existing {partner-product-short-name} entitlement. Amazon will charge directly to your account, depending on your usage of Amazon EBS gp2 volume usage.
 
 To get pricing information, or to use your existing {partner-product-short-name} entitlements, contact your IBM sales representative at +1 (877) 426-3774. For more information about licensing terms, see the https://ibm.biz/Bdqt9u[software license agreement^].
