@@ -4,18 +4,26 @@
 == Test the deployment
 // If steps are required to test the deployment, add them here. If not, remove the heading
 
+You can confirm the deployment was successful by logging into the BootNode and checking that all _iscsequence_ are in _Successful_ status.
+
+```bash
+oc get iscsequence -n cp4s
+```
+
 == Post deployment steps
 // If Post-deployment steps are required, add them here. If not, remove the heading
 
 == Best practices for using {partner-product-short-name} on AWS
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
 
-_Add any best practices for using the software._
+You can activate X-Force exchange directly from the {partner-product-short-name} console <Need to add more info>
+
+You can activate the Action Module to turn on SOAR playbook functionality and unlock Resilient features <Need to add more info>
 
 == Security
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
 
-_Add any security-related information._
+{partner-product-name} connects to various data sources using _data connectors_ it is in your best interest to ensure that only trusted priveleged users have access to both the data sources on the {partner-product-short-name} console or the OpenShift console.
 
 == Other useful information
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
