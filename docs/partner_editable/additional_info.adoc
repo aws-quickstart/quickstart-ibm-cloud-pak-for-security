@@ -20,4 +20,4 @@ _Add any security-related information._
 == Other useful information
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
-_Add any other details that will help the customer use the software on AWS._
+{partner-product-name} has a simple static LDAP (openLDAP and phpLDAPadmin) configured user system. We reccomend that you connect your own LDAP server to IBM Common Services to better support your long term use of the product. For further assistance please see: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/ldap-connect.html
