@@ -38,23 +38,11 @@ ssh -i path_to_key/key.pem ec2-user@BootNode_instance_ip
 
 Where the *path_to_key/key.pem* is where you downloaded your private key and *BootNode_instance_ip* is the public IPv4 address of the BootNode instance.
 
-#### Part 2. Stack deployment
-
-There are 3 stacks involved with this QuickStart.
-
-1. Root stack - Takes in user input from parameters
-2. VPC stack - Creates VPC infrastructure for OpenShift
-3. Pak stack - Creates EC2 instance, downloads resources, and runs bootstrap.sh
-
-#### Part 3. Bootstrap
-
-The *bootstrap.sh* script is essentially the entrypoint for the QuickStart deployment of the product. It's responsible for installing all dependecies onto the BootNode, modifying permissions and file system, and finally calling the installation of the product.
-
-#### Part 4. Installation of the product
+#### Part 2. Installation of the product
 
 When bootstrapping is complete all depndencies needed to run automation to deploy the desired product should be in place. From here the bootstrap will run the products automation to deploy. First OpenShift is installed using the openshift-install IPI followed by CP4S using in-house built automation.
 
-#### Part 5. Logging
+#### Part 3. Logging
 
 Various log files are generated and it's good to have a reference on where/what they are.
 
@@ -63,6 +51,6 @@ Various log files are generated and it's good to have a reference on where/what 
 **/ibm/cp4s_install_logs.log** - STDOUT of the CP4S install scripts
 
 
-#### Part 6. Troubleshooting {partner-product-short-name}
+#### Part 4. Troubleshooting {partner-product-short-name}
 
 Reference: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/troubleshooting.html
