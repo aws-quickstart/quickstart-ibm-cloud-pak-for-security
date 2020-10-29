@@ -46,10 +46,11 @@ When bootstrapping is complete all depndencies needed to run automation to deplo
 
 Various log files are generated and it's good to have a reference on where/what they are.
 
-**/ibm/logs/cp4iopenshift_install.log** - STDOUT of the openshift-install IPI
+**/ibm/logs/icp4i_install.log** - STDOUT of the openshift-install IPI
+
+**/ibm/logs/icp4i-logs.txt** - STDOUT of the openshift-install IPI
 
 **/ibm/cp4s_install_logs.log** - STDOUT of the CP4S install scripts
-
 
 #### Part 4. Troubleshooting {partner-product-short-name}
 
