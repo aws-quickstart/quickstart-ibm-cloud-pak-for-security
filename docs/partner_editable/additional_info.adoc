@@ -16,9 +16,7 @@ oc get iscsequence -n cp4s
 == Best practices for using {partner-product-short-name} on AWS
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
 
-You can activate X-Force exchange directly from the {partner-product-short-name} console <Need to add more info>
-
-You can activate the Action Module to turn on SOAR playbook functionality and unlock Resilient features <Need to add more info>
+You can activate the Orchestration & Automation by following the steps described here: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/app_licensereq.html
 
 == Security
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
