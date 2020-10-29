@@ -55,3 +55,23 @@ Various log files are generated and it's good to have a reference on where/what 
 #### Part 4. Troubleshooting {partner-product-short-name}
 
 Reference: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/troubleshooting.html
+
+Part 4. Logging into the {partner-product-name}
+
+If you are experiencing issues logging into the cosnole for {partner-product-short-name} the most likely error could be incorrect LDAP configuration.
+
+To redeploy the openLDAP and phpLDAPadmin package that comes with this QuickStart simply log onto the EC2 BootNode instance and navigate to the /ibm directory.
+
+You will see a folder called **cp4s-openldap-master** edit the **playbook.yml** file in this directory and redeploy
+
+```bash
+ansible-playbook -i hosts playbook.yml
+```
+
+If the deployment fails you might need to remove the old LDAP helm deployment before attempting to deploy again
+
+```bash
+helm3 delete cp4s-openldap -n default
+```
+
+You must have an account named **platform-admin** in the LDAP configuration within the **playbook.yml** file
