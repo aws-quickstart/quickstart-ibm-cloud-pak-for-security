@@ -2,7 +2,9 @@
 
 ==== Prepare your AWS account
 
-_Describe any setup required in the AWS account prior to template launch_
+_Ensure your AWS account has the proper permissions settings to install OpenShift via IPI._
+
+_For reference to permissions necessary see: https://docs.openshift.com/container-platform/4.4/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account
 
 ==== Prepare your {partner-company-name} account
 
