@@ -1,6 +1,6 @@
 :quickstart-project-name: quickstart-documentation-base
 :partner-product-name: IBM Cloud Pak® for Security
-:partner-product-short-name: CP4S
+:partner-product-short-name: Cloud Pak for Security
 :partner-company-name: IBM
 :doc-month: October
 :doc-year: 2020
