@@ -2,7 +2,4 @@
 
 To use Cloud Pak for Security on AWS, you need to use your existing {partner-product-short-name} entitlement. Amazon will charge directly to your account, depending on your usage of Amazon EBS gp2 volume usage.
 
-// Or, if the deployment uses an AMI, update this paragraph. If it doesn’t, remove the paragraph.
-_<AMI information>The Quick Start requires a subscription to the Amazon Machine Image (AMI) for {partner-product-short-name}, which is available from https://aws.amazon.com/marketplace/[AWS Marketplace^]. Additional pricing, terms, and conditions may apply. For instructions, see link:#step-2.-subscribe-to-the-software-ami[step 2] in the deployment section._
-
 To get pricing information, or to use your existing {partner-product-short-name} entitlements, contact your IBM sales representative at +1 (877) 426-3774. For more information about licensing terms, see the https://ibm.biz/Bdqt9u[software license agreement^].
