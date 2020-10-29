@@ -2,14 +2,18 @@
 
 ==== Prepare your AWS account
 
-_Ensure your AWS account has the proper permissions settings to install OpenShift via IPI._
+Ensure your AWS account has the proper permissions settings to install OpenShift via IPI.
 
 For reference to permissions necessary see: https://docs.openshift.com/container-platform/4.4/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account
 
 ==== Prepare your {partner-company-name} account
 
-_Describe any setup required in the partner portal/account prior to template launch_
+Acquire your IBM Entitled registry key from: https://myibm.ibm.com/products-services/containerlibrary
+
+Acquire pull-secret from RedHat: https://cloud.redhat.com/openshift/install/aws/user-provisioned
 
 ==== Prepare for the deployment
 
-_Describe any preparation required to complete the product build, such as obtaining licenses or placing files in S3_
+Ensure you have a domain name to use for OpenShift in Route53: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html
+
+Create a seperate FQDN used for the CP4S Application console. Should have CNAME DNS record entry pointing to cp-console.apps.<Cluster Name>.<Domaion Name>
