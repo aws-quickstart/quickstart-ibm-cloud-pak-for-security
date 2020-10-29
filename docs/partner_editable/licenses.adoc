@@ -2,4 +2,5 @@
 
 To use {partner-product-name} on AWS you need to use your existing {partner-product-short-name} entitlement. Additional costs depend on storage usage may be charged by Amazon automatically to your AWS account.
 
-To get pricing information, or to use your existing {partner-product-short-name} entitlements, contact your IBM sales representative at +1 (877) 426-3774. For more information about licensing terms, see the https://ibm.biz/Bdqt9u[software license agreement^].
+For Cloud Pak for Security product and pricing information, or to use your existing entitlements, contact your IBM sales representative at +1 (877) 426-3774 or online at https://www.ibm.com/products/cloud-pak-for-security.
+For more information about licensing terms, see the https://ibm.biz/Bdqt9u [software license agreement^].
