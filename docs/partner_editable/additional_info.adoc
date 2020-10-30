@@ -5,20 +5,48 @@
 // If steps are required to test the deployment, add them here. If not, remove the heading
 
 1. Logging into the {partner-product-short-name} Console
-
-You can confirm the deployment was successful by logging into the BootNode and checking that all _iscsequence_ are in _Successful_ status.
-
-```bash
-oc get iscsequence -n cp4s
-```
+  
+  Navigate to the CPSFQDN specified for the {partner-product-name} deployment parameters.
+  
+  Select _Default authentication_
+  
+  ![](../images/1.png)
+  
+  Use the name _platform-admin_ with the specified {partner-product-short-name} UI password.
+  
+  ![](../images/2.png)
 
 == Post deployment steps
 // If Post-deployment steps are required, add them here. If not, remove the heading
 
+1. Activate the Orchestration & Automation
+
+  See reference here: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/app_licensereq.html
+
+2. Activate X-Force Threat Intelligence Insights
+
+  Open the settings menu (Left menu bar)
+  
+  ![](../images/3.png)
+
+  Select _Threat intelligence plan_
+
+  ![](../images/4.png)
+
+  Select your package and see onboard references and prompts to apply your X-Force API key to activate the feature
+  
+  ![](../images/5.png)
+
+3. Install third party applications & AppHost
+
+  Select Orchestration & Administration > Permissions and access > Apps
+  
+  ![](../images/6.png)
+  
+  ![](../images/7.png)
+
 == Best practices for using {partner-product-short-name} on AWS
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
-
-You can activate the Orchestration & Automation by following the steps described here: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/app_licensereq.html
 
 == Security
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
