@@ -9,8 +9,7 @@
   Navigate to the CPSFQDN specified for the {partner-product-name} deployment parameters.
   
   Select _Default authentication_
-  
-[link=images/1.png]
+
 image::../images/image1.png[image_placeholder,width=648,height=439]
   
   Use the name _platform-admin_ with the specified {partner-product-short-name} UI password.
