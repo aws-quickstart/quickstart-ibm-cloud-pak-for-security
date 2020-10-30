@@ -4,7 +4,7 @@
 
 This Quick Start reference deployment guide provides step-by-step instructions for deploying {partner-product-short-name} on the AWS Cloud.
 
-Clients with IBM Cloud Pak for Security gain security insights with a unified console that provides visibility and analytics across IBM and 3rd party security tools, data, and clouds. They can take action faster with built-in AI and automation that simplify operations and streamline responses to save time and lower risk.
+Clients with {partner-product-name} gain security insights with a unified console that provides visibility and analytics across IBM and 3rd party security tools, data, and clouds. They can take action faster with built-in AI and automation that simplify operations and streamline responses to save time and lower risk.
 
 Security analysts may leverage the Data Explorer application to run federated investigations to fully understand the context and true impact of any security incident, risk, or threat.
 
