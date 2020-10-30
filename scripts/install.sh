@@ -87,7 +87,7 @@ SERVER="$(cut -d':' -f1 <<<"$OCP_URL")"
 PORT="$(cut -d':' -f2 <<<"$OCP_URL")"
 
 cd /ibm
-unzip unzip cp4s-openldap-master.zip
+unzip cp4s-openldap-master.zip
 cd cp4s-openldap-master
 
 cat << EOF > playbook.yml
