@@ -1,6 +1,7 @@
 // Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
 //Should any sections not be applicable, remove them
 
+//TODO I added this section - without this I was getting a 403 when directly accessing https://cp-console.apps.ClusterName.DomainName/console
 == Create DNS record
 Before you can test the deployment, you need to add one DNS record to your hosted zone in Amazon Route 53. Go to Amazon Route 53 console,
 choose the hosted zone corresponding to  the domain name that you specified as the `DomainName` parameter. Choose *Create Record*,
