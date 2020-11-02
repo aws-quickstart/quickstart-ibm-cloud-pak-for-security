@@ -34,31 +34,8 @@ image::../images/cloud-pak-security-welcome-page.png[CP4S welcome page,width=972
 //TODO This section doesn't look very coherent, unless Steps 1, 2, and 3 below are what all users are expected to do in sequence. Even if so, I'd prefer if you descriptively write them at a high level. However, my recommendation is to simply link to a IBM web page that has all the post-installation details.
 // If Post-deployment steps are required, add them here. If not, remove the heading
 
-. Activate the Orchestration & Automation
-
-See reference here: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/app_licensereq.html
-
-. Activate X-Force Threat Intelligence Insights
-
-Open the settings menu (Left menu bar)
-  
-image::../images/3.png[image_placeholder]
-
-Select _Threat intelligence plan_
-
-image::../images/4.png[image_placeholder]
-
-Select your package and see onboard references and prompts to apply your X-Force API key to activate the feature
-  
-image::../images/5.png[image_placeholder]
-
-. Install third party applications & AppHost
-
-Select Orchestration & Administration > Permissions and access > Apps
-  
-image::../images/6.png[image_placeholder]
-  
-image::../images/7.png[image_placeholder]
+Before using CP4S, you need to define users and connect it to data sources in your environment as described in the IBM Knowledge Center
+https://www-03preprod.ibm.com/support/knowledgecenter/SSTDPP_1.1.0/docs/security-pak/postinstallation.html 
 
 == Security
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
