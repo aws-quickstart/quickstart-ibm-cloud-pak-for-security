@@ -25,5 +25,5 @@ You can acquire your entitlement key from https://myibm.ibm.com/products-service
 ==== Prepare for the deployment
 
 Ensure you have a domain name to use for OpenShift in Amazon Route53: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html[Registering a new domain^].
-//TODO This should go in post-deployment steps
+//TODO Verify. Moved this to a new Create DNS record section in additional_info.adoc prior to Test the deployment
 //Create a seperate FQDN used for the CP4S Application console. Should have CNAME DNS record entry pointing to cp-console.apps.<Cluster Name>.<Domain Name>
