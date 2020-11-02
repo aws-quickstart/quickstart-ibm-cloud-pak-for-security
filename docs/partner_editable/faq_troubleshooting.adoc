@@ -26,42 +26,23 @@ For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/la
 
 == Troubleshooting
 
-#### Part 1. Setup resources
+//TODO Part 1. Setup resources has been removed, we cover it generically in the EC2 key pairs section in Specialized knowledge.
 
-**Set-up EC2 Key pair**
-From your AWS dashboard (ensure you're in the correct region)
-Find Services: EC2 > Network & Security > Key Pairs > Create key pair
+=== Installation of the product
 
-**How do I use my key pair to SSH into the BootNode instance?**
-When you generate a key pair you should recieve a *\*.pem* file containing the private key. With this you can simply use the *-i* option with *ssh* to login.
+When bootstrapping is complete all dependencies needed to run automation to deploy the desired product should be in place. From here the bootstrap will run the products automation to deploy. First OpenShift is installed using the openshift-install IPI followed by {partner-product-short-name} using in-house built automation.
 
-```bash
-ssh -i path_to_key/key.pem ec2-user@BootNode_instance_ip
-```
-
-Where the *path_to_key/key.pem* is where you downloaded your private key and *BootNode_instance_ip* is the public IPv4 address of the BootNode instance.
-
-#### Part 2. Installation of the product
-
-When bootstrapping is complete all depndencies needed to run automation to deploy the desired product should be in place. From here the bootstrap will run the products automation to deploy. First OpenShift is installed using the openshift-install IPI followed by CP4S using in-house built automation.
-
-#### Part 3. Logging
+=== Logs
 
 Various log files are generated and it's good to have a reference on where/what they are.
 
-**/ibm/logs/icp4i_install.log** - STDOUT of the openshift-install IPI
+* **/ibm/logs/icp4s_install.log** - STDOUT of the openshift-install IPI
 
-**/ibm/logs/icp4i-logs.txt** - STDOUT of the openshift-install IPI
+* **/ibm/cp4s_install_logs.log** - STDOUT of the {partner-product-short-name} install scripts
 
-**/ibm/cp4s_install_logs.log** - STDOUT of the CP4S install scripts
+=== Logging into the {partner-product-short-name} console
 
-#### Part 4. Troubleshooting {partner-product-short-name}
-
-Reference: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/troubleshooting.html
-
-Part 4. Logging into the {partner-product-name}
-
-If you are experiencing issues logging into the cosnole for {partner-product-short-name} the most likely error could be incorrect LDAP configuration.
+If you are experiencing issues logging into the console for {partner-product-short-name} the most likely error could be incorrect LDAP configuration.
 
 To redeploy the openLDAP and phpLDAPadmin package that comes with this QuickStart simply log onto the EC2 BootNode instance and navigate to the /ibm directory.
 
@@ -78,3 +59,5 @@ helm3 delete cp4s-openldap -n default
 ```
 
 You must have an account named **platform-admin** in the LDAP configuration within the **playbook.yml** file
+
+For additional troubleshooting, visit https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/troubleshooting.html[Troubleshooting^] in {partner-product-short-name} documentation.

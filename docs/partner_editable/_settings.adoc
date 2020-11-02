@@ -1,13 +1,15 @@
 :quickstart-project-name: quickstart-documentation-base
-:partner-product-name: IBM Cloud Pak® for Security
+:partner-product-name: IBM Cloud Pak for Security
 :partner-product-short-name: Cloud Pak for Security
 :partner-company-name: IBM
 :doc-month: October
 :doc-year: 2020
-:partner-contributors: Tudor Chiribes, Andrew Campagna, Tyler Stendara, Nir Carmel - {partner-company-name}
+:partner-contributors: Tudor Chiribes, Andrew Campagna, Tyler Stendara, and Nir Carmel - {partner-company-name}
 :quickstart-contributors: Vinod Shukla and Jim McConnell, AWS Quick Start team
 :deployment_time: 90 minutes
 :default_deployment_region: us-east-1
+:template_ec2: true
+:parameters_as_appendix: true
 // Uncomment these two attributes if you are leveraging
 // - an AWS Marketplace listing.
 // Additional content will be auto-generated based on these attributes.

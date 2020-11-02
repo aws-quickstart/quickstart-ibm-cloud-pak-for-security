@@ -1,4 +1,1 @@
-The following Regions are currently supported by this Quick Start.
-
-- _us-east-1 (N. Virginia)_ (EXAMPLE)
-- _us-east-2 (Ohio)_ (EXAMPLE)
+This deployment includes 3 Availability Zones, which isn’t currently supported in all AWS Regions. For a current list of supported Regions, see https://aws.amazon.com/about-aws/global-infrastructure/regions_az/[Regions and Availability Zones^] in the AWS documentation.
