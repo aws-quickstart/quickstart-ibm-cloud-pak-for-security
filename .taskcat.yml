@@ -1,0 +1,38 @@
+project:
+  name: quickstart-ibm-cloud-pak-for-security
+  shorten_stack_name: true
+  s3_regional_buckets: true
+  package_lambda: false
+  s3_bucket: ''
+  regions:
+  - us-east-1
+  - us-west-1
+  - us-west-2
+  
+tests:
+
+  cp4s-3AZ:
+    parameters:
+      #override these values in .taskcat_overrides.yml
+      APIKey: override
+      AdminPassword: override
+      BootNodeAccessCIDR: override
+      CPSFQDN: override
+      DomainName: override
+      CP4SDeploymentLogsBucketName: override
+      KeyPairName: override
+      RedhatPullSecret: override
+      # Defaults
+      APIUsername: "cp"
+      AvailabilityZones: $[taskcat_genaz_3]
+      ClusterName: cp4s-$[taskcat_random-string]
+      Namespace: cp4s-$[taskcat_random-string]
+      LicenseAgreement: "I agree"
+      NumberOfAZs: "3"
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+      QSS3KeyPrefix: "quickstart-ibm-cloud-pak-for-security/"
+
+    regions:
+      - us-west-2
+    template: templates/ibm-cloudpak-root.template.yaml
