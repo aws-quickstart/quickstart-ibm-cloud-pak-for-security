@@ -30,8 +30,6 @@ image::../images/create-dns-record.png[DNS Record,width=648,height=439]
 image::../images/cloud-pak-security-welcome-page.png[CP4S welcome page,width=972,height=702]
 
 == Post deployment steps
-//TODO This section doesn't look very coherent, unless Steps 1, 2, and 3 below are what all users are expected to do in sequence. Even if so, I'd prefer if you descriptively write them at a high level. However, my recommendation is to simply link to a IBM web page that has all the post-installation details.
-// If Post-deployment steps are required, add them here. If not, remove the heading
 
 Before using CP4S, you need to define users and connect the platform to data sources in your environment following the instructions in the https://www.ibm.com/support/knowledgecenter/SSTDPP_1.1.0/docs/security-pak/postinstallation.html[IBM Knowledge Center^].
 

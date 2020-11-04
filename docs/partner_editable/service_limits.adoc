@@ -1,5 +1,4 @@
 // Replace the <n> in each row to specify the number of resources used in this deployment. Remove the rows for resources that aren’t used.
-// TODO Check number of Classic Load Balancers - in my testing only 1 was created.
 |===
 |Resource |This deployment uses
 

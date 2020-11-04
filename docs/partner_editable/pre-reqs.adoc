@@ -7,7 +7,6 @@ Ensure your AWS account has the proper permissions settings to install OpenShift
 For reference to permissions necessary see: https://docs.openshift.com/container-platform/4.4/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account[Required AWS permissions^].
 This Quick Start creates a new IAM user with `AdministratorAccess` policy attached.
 
-//TODO Refactored this, verify if okay.
 ==== Sign up for a Red Hat Subscription
 
 This Quick Start requires a Red Hat subscription. During the deployment of the Quick Start, you’ll need to provide your https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift Installer Provisioned Infrastructure pull secret^].
