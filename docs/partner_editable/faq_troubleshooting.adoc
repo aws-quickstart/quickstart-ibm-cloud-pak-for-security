@@ -26,8 +26,6 @@ For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/la
 
 == Troubleshooting
 
-//TODO Part 1. Setup resources has been removed, we cover it generically in the EC2 key pairs section in Specialized knowledge.
-
 === Installation of the product
 
 When bootstrapping is complete all dependencies needed to run automation to deploy the desired product should be in place. From here the bootstrap will run the products automation to deploy. First OpenShift is installed using the openshift-install IPI followed by {partner-product-short-name} using in-house built automation.

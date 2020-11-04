@@ -9,7 +9,7 @@
 |AWS Identity and Access Management (IAM) security groups |6
 |IAM users |1
 |IAM roles |4
-|Classic Load Balancers |3
+|Classic Load Balancers |1
 |Network Load Balancers |2
 |EC2 Instances |8
 |===
