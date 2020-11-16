@@ -1,1 +1,1 @@
-This deployment includes 3 Availability Zones, which isn’t currently supported in all AWS Regions. For a current list of supported Regions, see https://aws.amazon.com/about-aws/global-infrastructure/regions_az/[Regions and Availability Zones^] in the AWS documentation.
+This deployment includes 3 Availability Zones, but this configuration is not currently supported in all AWS Regions. For a current list of supported Regions, see https://aws.amazon.com/about-aws/global-infrastructure/regions_az/[Regions and Availability Zones^] in the AWS documentation.

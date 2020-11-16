@@ -2,13 +2,13 @@
 //Should any sections not be applicable, remove them
 
 == Create DNS record
-Before you can test the deployment, you need to add one DNS record to your hosted zone in Amazon Route 53. Go to Amazon Route 53 console,
-choose the hosted zone corresponding to  the domain name that you specified as the `DomainName` parameter. Choose *Create Record*,
-then pick Simple routing policy, then choose *Define simple record* as shown in <<postDeploy1>>.
-
-. The record name must match the `CPSFQDN` parameter input you passed when creating the stack.
-. The record type should be a CNAME.
-. The value of the record should be `cp-console.apps.ClusterName.DomainName`, where `ClusterName` and `DomainName` were passed as input parameters.
+Before you can test the deployment, add one DNS record to your hosted zone in Amazon Route 53:
+. Go to Amazon Route 53 console.
+. Choose the hosted zone that corresponds to the domain name that you specified as the `DomainName` parameter. . .. Choose *Create Record*.
+. Pick the Simple routing policy, and then choose *Define simple record*, as shown in <<postDeploy1>>.
+. Confirm that the record name matches the `CPSFQDN` parameter input that you passed when creating the stack.
+. Confirm that the record type is CNAME.
+. For the value of the record, specify `cp-console.apps.ClusterName.DomainName`, where `ClusterName` and `DomainName` were passed as input parameters.
 +
 :xrefstyle: short
 [#postDeploy1]
@@ -18,10 +18,10 @@ image::../images/create-dns-record.png[DNS Record,width=648,height=439]
 
 == Test the deployment
 
-. After you have completed the link:#_create_dns_record[create DNS record step] above, navigate to the *CP4SWebClientURL* output of the root stack as shown in <<cfn_outputs>>.
+. After you have completed the link:#_create_dns_record[create DNS record step] above, navigate to the *CP4SWebClientURL* output of the root stack, as shown in <<cfn_outputs>>.
 . A new tab opens in your browser. You see either the {partner-product-short-name} web client login page or a warning from your browser that the HTTPS connection is not safe. By default, the public key infrastructure (PKI) certificate that is created for the {partner-product-short-name} cluster is self-signed, which causes the unsafe connection warning from your browser.
-. Log in to the {partner-product-short-name} web client by choosing *Default authentication*, and then using the default user `platform-admin` and the admin password you supplied when creating the stack. If you did not supply a password, you can retrieve it from the *CP4SSecret* secret stored in AWS Secrets Manager.
-. Once you log in, the welcome page is displayed as shown in <<testStep1>>.
+. Log in to the {partner-product-short-name} web client by choosing *Default authentication*, and then entering the default user `platform-admin` and the admin password that you supplied when creating the stack. If you did not supply a password, you can retrieve it from the *CP4SSecret* secret stored in AWS Secrets Manager.
+. After you log in, the welcome page opens, as shown in <<testStep1>>.
 +
 :xrefstyle: short
 [#testStep1]
@@ -31,14 +31,14 @@ image::../images/cloud-pak-security-welcome-page.png[CP4S welcome page,width=972
 
 == Post deployment steps
 
-Before using CP4S, you need to define users and connect the platform to data sources in your environment following the instructions in the https://www.ibm.com/support/knowledgecenter/SSTDPP_1.1.0/docs/security-pak/postinstallation.html[IBM Knowledge Center^].
+Before using {partner-product-short-name}, define users and connect the platform to data sources in your environment, following the instructions in the https://www.ibm.com/support/knowledgecenter/SSTDPP_1.1.0/docs/security-pak/postinstallation.html[IBM Knowledge Center^].
 
 == Security
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
 
-{partner-product-name} connects to various data sources using _data connectors_ it is in your best interest to ensure that only trusted priveleged users have access to both the data sources on the {partner-product-short-name} console or the OpenShift console.
+{partner-product-name} connects to various data sources using data connectors. Ensure that only trusted priveleged users have access to both the data sources on the {partner-product-short-name} console or the OpenShift console.
 
 == Other useful information
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
-{partner-product-name} has a simple static LDAP (openLDAP and phpLDAPadmin) configured user system. We recommend that you connect your own LDAP server to IBM Common Services to better support your long term use of the product. For further assistance please see https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/ldap-connect.html[Configuration LDAP authentication^] for details.
+{partner-product-name} has a simple static LDAP-configured (openLDAP and phpLDAPadmin) user system. Connect your own LDAP server to IBM Common Services to better support your long-term use of the product. For more information, see https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/ldap-connect.html[Configuration LDAP authentication^].

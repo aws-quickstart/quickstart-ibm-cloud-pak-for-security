@@ -2,33 +2,33 @@
 
 == FAQ
 
-*Q.* Where can I get my RedHat pull-secret from?
+*Q.* Where can I get my Red Hat pull secret?
 
-*A.* Visit: https://cloud.redhat.com/openshift/install/aws/installer-provisioned
+*A.* Go to the following URL to obtain the pull secret: https://cloud.redhat.com/openshift/install/aws/installer-provisioned.
 
 *Q.* Where can I get my IBM private registry password?
 
-*A.* Visit: https://myibm.ibm.com/products-services/containerlibrary
+*A.* Go to the following URL to obtain the IBM private registry password: https://myibm.ibm.com/products-services/containerlibrary.
 
 *Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
 
-*A.* If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with *Rollback on failure* set to *Disabled*. (This setting is under *Advanced* in the AWS CloudFormation console, *Options* page.) With this setting, the stack’s state is retained and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)
+*A.* If AWS CloudFormation fails to create the stack, relaunch the template with *Rollback on failure* set to *Disabled*. This setting is under *Advanced* in the AWS CloudFormation console on the *Configure stack options* page. With this setting, the stack’s state is retained, and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)
 // If you’re deploying on Linux instances, provide the location for log files on Linux, or omit this sentence.
 
-WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Please make sure to delete the stack when you finish troubleshooting.
+WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Make sure to delete the stack when you finish troubleshooting.
 
 For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation^] on the AWS website.
 
 *Q.* I encountered a size limitation error when I deployed the AWS CloudFormation templates.
 
-*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see the http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS documentation^].
+*A.* Launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^] in the AWS documentation.
 
 
 == Troubleshooting
 
-=== Installation of the product
+=== Installing the product
 
-When bootstrapping is complete all dependencies needed to run automation to deploy the desired product should be in place. From here the bootstrap will run the products automation to deploy. First OpenShift is installed using the openshift-install IPI followed by {partner-product-short-name} using in-house built automation.
+When bootstrapping is complete, all dependencies that are needed to run automation to deploy the desired product should be in place. From here, the bootstrap will run the product's automation to deploy. First OpenShift is installed using the openshift-install IPI followed by {partner-product-short-name} using automation built in house.
 
 === Logs
 

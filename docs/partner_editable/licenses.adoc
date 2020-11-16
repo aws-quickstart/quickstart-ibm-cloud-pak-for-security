@@ -1,6 +1,6 @@
 // Include details about the license and how they can sign up. If no license is required, clarify that.
 
-To use {partner-product-name} on AWS you need to use your existing {partner-product-short-name} entitlement.
+To use {partner-product-name} on AWS, use your existing {partner-product-short-name} entitlement.
 
-For Cloud Pak for Security product and pricing information, or to use your existing entitlements, contact your IBM sales representative at +1 (877) 426-3774 or online at https://www.ibm.com/products/cloud-pak-for-security[{partner-product-name}^].
+For {partner-product-name} product and pricing information, or to use your existing entitlements, contact your IBM sales representative at +1 (877) 426-3774 or online at https://www.ibm.com/products/cloud-pak-for-security[{partner-product-name}^].
 For more information about licensing terms, see the https://ibm.biz/Bdqt9u[software license agreement^].

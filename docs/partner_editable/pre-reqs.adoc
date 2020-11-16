@@ -2,25 +2,26 @@
 
 ==== Prepare your AWS account
 
-Ensure your AWS account has the proper permissions settings to install OpenShift via IPI.
+Ensure your AWS account has the proper permissions settings to install OpenShift via Installer Provisioned Infrastructure (IPI).
 
-For reference to permissions necessary see: https://docs.openshift.com/container-platform/4.4/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account[Required AWS permissions^].
-This Quick Start creates a new IAM user with `AdministratorAccess` policy attached.
+For a list of required permissions, see https://docs.openshift.com/container-platform/4.4/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account[Required AWS permissions^].
+
+This Quick Start creates a new AWS Identity and Access Management (IAM) user with the `AdministratorAccess` policy.
 
 ==== Sign up for a Red Hat Subscription
 
-This Quick Start requires a Red Hat subscription. During the deployment of the Quick Start, you’ll need to provide your https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift Installer Provisioned Infrastructure pull secret^].
+This Quick Start requires a Red Hat subscription. During the deployment of the Quick Start, provide your https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift Installer Provisioned Infrastructure pull secret^].
 
-If you don’t have an Red Hat account, you can register on the Red Hat website. (Note that registration may require a non-personal email address). To procure a 60-day evaluation license for OpenShift, follow the instructions at https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it[Evaluate Red Hat OpenShift Container Platform^].
+If you don’t have a Red Hat account, you can register on the Red Hat website. Note that registration may require a non-personal email address. To get a 60-day evaluation license for OpenShift, see the instructions in https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it[Red Hat OpenShift Container Platform^].
 
-The https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift pull secret^] should be uploaded to an S3 bucket. The Quick Start will pull this secret file from the specified S3 bucket location to provision the cluster.
+Upload the https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift pull secret^] to an S3 bucket. The Quick Start pulls this secret file from the specified S3 bucket location to provision the cluster.
 
 
 ==== {partner-product-short-name} Subscription
 
-The Quick Start requires an entitlement key to allow you to access the {partner-product-short-name} content.
+The Quick Start requires an entitlement key to access the {partner-product-short-name} content.
 You can acquire your entitlement key from https://myibm.ibm.com/products-services/containerlibrary[IBM Container Library^].
 
 ==== Prepare for the deployment
 
-Ensure you have a domain name to use for OpenShift in Amazon Route53: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html[Registering a new domain^].
+Confirm that you have a domain name to use for OpenShift in Amazon Route 53: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html[Registering a new domain^].
