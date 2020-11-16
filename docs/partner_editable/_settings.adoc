@@ -2,7 +2,7 @@
 :partner-product-name: IBM Cloud Pak for Security
 :partner-product-short-name: Cloud Pak for Security
 :partner-company-name: IBM
-:doc-month: October
+:doc-month: November
 :doc-year: 2020
 :partner-contributors: Tudor Chiribes, Andrew Campagna, Tyler Stendara, and Nir Carmel - {partner-company-name}
 :quickstart-contributors: Vinod Shukla and Jim McConnell, AWS Quick Start team

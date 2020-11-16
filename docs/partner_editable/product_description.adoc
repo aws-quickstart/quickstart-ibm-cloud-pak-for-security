@@ -2,4 +2,4 @@
 // Briefly describe the software. Use consistent and clear branding. 
 // Include the benefits of using the software on AWS, and provide details on usage scenarios.
 
-{partner-product-name} is a platform to more quickly integrate your existing security teams and tools to generate deeper insights into threats and risks, orchestrate actions and automate responses — all while leaving your data where it is.
+{partner-product-name} is a platform that helps you integrate your existing security teams and tools to generate deeper insights into threats and risks, orchestrate actions and automate responses--all while leaving your data where it is.
