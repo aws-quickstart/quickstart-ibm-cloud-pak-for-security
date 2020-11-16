@@ -232,18 +232,6 @@ class CP4SecurityInstall(object):
         return destPath
     #endDef
 
-    def updateStatus(self, status):
-        methodName = "updateStatus"
-        TR.info(methodName," Update Status of installation")
-        data = "301_AWS_STACKNAME="+self.stackName+",Status="+status
-        updateStatus = "curl -X POST https://un6laaf4v0.execute-api.us-west-2.amazonaws.com/testtracker --data "+data
-        try:
-            call(updateStatus, shell=True)
-            TR.info(methodName,"Updated status with data %s"%data)
-        except CalledProcessError as e:
-            TR.error(methodName,"command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))    
-    #endDef
-
     def installOCP(self, icp4sInstallLogFile):
         methodName = "installOCP"
         TR.info(methodName,"  Start installation of Openshift Container Platform")
