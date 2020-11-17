@@ -1,4 +1,4 @@
-:quickstart-project-name: quickstart-documentation-base
+:quickstart-project-name: quickstart-ibm-cloud-pak-for-security
 :partner-product-name: IBM Cloud Pak for Security
 :partner-product-short-name: Cloud Pak for Security
 :partner-company-name: IBM
