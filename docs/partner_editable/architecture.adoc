@@ -6,8 +6,8 @@ AWS Cloud.
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-[link=images/icp-for-security-architecture-diagram.png]
-image::../images/icp-for-security-architecture-diagram.png[Architecture,width=750,height=508]
+[link=images/icp-security-architecture-diagram.png]
+image::../images/icp-security-architecture-diagram.png[Architecture,width=750,height=508]
 
 As shown in Figure 1, the Quick Start sets up the following:
 
