@@ -3,12 +3,14 @@
 
 == Create DNS record
 Before you can test the deployment, add one DNS record to your hosted zone in Amazon Route 53:
+
 . Go to Amazon Route 53 console.
 . Choose the hosted zone that corresponds to the domain name that you specified as the `DomainName` parameter. . .. Choose *Create Record*.
 . Pick the Simple routing policy, and then choose *Define simple record*, as shown in <<postDeploy1>>.
 . Confirm that the record name matches the `CPSFQDN` parameter input that you passed when creating the stack.
 . Confirm that the record type is CNAME.
 . For the value of the record, specify `cp-console.apps.ClusterName.DomainName`, where `ClusterName` and `DomainName` were passed as input parameters.
+
 +
 :xrefstyle: short
 [#postDeploy1]
