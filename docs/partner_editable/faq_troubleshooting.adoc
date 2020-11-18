@@ -32,30 +32,28 @@ When bootstrapping is complete, all dependencies that are needed to run automati
 
 === Logs
 
-Various log files are generated and it's good to have a reference on where/what they are.
+Make notes of the the log files that are generated: 
 
-* **/ibm/logs/icp4s_install.log** - STDOUT of the openshift-install IPI
+* /ibm/logs/icp4s_install.log--STDOUT of the openshift-install IPI
 
-* **/ibm/cp4s_install_logs.log** - STDOUT of the {partner-product-short-name} install scripts
+* /ibm/cp4s_install_logs.log--STDOUT of the {partner-product-short-name} install scripts
 
-=== Logging into the {partner-product-short-name} console
+=== Logging in to the {partner-product-short-name} console
 
-If you are experiencing issues logging into the console for {partner-product-short-name} the most likely error could be incorrect LDAP configuration.
+If you are experiencing issues logging in to the console for {partner-product-short-name}, the most likely error is an incorrect LDAP configuration.
 
-To redeploy the openLDAP and phpLDAPadmin package that comes with this QuickStart simply log onto the EC2 BootNode instance and navigate to the /ibm directory.
-
-You will see a folder called **cp4s-openldap-master** edit the **playbook.yml** file in this directory and redeploy
+To redeploy the openLDAP and phpLDAPadmin package that comes with this Quick Start, log in to the EC2 BootNode instance and navigate to the /ibm directory. Edit the *playbook.yml* file in the *cp4s-openldap-master* folder and redeploy: 
 
 ```bash
 ansible-playbook -i hosts playbook.yml
 ```
 
-If the deployment fails you might need to remove the old LDAP helm deployment before attempting to deploy again
+If the deployment fails, you might need to remove the old LDAP helm deployment before attempting to deploy again:
 
 ```bash
 helm3 delete cp4s-openldap -n default
 ```
 
-You must have an account named **platform-admin** in the LDAP configuration within the **playbook.yml** file
+You must have an account named **platform-admin** in the LDAP configuration within the **playbook.yml** file.
 
-For additional troubleshooting, visit https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/troubleshooting.html[Troubleshooting^] in {partner-product-short-name} documentation.
+For additional troubleshooting, see https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/troubleshooting.html[Troubleshooting^] in {partner-product-short-name} documentation.
