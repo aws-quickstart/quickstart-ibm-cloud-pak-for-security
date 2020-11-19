@@ -20,12 +20,13 @@ internet access for resources in the private subnets.*
   ** A boot node Amazon EC2 instance that also serves as a bastion host to allow inbound Secure Shell (SSH) access to EC2 instances in the private subnets.
 * In the private subnets:
   ** OpenShift Container Platform (OCP) master nodes in up to three Availability Zones.
-  ** OCP compute nodes that host the {partner-product-short-name} capabilities.
+  ** OCP compute nodes with OpenShift auto scaling for hosting the {partner-product-short-name} capabilities.
   ** Amazon Elastic Block Storage disks that are mounted on the compute nodes for container-persistent data.
 * A Classic Load Balancer spanning the public subnets for accessing {partner-product-short-name} from a web browser.
 * A Network Load Balancer spanning the public subnets for routing external OpenShift application programming interface (API) traffic to the OCP master instances.
 * A Network Load Balancer spanning the private subnets for routing internal OpenShift API traffic to the OCP master instances.
 * Amazon Route 53 as your public Domain Name System (DNS) for resolving domain names of the IBM {partner-product-short-name} management console and applications deployed on the cluster.
+* Amazon S3 bucket used for OpenShift image registry.
 
 *The template that deploys the Quick Start into an existing VPC skips
 the components marked by asterisks and prompts you for your existing VPC
