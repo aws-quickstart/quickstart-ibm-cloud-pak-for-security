@@ -1,0 +1,59 @@
+---
+
+- name: generate uuid
+  shell: uuidgen
+  register: uuid
+
+- name: create tmp dir for specification
+  file:
+    path: /tmp/openldap_{{ uuid.stdout }}
+    state: directory
+
+- name: copy helm chart
+  synchronize:
+    src: "openldap-chart"
+    dest: /tmp/openldap_{{ uuid.stdout }}
+
+- name: copy image policy
+  synchronize:
+    src: "image-policy.yaml"
+    dest: /tmp/openldap_{{ uuid.stdout }}/openldap-chart
+
+- name: copy values.yml
+  template:
+    src: "templates/values.yaml.j2"
+    dest: /tmp/openldap_{{ uuid.stdout }}/openldap-chart/values.yaml    
+
+- name: check if ImagePolicy is enaled
+  shell: kubectl get ImagePolicy
+  register: policy
+  ignore_errors: yes
+
+- name: apply image-policy
+  shell: kubectl apply -f /tmp/openldap_{{ uuid.stdout }}/image-policy.yaml
+  when: policy.stdout.find('NAME') != -1
+
+- name: check if icp-openldap is present
+  shell: >
+    helm3 status icp-openldap
+  register: release
+  failed_when: False
+
+- name: debug
+  debug:
+    msg: "{{ release }}"   
+
+- name: deploy openldap service
+  shell: helm3 install icp-openldap --namespace {{ namespace|default('default') }} /tmp/openldap_{{ uuid.stdout }}/openldap-chart
+  when: release.rc != 0  
+
+- name: update openldap service
+  shell: helm3 upgrade icp-openldap --namespace {{ namespace|default('default') }} /tmp/openldap_{{ uuid.stdout }}/openldap-chart
+  when: release.rc == 0
+
+- name: cleanup
+  file:
+    path: /tmp/openldap_{{ uuid.stdout }}
+    state: absent
+  when: lookup('env', 'DEBUG') != 'DEBUG'
+

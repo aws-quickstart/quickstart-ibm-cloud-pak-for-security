@@ -1,0 +1,30 @@
+---
+
+# Login task
+    
+- name: "Login"
+  shell: >
+     cloudctl login -a https://{{ icp.console_url }} -u {{ icp.username }} -p {{ icp.password }} -n {{ icp.namespace }} --skip-ssl-validation
+
+- name: If IBMCloud login, setup for pulling certs is required
+  block:
+    - name: Setup Cluser
+      shell: kubectl config set-cluster mycluster --server=https://{{ icp.ibm_cloud_server }}:{{ icp.ibm_cloud_port }} --insecure-skip-tls-verify=true
+
+    - name: Setup Cluser
+      shell: kubectl config set-context mycluster-context --cluster=mycluster
+
+    - name: Retrieve Token
+      shell: cloudctl tokens | grep ID | awk '{print $3; exit}'
+      register: token
+
+    - name: Setup Cluster
+      shell: kubectl config set-credentials admin --token={{ token.stdout }}
+
+    - name: Setup Cluster
+      shell: kubectl config set-context mycluster-context --user={{ icp.username }} --namespace=services
+
+    - name: Setup Cluster
+      shell: kubectl config use-context mycluster-context
+
+  when: icp.ibm_cloud_server != ""

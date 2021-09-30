@@ -1,0 +1,38 @@
+---
+
+- name: retrieve token
+  uri:
+    url: https://{{ icp.console_url }}/idprovider/v1/auth/identitytoken
+    method: POST
+    body: "grant_type=password&username={{ icp.username }}&password={{ icp.password }}&scope=openid"
+    body_format: raw
+    headers:
+      Content-Type: "application/x-www-form-urlencoded;charset=UTF-8"
+    validate_certs: no 
+  register: result
+
+- name: get OpenLDAP Service
+  shell: kubectl get svc -n {{ namespace|default('default') }}| grep "icp-openldap" | awk '{print $3; exit}'
+  register: ldap  
+
+- name: debug
+  debug: 
+    var: ldap
+    
+
+# 422 - Entity already exist, so acceptable
+- name: register OpenLDAP Directory
+  uri:
+    url: https://{{ icp.console_url }}/idmgmt/identity/api/v1/directory/ldap/onboardDirectory
+    method: POST
+    body: "{{ lookup('template','openldap.json.j2') }}"
+    body_format: json
+    status_code: [200, 422]
+    validate_certs: no
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Bearer {{ result.json.access_token }}"
+  retries: 30
+  delay: 30
+  until: ('status' in registration) and (registration.status == 200 or registration.status == 422)
+  register: registration

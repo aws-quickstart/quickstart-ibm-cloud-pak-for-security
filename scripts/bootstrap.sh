@@ -18,12 +18,12 @@ systemctl start amazon-ssm-agent
 systemctl enable amazon-ssm-agent
 rm -f ./amazon-ssm-agent.rpm
 
-qs_retry_command 10 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.29/openshift-client-linux.tar.gz
+qs_retry_command 10 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.7.7/openshift-client-linux.tar.gz
 tar xvf openshift-client-linux.tar.gz
 mv ./oc /usr/bin/
 mv ./kubectl /usr/bin
 
-qs_retry_command 10 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.4.29/openshift-install-linux.tar.gz
+qs_retry_command 10 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.7.7/openshift-install-linux.tar.gz
 tar xvf openshift-install-linux.tar.gz
 mv ./openshift-install /ibm/
 cd -
@@ -44,7 +44,7 @@ sudo tar xvf helm-v3.2.4-linux-amd64.tar.gz
 sudo cp linux-amd64/helm /usr/local/bin/helm3
 
 echo "INSTALLING CLOUDCTL"
-sudo curl -L https://github.com/IBM/cloud-pak-cli/releases/download/v3.4.4/cloudctl-linux-amd64.tar.gz -o cloudctl-linux-amd64.tar.gz
+sudo curl -L https://github.com/IBM/cloud-pak-cli/releases/download/v3.7.1/cloudctl-linux-amd64.tar.gz -o cloudctl-linux-amd64.tar.gz
 sudo tar xvf cloudctl-linux-amd64.tar.gz
 sudo cp cloudctl-linux-amd64 /usr/local/bin/cloudctl
 
@@ -63,7 +63,7 @@ echo "INSTALLING CERTAUTH"
 pip3 install certauth
 
 echo "INSTALLING ANSIBLE"
-pip3 install ansible
+pip install ansible
 
 echo "INSTALLING BOTO3"
 qs_retry_command 10 pip install boto3 &> /var/log/userdata.boto3_install.log

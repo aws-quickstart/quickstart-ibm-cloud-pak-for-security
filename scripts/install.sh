@@ -1,66 +1,68 @@
 exec > cp4s_install_logs.log
 
-ENTITLED_REGISTRY_PASSWORD=$1
-CP4S_FQDN=$2
-OCP_URL=$3
-LDAP_PASS=$4
+export ENTITLED_REGISTRY_PASSWORD=$1
+export OCP_URL=$2
+export LDAP_PASS=$3
+export CLOUDCTL_TRACE=TRUE
 
-python3 /ibm/pyca/ca.py $CP4S_FQDN
-cloudctl case save --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.9.tgz --outputdir .
-tar xvf ibm-cp-security-1.0.9.tgz
+cloudctl case save --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir .
+tar xvf ibm-cp-security-1.0.17.tgz
 
 cat << EOF  > ibm-cp-security/inventory/installProduct/files/values.conf
 
-# Admin User ID (Required)
+# Admin User ID (Required): The user that is to be assigned as an Administrator in the default account after the installation. The user must exist in an LDAP directory that will be connected to Foundational Services after deployment.
 adminUserId="platform-admin" 
 
-#Cluster type e.g aws,ibmcloud, ocp (Required)
+# Cluster type (Required) should be one of the following: i.e. "aws", "ibmcloud", "azure", "ocp". This is a mandatory value, If not set it will be "ocp" by default.
 cloudType="aws"
 
-# CP4S FQDN domain(Required)
-cp4sapplicationDomain="$CP4S_FQDN"
+# Block storage (Required), see more details https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.7.0/docs/security-pak/persistent_storage.html
+storageClass="gp2"
 
-# e.g ./path-to-cert/cert.crt (Required)
-cp4sdomainCertificatePath="/ibm/cert.crt" 
-
-## Path to domain certificate key ./path-to-key/cert.key (Required)
-cp4sdomainCertificateKeyPath="/ibm/private.key"  
-
-# Path to custom ca cert e.g <path-to-cert>/ca.crt (Only required if using custom/self signed certificate)
-cp4scustomcaFilepath="/ibm/ca.crt" 
-
-# Set image pullpolicy  e.g Always,IfNotPresent, default is IfNotPresent (Optional)
-cp4simagePullPolicy="IfNotPresent"
-
-# Default Account name, default is "Cloud Pak For Security" (Optional)
-#defaultAccountName="Cloud Pak For Security" 
-
-# set to "true" to enable CSA Adapter (Optional)
-enableCloudSecurityAdvisor="false" 
-
-## Only Required for online install 
-entitledRegistryUrl="cp.icr.io"
-
-## Only Required for online install 
-entitledRegistryPassword="$ENTITLED_REGISTRY_PASSWORD" 
-
-## Only Required for online install 
-entitledRegistryUsername="cp" 
-
-# Only required for airgap install
-localDockerRegistry="" 
-
-# Only required for airgap install
-localDockerRegistryUsername=""
-
-# Only required for airgap install
-localDockerRegistryPassword=""
-
-#Entitled by default,set to <local> for airgap install 
+# Entitled by default (Required)
 registryType="entitled"
 
-# Block storage (Required)
-storageClass="gp2"
+# Only Required for online install 
+entitledRegistryUrl="cp.icr.io"
+
+# Only Required for online install 
+entitledRegistryPassword="$ENTITLED_REGISTRY_PASSWORD" 
+
+# Only Required for online install 
+entitledRegistryUsername="cp" 
+
+# Only required for offline/airgap install
+localDockerRegistry="" 
+
+# Only required for offline/airgap install
+localDockerRegistryUsername=""
+
+# Only required for offline/airgap install
+localDockerRegistryPassword=""
+
+# CP4S FQDN domain (Optional: Not required if your cloudType is set to "ibmcloud" or "aws")
+cp4sapplicationDomain=""
+
+# e.g ./path-to-cert/cert.crt (Optional: Not required if you are using ibmcloud or aws). See more details: https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.7.0/docs/security-pak/tls_certs.html.
+cp4sdomainCertificatePath="" 
+
+# Path to domain certificate key ./path-to-key/cert.key (Optional: Not required if you using ibmcloud or aws). See more at https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.7.0/docs/security-pak/tls_certs.html.
+cp4sdomainCertificateKeyPath=""  
+
+# Path to custom ca cert e.g <path-to-cert>/ca.crt (Only required if using custom/self signed certificate and optional on ibmcloud or aws). See more at https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.7.0/docs/security-pak/tls_certs.html.
+cp4scustomcaFilepath="" 
+
+# Set image pullpolicy  e.g Always,IfNotPresent, default is Always (Required)
+cp4simagePullPolicy="Always"
+
+# Set to "true" to enable Openshift authentication (Optional). Only supported for ROKS clusters, for more details, see https://www.ibm.com/support/knowledgecenter/en/SSHKN6/iam/3.x.x/roks_config.html
+cp4sOpenshiftAuthentication="false"
+
+# Default Account name, default is "Cloud Pak For Security" (Optional)
+defaultAccountName="Cloud Pak For Security" 
+
+# set to "true" to enable CSA Adapter (Optional), see https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.7.0/docs/scp-core/csa-adapter-cases.html for more details
+enableCloudSecurityAdvisor="false"
 
 # Set storage fs group. Default is 26 (Optional)
 storageClassFsGroup="26"
@@ -68,29 +70,26 @@ storageClassFsGroup="26"
 # Set storage class supplemental groups (Optional)
 storageClassSupplementalGroups="" 
 
-# set seperate storageclass for toolbox (Optional)
-toolboxStorageClass="" 
+# Set seperate storageclass for backup (Optional)
+backupStorageClass="" 
 
-# set custom storage size for toolbox,default is 100Gi (Optional)
-toolboxStorageSize="100Gi" 
+# Set custom storage size for backup, default is 100Gi (Optional)
+backupStorageSize="100Gi"
 
 EOF
 
 cat patch.sh > /ibm/ibm-cp-security/inventory/installProduct/files/launch.sh
-
-cloudctl case launch --case ibm-cp-security --namespace cp4s  --inventory installProduct --action install --args "--license accept --helm3 /usr/local/bin/helm3 --inputDir /ibm" --tolerance 1
+cloudctl case launch -t 1 --case ibm-cp-security --namespace cp4s  --inventory installProduct --action install --args "--license accept --helm3 /usr/local/bin/helm3 --inputDir /ibm"
 CP_RESULT=${?}
+
+echo $CP_RESULT
 
 CP_PASSWORD=$(oc get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' -n ibm-common-services | base64 -d)
 CP_ROUTE=$(oc get route cp-console -n ibm-common-services|awk 'FNR == 2 {print $2}')
 SERVER="$(cut -d':' -f1 <<<"$OCP_URL")"
 PORT="$(cut -d':' -f2 <<<"$OCP_URL")"
 
-cd /ibm
-unzip cp4s-openldap-master.zip
-cd cp4s-openldap-master
-
-cat << EOF > playbook.yml
+cat << EOF > cp4s-openldap-master/playbook.yml
 
 ---
 - hosts: local
@@ -103,20 +102,21 @@ cat << EOF > playbook.yml
 
   vars:
     icp:        
-        console_url: "${CP_ROUTE}"
+        console_url: "$CP_ROUTE"
         ibm_cloud_server: "" # Only Applicable for IBMCloud Deployment
         ibm_cloud_port: ""   # Only Applicable for IBMCloud Deployment
         username: "admin"
-        password: "${CP_PASSWORD}"
+        password: "$CP_PASSWORD"
         account: "id-mycluster-account"
         namespace: "default"
 
     
     openldap:
-        adminPassword: "${LDAP_PASS}"
-        initialPassword: "${LDAP_PASS}"
+        adminPassword: "$LDAP_PASS"
+        initialPassword: "$LDAP_PASS"
         userlist: "isc-demo,isc-test,platform-admin"
 
 EOF
 
+cd cp4s-openldap-master
 ansible-playbook -i hosts playbook.yml

@@ -1,0 +1,13 @@
+{
+      "LDAP_ID": "ICPOpenLDAP",
+      "LDAP_URL": "ldap://{{ ldap.stdout }}:389",
+      "LDAP_BASEDN": "dc=local,dc=io",
+      "LDAP_BINDDN": "cn=admin,dc=local,dc=io",
+      "LDAP_BINDPASSWORD": "{{ openldap.adminPassword | b64encode }}",
+      "LDAP_TYPE": "Custom",
+      "LDAP_USERFILTER": "(&(uid=%v)(objectclass=person))",
+      "LDAP_GROUPFILTER": "(&(cn=%v)(objectclass=groupOfUniqueNames))",
+      "LDAP_USERIDMAP": "*:uid",
+      "LDAP_GROUPIDMAP": "*:cn",
+      "LDAP_GROUPMEMBERIDMAP": "groupOfUniqueNames:uniquemember"
+}

@@ -1,0 +1,24 @@
+---
+- hosts: local
+  gather_facts: true
+  any_errors_fatal: true
+  roles:
+    - roles/secops.ibm.icp.login
+    - roles/secops.ibm.icp.openldap.deploy
+    - roles/secops.ibm.icp.openldap.register
+
+  vars:
+    icp:        
+        console_url: ""
+        ibm_cloud_server: "" # Only Applicable for IBMCloud Deployment
+        ibm_cloud_port: ""   # Only Applicable for IBMCloud Deployment
+        username: ""
+        password: ""
+        account: "id-mycluster-account"
+        namespace: "default"
+
+    
+    openldap:
+        adminPassword: "isc-demo"
+        initialPassword: "isc-demo"
+        userlist: "isc-demo,isc-test"

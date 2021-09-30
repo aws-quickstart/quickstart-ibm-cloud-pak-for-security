@@ -232,6 +232,18 @@ class CP4SecurityInstall(object):
         return destPath
     #endDef
 
+    def updateStatus(self, status):
+        methodName = "updateStatus"
+        TR.info(methodName," Update Status of installation")
+        data = "301_AWS_STACKNAME="+self.stackName+",Status="+status
+        updateStatus = "curl -X POST https://un6laaf4v0.execute-api.us-west-2.amazonaws.com/testtracker --data "+data
+        try:
+            call(updateStatus, shell=True)
+            TR.info(methodName,"Updated status with data %s"%data)
+        except CalledProcessError as e:
+            TR.error(methodName,"command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))    
+    #endDef
+
     def installOCP(self, icp4sInstallLogFile):
         methodName = "installOCP"
         TR.info(methodName,"  Start installation of Openshift Container Platform")
@@ -528,7 +540,7 @@ class CP4SecurityInstall(object):
                 ocpend = Utilities.currentTimeMillis()
                 self.printTime(ocpstart, ocpend, "Installing OCP")
 
-                install_cps = ("bash install.sh " + self.apiKey + " " + self.CPSFQDN + " " + "api." +
+                install_cps = ("bash install.sh " + self.apiKey + " " + "api." +
                                 self.ClusterName + "." + self.DomainName + ":6443 " + self.password)
                 
                 try:
@@ -569,11 +581,15 @@ class CP4SecurityInstall(object):
             success = 'true'
             status = 'SUCCESS'
             TR.info(methodName,"SUCCESS END CP4S Install AWS ICP4S Quickstart.  Elapsed time (hh:mm:ss): %d:%02d:%02d" % (eth,etm,ets))
+            # TODO update this later
+            self.updateStatus(status)
         else:
             success = 'false'
             status = 'FAILURE: Check logs in S3 log bucket or on the Boot node EC2 instance in /ibm/logs/icp4s_install.log and /ibm/logs/post_install.log'
             TR.info(methodName,"FAILED END CP4S Install AWS ICP4S Quickstart.  Elapsed time (hh:mm:ss): %d:%02d:%02d" % (eth,etm,ets))
-
+            # # TODO update this later
+            self.updateStatus(status)
+           
         #endIf 
         try:
             data = "%s: IBM Cloud Pak installation elapsed time: %d:%02d:%02d" % (status,eth,etm,ets)    
