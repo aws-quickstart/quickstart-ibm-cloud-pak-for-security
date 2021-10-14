@@ -8,3 +8,5 @@ taskcat_outputs/
 index.html
 docs/index.html
 docs/generated/*
+.idea
+debug

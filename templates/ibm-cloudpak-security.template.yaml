@@ -1,6 +1,15 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Template for an IBM Cloud Pak for Security deployment with existing VPC. **WARNING** This template creates EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1r9m3n6hu)
 Metadata:
+  cfn-lint:
+    config:
+      ignore_checks:
+        - W9002
+        - W9003
+        - W9006
+        - E9101 # Master is a OpenShift term and cannot be removed at this time.
+        - W2001
+        - E9010 # Some parameters are used from OpenShift configuration
   QuickStartDocumentation:
     EntrypointName: "Parameters for deploying into an existing VPC"
     Order: "2"
@@ -376,7 +385,6 @@ Rules:
         AssertDescription: All subnets must in the VPC.
 
 Conditions:
-  3AZCondition: !Equals [!Ref NumberOfAZs, 3]
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 
 Resources:
@@ -384,7 +392,7 @@ Resources:
     Type: 'AWS::IAM::User'
     Properties:
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess
 
   CP4SIAMUserAccessKey:
     Type: 'AWS::IAM::AccessKey'
@@ -399,7 +407,7 @@ Resources:
   OpenshiftSecret:
     Type: "AWS::SecretsManager::Secret"
     Properties:
-      SecretString: !Sub '{"ocpPassword":""}'
+      SecretString: '{"ocpPassword":""}'
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -412,8 +420,8 @@ Resources:
               Service: lambda.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Path: /
       Policies:
         - PolicyName: lambda-cleanUpLambda
@@ -427,7 +435,7 @@ Resources:
                   - ssm:GetParameter
                   - ssm:DeleteParameter
                 Resource:
-                  - '*'
+                  - !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*
               - Effect: Allow
                 Action:
                   - logs:FilterLogEvents
@@ -448,8 +456,8 @@ Resources:
           - "sts:AssumeRole"
       Path: "/"
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
-        - arn:aws:iam::aws:policy/AWSCloudFormationReadOnlyAccess
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/AWSCloudFormationReadOnlyAccess
       Policies:
       - PolicyName: bootnode-policy
         PolicyDocument:
@@ -479,10 +487,10 @@ Resources:
             - !Ref OpenshiftSecret
           - Effect: "Allow"
             Action: "s3:ListBucket"
-            Resource: !Sub arn:aws:s3:::${CP4SDeploymentLogsBucketName}
+            Resource: !Sub arn:${AWS::Partition}:s3:::${CP4SDeploymentLogsBucketName}
           - Effect: "Allow"
             Action: "s3:PutObject"
-            Resource: !Sub arn:aws:s3:::${CP4SDeploymentLogsBucketName}/*
+            Resource: !Sub arn:${AWS::Partition}:s3:::${CP4SDeploymentLogsBucketName}/*
           - Effect: Allow
             Action:
             - ssm:SendCommand

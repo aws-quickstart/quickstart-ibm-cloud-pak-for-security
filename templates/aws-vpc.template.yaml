@@ -1,7 +1,8 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "This template creates a Multi-AZ, multi-subnet VPC infrastructure with managed NAT gateways in the public subnet for each Availability Zone. You can also create additional private subnets with dedicated custom network access control lists (ACLs). If you deploy the Quick Start in a region that doesn't support NAT gateways, NAT instances are deployed instead. **WARNING** This template creates AWS resources. You will be billed for the AWS resources used if you create a stack from this template. QS(0027)",
+    "Description": "This template creates a Multi-AZ, multi-subnet VPC infrastructure with managed NAT gateways in the public subnet for each Availability Zone. You can also create additional private subnets with dedicated custom network access control lists (ACLs). If you deploy the Quick Start in a region that doesn't support NAT gateways, NAT instances are deployed instead. **WARNING** This template creates AWS resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1s8ciba93)",
     "Metadata": {
+        "cfn-lint": { "config": { "ignore_checks": ["W9002", "W9003", "W9006", "W1001"] } },
         "AWS::CloudFormation::Interface": {
             "ParameterGroups": [
                 {
@@ -41,15 +42,6 @@
                         "PrivateSubnetBTag3",
                         "VPCTenancy"
                     ]
-                },
-                {
-                    "Label": {
-                        "default": "Deprecated: NAT Instance Configuration"
-                    },
-                    "Parameters": [
-                        "KeyPairName",
-                        "NATInstanceType"
-                    ]
                 }
             ],
             "ParameterLabels": {
@@ -61,12 +53,6 @@
                 },
                 "CreatePrivateSubnets": {
                     "default": "Create private subnets"
-                },
-                "KeyPairName": {
-                    "default": "Deprecated: Key pair name"
-                },
-                "NATInstanceType": {
-                    "default": "Deprecated: NAT instance type"
                 },
                 "NumberOfAZs": {
                     "default": "Number of Availability Zones"
@@ -155,16 +141,6 @@
             ],
             "Default": "true",
             "Description": "Set to false to create only public subnets. If false, the CIDR parameters for ALL private subnets will be ignored.",
-            "Type": "String"
-        },
-        "KeyPairName": {
-            "Description": "Deprecated. NAT gateways are now supported in all regions.",
-            "Type": "String",
-            "Default": "deprecated"
-        },
-        "NATInstanceType": {
-            "Default": "deprecated",
-            "Description": "Deprecated. NAT gateways are now supported in all regions.",
             "Type": "String"
         },
         "NumberOfAZs": {
@@ -2357,6 +2333,20 @@
         "S3VPCEndpoint": {
             "Condition": "PrivateSubnetsCondition",
             "Type": "AWS::EC2::VPCEndpoint",
+            "Metadata": {
+                "cfn-lint": {
+                    "config": {
+                        "ignore_checks": [
+                                "EIAMPolicyActionWildcard",
+                                "EPolicyWildcardPrincipal"
+                        ],
+                        "ignore_reasons": {
+                            "EIAMPolicyActionWildcard": "Full access to the service from the endpoint is intentional",
+                            "EPolicyWildcardPrincipal": "Full access to the service from the endpoint is intentional",
+                        }
+                    }
+                }
+            },
             "Properties": {
                 "PolicyDocument": {
                     "Version": "2012-10-17",
