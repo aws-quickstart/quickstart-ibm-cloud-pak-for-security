@@ -4,24 +4,67 @@
 
 Ensure your AWS account has the proper permissions settings to install OpenShift via Installer Provisioned Infrastructure (IPI).
 
-For a list of required permissions, see https://docs.openshift.com/container-platform/4.4/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account[Required AWS permissions^].
+For a list of required permissions, see the  OpenShift Container Platform documentation on https://docs.openshift.com/container-platform/4.8/installing/installing_aws/installing-aws-account.html#installation-aws-permissions_installing-aws-account[Required AWS Permissions for the IAM User^].
 
-This Quick Start creates a new AWS Identity and Access Management (IAM) user with the `AdministratorAccess` policy.
+This Quick Start creates a new AWS Identity and Access Management (IAM) user with the *AdministratorAccess* policy.
 
-==== Sign up for a Red Hat Subscription
+==== Create a key pair using Amazon EC2
+
+Make sure you have an Amazon EC2 key pair in the region where you are deploying the stack. You will need this key pair to securely connect to your instance after it launches in that region. See AWS documentation on how to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair[Create a key pair using Amazon EC2^].
+
+==== Create an Amazon S3 bucket
+
+You need to create an Amazon S3 bucket in one of the AWS Regions. See AWS documentation on how to https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html[Create your first S3 bucket^].
+
+To upload files into your S3 bucket, see https://docs.aws.amazon.com/AmazonS3/latest/userguide/uploading-an-object-bucket.html[Upload an object to your bucket^].
+
+This S3 bucket is used for storing Red Hat OpenShift pull secret which is required for deploying IBM Cloud Pak for Security. Additionally, it can also be used to store the optional TLS certificates, keys, and SOAR Entitlement.
+
+==== Sign up for a Red Hat subscription
 
 This Quick Start requires a Red Hat subscription. During the deployment of the Quick Start, provide your https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift Installer Provisioned Infrastructure pull secret^].
 
-If you don’t have a Red Hat account, you can register on the Red Hat website. Note that registration may require a non-personal email address. To get a 60-day evaluation license for OpenShift, see the instructions in https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it[Red Hat OpenShift Container Platform^].
+If you don’t have a Red Hat account, you can create one on the Red Hat website. Note that registration may require a non-personal email address. To get a 60-day evaluation license for OpenShift, see the instructions in https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it[Red Hat OpenShift Container Platform^].
 
-Upload the https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift pull secret^] to an S3 bucket. The Quick Start pulls this secret file from the specified S3 bucket location to provision the cluster.
+Upload the https://console.redhat.com/openshift/install/aws/installer-provisioned[OpenShift pull secret^] to your S3 bucket. The Quick Start pulls this secret from your S3 bucket location to provision the cluster.
 
+==== {partner-product-name} subscription
 
-==== {partner-product-short-name} Subscription
+* The Quick Start requires an entitlement key to access the {partner-product-name} content.
+  ** You can acquire your IBM entitlement key from https://myibm.ibm.com/products-services/containerlibrary[IBM Container Library^].
+  ** During stack creation you will need to pass the IBM entitlement key as the link:#_icp4s_parameters[RepositoryPassword] parameter.
+  
+* The Quick Start uses link:#_icp4s_optional_parameters[SOAR Entitlement] for Orchestration & Automation application on {partner-product-name}.
+  ** To know how to acquire your SOAR Entitlement, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-licensing-entitlement[Licensing and Entitlement^].
+  ** Upload the SOAR Entitlement to your S3 bucket. The Quick Start pulls this SOAR Entitlement from the specified S3 bucket location for configuring Orchestration & Automation.
+  
+==== Domain name and TLS certificates 
 
-The Quick Start requires an entitlement key to access the {partner-product-short-name} content.
-You can acquire your entitlement key from https://myibm.ibm.com/products-services/containerlibrary[IBM Container Library^].
+Confirm that you have a domain name to use for OpenShift in Amazon Route 53. If you do not have a domain name, see the AWS documentation on https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html[Registering a new domain^].
 
-==== Prepare for the deployment
+NOTE: {partner-product-name} can be installed using the FQDN and TLS certificates of the Red Hat® OpenShift® Container Platform by not passing in an FQDN in the link:#_icp4s_optional_parameters[CP4SFQDN] parameter during installation. If you choose this method, you don't have to create your own fully qualified domain name.
 
-Confirm that you have a domain name to use for OpenShift in Amazon Route 53: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html[Registering a new domain^].
+If you wish to create your own FQDN for the {partner-product-name}, add a DNS record to your hosted zone in Amazon Route 53. 
+
+The following procedure explains how to create records using the Amazon Route 53 console.
+
+. Go to Amazon Route 53 console. https://us-east-1.console.aws.amazon.com/route53[Click here^].
+. Choose the hosted zone that corresponds to the domain name you will use when creating the stack.
+. Choose *Create Record*.
+. Enter a value for record name, this record will be used for the {partner-product-name} link:#_icp4s_optional_parameters[CP4SFQDN] parameter value when creating the stack. 
++
+WARNING: Make sure that your FQDN must not be the same as the Red Hat OpenShift Container Platform cluster FQDN, or any other FQDN associated with the Red Hat OpenShift Container Platform cluster.
++
+. Confirm that the record type is `CNAME`.
+. For the value of the record, specify `console-openshift-console.apps.ClusterName.DomainName`, where link:#_cluster_name_parameter[ClusterName] and link:#_domain_name_parameter[DomainName] are the respective input parameters used when creating the stack.
+. For the routing policy, pick `Simple routing`, and then choose *Create record*, as shown in <<_create_dns_record>>.
+
+[#_create_dns_record]
+.Create DNS record for FQDN for the {partner-product-name}
+[link=images/create-dns-record.png]
+image::../images/create-dns-record.png[DNS Record]
+
+{empty} +
+If you are using your own FQDN, you must provide a link:#_icp4s_optional_parameters[TLS certificate] and link:#_icp4s_optional_parameters[TLS key], that use keys that are signed by a trusted certificate authority (CA). A link:#_icp4s_optional_parameters[custom TLS certificate] is required, if the provided server keys are not signed by a trusted certificate authority. For more information, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-domain-name-tls-certificates[Domain Name and TLS Certificates^]. 
+
+Upload the TLS certificate, TLS key and custom TLS certificate to your S3 bucket. The Quick Start pulls these certificates and keys from your S3 bucket location for {partner-product-name} deployment.
