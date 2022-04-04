@@ -52,7 +52,7 @@
 |Number of compute nodes (`NumberOfCompute`)|`4`|The desired capacity for the Red Hat Openshift Container Platform compute node instances. The minimum value required is 4 nodes. Note: If the number of compute node instances exceeds your Red Hat entitlement limits or AWS instance limits, the stack will fail. Choose a number that is within your limits.
 |Master instance type (`MasterInstanceType`)|`m5.xlarge`|The EC2 instance type for the Red Hat Openshift Container Platform master node instances. Instance must have 4 cores CPU, 16 GB RAM and 120 GB storage.
 |Compute node instance type (`ComputeInstanceType`)|`m5.2xlarge`|The EC2 instance type for the Red Hat Openshift Container Platform compute node instances. Instance must have 8 cores CPU, 32 GB RAM and 120 GB storage.
-|Cluster name (`ClusterName`)|`**__Requires input__**`|Name of your Red Hat Openshift Container Platform cluster. The name must start with a letter, can contain letters, numbers, periods (.), and hyphen (-). Use a name that is unique across regions.
+|Cluster name (`ClusterName`)|`**__Requires input__**`|Name of your Red Hat Openshift Container Platform cluster. The name must start with a letter, can contain letters, numbers, periods (.), and hyphen (-). Use a name that is unique across Regions.
 |===
 
 [#_icp4s_parameters]
@@ -92,6 +92,6 @@
 |===
 |Parameter label (name) |Default value|Description
 |Quick Start S3 bucket name (`QSS3BucketName`)|`aws-quickstart`|Name of the S3 bucket for your copy of the Quick Start assets. Do not change the default value unless you are customizing the deployment. Changing the name updates code references to point to a new Quick Start location. This name can include numbers, lowercase letters, uppercase letters, and hyphens, but do not start or end with a hyphen (-). Bucket names must be between 3 (min) and 63 (max) characters long. To know how you can customize the deployment, see https://aws-quickstart.github.io/option1.html[here^].
-|Quick Start S3 bucket region (`QSS3BucketRegion`)|`us-east-1`|The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. Do not change the default value unless you are customizing the deployment. To know how you can customize the deployment, see https://aws-quickstart.github.io/option1.html[here^].
+|Quick Start S3 bucket Region (`QSS3BucketRegion`)|`us-east-1`|The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. Do not change the default value unless you are customizing the deployment. To know how you can customize the deployment, see https://aws-quickstart.github.io/option1.html[here^].
 |Quick Start S3 key prefix (`QSS3KeyPrefix`)|`quickstart-ibm-cloud-pak-for-security/`|S3 key prefix that is used to simulate a directory for your copy of the Quick Start assets. Do not change the default value unless you are customizing the deployment. Changing this prefix updates code references to point to a new Quick Start location. This prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slashes (/). Must end with a forward slash, see https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html[here^]. To know how you can customize the deployment, see https://aws-quickstart.github.io/option1.html[here^].
 |===

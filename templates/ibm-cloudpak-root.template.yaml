@@ -151,7 +151,7 @@ Metadata:
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3BucketRegion:
-        default: Quick Start S3 bucket region
+        default: Quick Start S3 bucket Region
       QSS3KeyPrefix:
         default: Quick Start S3 key prefix
 Parameters:
@@ -258,7 +258,7 @@ Parameters:
   ClusterName:
     AllowedPattern: ^[0-9a-z-.]*$
     ConstraintDescription: Must contain valid cluster name. The name must start with a letter, can contain letters, numbers, periods (.), and hyphen (-).
-    Description: Name of your Red Hat Openshift Container Platform cluster. The name must start with a letter, can contain letters, numbers, periods (.), and hyphen (-). Use a name that is unique across regions.
+    Description: Name of your Red Hat Openshift Container Platform cluster. The name must start with a letter, can contain letters, numbers, periods (.), and hyphen (-). Use a name that is unique across Regions.
     Type: String
   LicenseAgreement:
     AllowedValues:

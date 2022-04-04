@@ -10,7 +10,7 @@ This Quick Start creates a new AWS Identity and Access Management (IAM) user wit
 
 ==== Create a key pair using Amazon EC2
 
-Make sure you have an Amazon EC2 key pair in the region where you are deploying the stack. You will need this key pair to securely connect to your instance after it launches in that region. See AWS documentation on how to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair[Create a key pair using Amazon EC2^].
+Make sure you have an Amazon EC2 key pair in the Region where you are deploying the stack. You will need this key pair to securely connect to your instance after it launches in that Region. See AWS documentation on how to https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair[Create a key pair using Amazon EC2^].
 
 ==== Create an Amazon S3 bucket
 
