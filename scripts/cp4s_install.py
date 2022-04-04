@@ -27,9 +27,7 @@ class CP4SecurityInstall(object):
     def __init__(self):
         """
         Constructor
-
-        NOTE: Some instance variable initialization happens in self._init() which is 
-        invoked early in main() at some point after _getStackParameters().
+        NOTE: Some instance variable initialization happens in self._init() which is invoked early in main() at some point after _getStackParameters().
         """
         object.__init__(self)
         self.home = os.path.expanduser("/ibm")
@@ -38,25 +36,14 @@ class CP4SecurityInstall(object):
     #endDef 
     def _getArg(self,synonyms,args,default=None):
         """
-        Return the value from the args dictionary that may be specified with any of the
-        argument names in the list of synonyms.
+        Return the value from the args dictionary that may be specified with any of the argument names in the list of synonyms.
+        The synonyms argument may be a Jython list of strings or it may be a string representation of a list of names with a comma or space separating each name.
+        The args is a dictionary with the keyword value pairs that are the arguments that may have one of the names in the synonyms list.
+        If the args dictionary does not include the option that may be named by any of the given synonyms then the given default value is returned.
 
-        The synonyms argument may be a Jython list of strings or it may be a string representation
-        of a list of names with a comma or space separating each name.
-
-        The args is a dictionary with the keyword value pairs that are the arguments
-        that may have one of the names in the synonyms list.
-
-        If the args dictionary does not include the option that may be named by any
-        of the given synonyms then the given default value is returned.
-
-        NOTE: This method has to be careful to make explicit checks for value being None
-        rather than something that is just logically false.  If value gets assigned 0 from
-        the get on the args (command line args) dictionary, that appears as false in a
-        condition expression.  However 0 may be a legitimate value for an input parameter
-        in the args dictionary.  We need to break out of the loop that is checking synonyms
-        as well as avoid assigning the default value if 0 is the value provided in the
-        args dictionary.
+        NOTE: This method has to be careful to make explicit checks for value being None rather than something that is just logically false.  If value gets assigned 0 from
+        the get on the args (command line args) dictionary, that appears as false in a condition expression.  However 0 may be a legitimate value for an input parameter
+        in the args dictionary.  We need to break out of the loop that is checking synonyms as well as avoid assigning the default value if 0 is the value provided in the args dictionary.
         """
         value = None
         if (type(synonyms) != type([])):
@@ -86,8 +73,7 @@ class CP4SecurityInstall(object):
 
         If trace is specified in the trace arguments then set up the trace.
         If a log file is specified, then set up the log file as well.
-        If trace is specified and no log file is specified, then the log file is
-        set to "trace.log" in the current working directory.
+        If trace is specified and no log file is specified, then the log file is set to "trace.log" in the current working directory.
         """
         logFile = self._getArg(['logFile','logfile'], traceArgs)
         if (logFile):
@@ -107,8 +93,7 @@ class CP4SecurityInstall(object):
     #endDef
     def getStackParameters(self, stackId):
         """
-        Return a dictionary with stack parameter name-value pairs from the  
-        CloudFormation stack with the given stackId.
+        Return a dictionary with stack parameter name-value pairs from the CloudFormation stack with the given stackId.
         """
         result = {}
         
@@ -124,8 +109,7 @@ class CP4SecurityInstall(object):
 
     def __getattr__(self,attributeName):
         """
-        Support for attributes that are defined in the StackParameterNames list
-        and with values in the StackParameters dictionary.  
+        Support for attributes that are defined in the StackParameterNames list and with values in the StackParameters dictionary.  
         """
         attributeValue = None
         if (attributeName in StackParameterNames):
@@ -139,8 +123,7 @@ class CP4SecurityInstall(object):
 
     def __setattr__(self,attributeName,attributeValue):
         """
-        Support for attributes that are defined in the StackParameterNames list
-        and with values in the StackParameters dictionary.
+        Support for attributes that are defined in the StackParameterNames list and with values in the StackParameters dictionary.
       
         NOTE: The StackParameters are intended to be read-only.  It's not 
         likely they would be set in the Bootstrap instance once they are 
@@ -155,7 +138,7 @@ class CP4SecurityInstall(object):
 
     def printTime(self, beginTime, endTime, text):
         """
-        method to capture time elapsed for each event during installation
+        Method to capture time elapsed for each event during installation.
         """
         methodName = "printTime"
         elapsedTime = (endTime - beginTime)/1000
@@ -166,7 +149,7 @@ class CP4SecurityInstall(object):
 
     def updateTemplateFile(self, source, placeHolder, value):
         """
-        method to update placeholder values in templates
+        Method to update placeholder values in templates
         """
         source_file = open(source).read()
         source_file = source_file.replace(placeHolder, value)
@@ -183,13 +166,8 @@ class CP4SecurityInstall(object):
     def getS3Object(self, bucket=None, s3Path=None, destPath=None):
         """
         Return destPath which is the local file path provided as the destination of the download.
-        
-        A pre-signed URL is created and used to download the object from the given S3 bucket
-        with the given S3 key (s3Path) to the given local file system destination (destPath).
-        
-        The destination path is assumed to be a full path to the target destination for 
-        the object. 
-        
+        A pre-signed URL is created and used to download the object from the given S3 bucket with the given S3 key (s3Path) to the given local file system destination (destPath).
+        The destination path is assumed to be a full path to the target destination for the object. 
         If the directory of the destPath does not exist it is created.
         It is assumed the objects to be gotten are large binary objects.
         
@@ -232,6 +210,18 @@ class CP4SecurityInstall(object):
         return destPath
     #endDef
 
+    def updateStatus(self, status):
+        methodName = "updateStatus"
+        TR.info(methodName," Update Status of installation")
+        data = "301_AWS_STACKNAME="+self.stackName+",Status="+status
+        updateStatus = "curl -X POST https://un6laaf4v0.execute-api.us-west-2.amazonaws.com/testtracker --data "+data
+        try:
+            call(updateStatus, shell=True)
+            TR.info(methodName,"Updated status with data %s"%data)
+        except CalledProcessError as e:
+            TR.error(methodName,"command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))    
+    #endDef
+
     def installOCP(self, icp4sInstallLogFile):
         methodName = "installOCP"
         TR.info(methodName,"  Start installation of Openshift Container Platform")
@@ -240,7 +230,6 @@ class CP4SecurityInstall(object):
         autoScalerFile = "/ibm/templates/cp4s/machine-autoscaler.yaml"
         healthcheckFile = "/ibm/templates/cp4s/health-check.yaml"
 
-        
         icf_1az = "/ibm/installDir/install-config-1AZ.yaml"
         icf_3az = "/ibm/installDir/install-config-3AZ.yaml"
         
@@ -272,7 +261,7 @@ class CP4SecurityInstall(object):
         self.updateTemplateFile(installConfigFile,'${pullSecret}',self.readFileContent(self.pullSecret))
         self.updateTemplateFile(installConfigFile,'${sshKey}',self.readFileContent("/root/.ssh/id_rsa.pub"))
         self.updateTemplateFile(installConfigFile,'${clustername}',self.ClusterName)
-        self.updateTemplateFile(installConfigFile, '${FIPS}',self.EnableFips)
+        self.updateTemplateFile(installConfigFile, '${FIPS}',"False")
         self.updateTemplateFile(installConfigFile, '${machine-cidr}', self.VPCCIDR)
         self.updateTemplateFile(autoScalerFile, '${az1}', self.zones[0])
         self.updateTemplateFile(healthcheckFile, '${az1}', self.zones[0])
@@ -457,11 +446,7 @@ class CP4SecurityInstall(object):
         if 'SecretString' in get_secret_value_response:
             secret = get_secret_value_response['SecretString']
             secretDict = json.loads(secret)
-            #TR.info(methodName,"Secret %s"%secret)
-            self.password = secretDict['adminPassword']
-            #TR.info(methodName,"password %s"%self.password)
-            self.apiKey = secretDict['apikey']
-            #TR.info(methodName,"apiKey %s"%self.apiKey)
+            self.repositoryPassword = secretDict['repositoryPassword']
         TR.info(methodName,"End Get secrets")
     #endDef    
 
@@ -471,7 +456,6 @@ class CP4SecurityInstall(object):
         secret_update_oc = '{"ocpPassword": "' + self.ocpassword + '"}'
         response = self.secretsmanager.update_secret(SecretId=self.ocpSecret,SecretString=secret_update_oc)
         TR.info(methodName,"Updated secret for %s with response %s"%(self.ocpSecret, response))
-
         TR.info(methodName,"End updateSecret")
     #endDef
     
@@ -519,30 +503,49 @@ class CP4SecurityInstall(object):
                 TR.info(methodName,"Pull secret  %s" %secret)  
                 self.pullSecret = "/ibm/pull-secret"
                 s3_cp_cmd = "aws s3 cp "+self.RedhatPullSecret+" "+self.pullSecret
-                TR.info(methodName,"s3 cp cmd %s"%s3_cp_cmd)
-                call(s3_cp_cmd, shell=True,stdout=icp4sInstallLogFile)
+                TR.info(methodName,"Copying RedHat Pull Secret... %s"%s3_cp_cmd)
+                call(s3_cp_cmd, shell=True, stdout=icp4sInstallLogFile)
                 self.getSecret(icp4sInstallLogFile)
                 
                 ocpstart = Utilities.currentTimeMillis()
                 self.installOCP(icp4sInstallLogFile)
                 ocpend = Utilities.currentTimeMillis()
                 self.printTime(ocpstart, ocpend, "Installing OCP")
-
-                install_cps = ("bash install.sh " + self.apiKey + " " + self.CPSFQDN + " " + "api." +
-                                self.ClusterName + "." + self.DomainName + ":6443 " + self.password)
                 
+                if self.CP4SFQDN == "":
+                    self.CP4SFQDN = "-"
+                if self.StorageClass == "":
+                    self.StorageClass = "-"
+                if self.BackupStorageClass == "":
+                    self.BackupStorageClass = "-"
+                if self.BackupStorageSize == "":
+                    self.BackupStorageSize = "-"
+
+                install_cps = ("bash install.sh " + self.CP4SFQDN + " " + "api." + self.ClusterName + "." + self.DomainName + ":6443" + " " + 
+                                self.ocpassword + " " + self.AdminUser + " " + self.StorageClass + " " + self.BackupStorageClass + " " + self.BackupStorageSize + " " + self.ImagePullPolicy + " " + self.repositoryPassword + " " + 
+                                self.DeployDRC + " " + self.DeployRiskManager + " " + self.DeployThreatInvestigator + " " + self.CP4SVersion + " " + self.Namespace)
                 try:
-                    process = Popen(install_cps,shell=True,stdout=icp4sInstallLogFile,stderr=icp4sInstallLogFile,close_fds=True)
-                    stdoutdata,stderrdata=process.communicate()
+                    check_output(install_cps, shell=True)
                 except CalledProcessError as e:
-                    TR.error(methodName, "ERROR return code: %s, Exception: %s" % (e.returncode, e), e)
+                    TR.error(methodName, "ERROR return code: %s, Exception: %s" % (e.returncode, e.output), e.output)
                     raise e    
-                TR.info(methodName,"Installation of CP4S %s %s" %(stdoutdata,stderrdata))
+                TR.info(methodName,"Installation of CP4S")
+
+                # Retrieve IBM Cloud Pak for Security FQDN
+                oc_login = "oc login -u kubeadmin -p "+self.ocpassword
+                get_route = "oc get route -n "+self.Namespace+" isc-route-default -o jsonpath='{.spec.host}'"
+                try:
+                    call(oc_login, shell=True)
+                    icp4sFQDN = check_output(['bash','-c', get_route])
+                except CalledProcessError as e:
+                    TR.error(methodName,"command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+                    raise e                 
+
                 time.sleep(30)
 
+                # Export Openshift web console URL and IBM Cloud Pak for Security web client url.
                 self.exportResults(self.stackName+"-OpenshiftURL", "https://"+self.openshiftURL, icp4sInstallLogFile)
-
-                self.exportResults(self.stackName+"-CP4SURL", "https://"+self.CPSFQDN+"/console", icp4sInstallLogFile)
+                self.exportResults(self.stackName+"-CP4SURL", "https://"+icp4sFQDN+"/console", icp4sInstallLogFile)
 
                 self.updateSecret(icp4sInstallLogFile)
             #endWith    
@@ -552,9 +555,8 @@ class CP4SecurityInstall(object):
             self.rc = 1
         finally:
             try:
-            # Copy icpHome/logs to the S3 bucket for logs.
+                # Copy icpHome/logs to the S3 bucket for logs.
                 self.logExporter.exportLogs("/var/log/")
-                self.logExporter.exportLogs("/ibm/cp4s-linux-workspace/Logs")
                 self.logExporter.exportLogs("%s" % self.logsHome)
             except Exception as  e:
                 TR.error(methodName,"ERROR: %s" % e, e)
@@ -569,11 +571,15 @@ class CP4SecurityInstall(object):
             success = 'true'
             status = 'SUCCESS'
             TR.info(methodName,"SUCCESS END CP4S Install AWS ICP4S Quickstart.  Elapsed time (hh:mm:ss): %d:%02d:%02d" % (eth,etm,ets))
+            # TODO update this later
+            self.updateStatus(status)
         else:
             success = 'false'
-            status = 'FAILURE: Check logs in S3 log bucket or on the Boot node EC2 instance in /ibm/logs/icp4s_install.log and /ibm/logs/post_install.log'
+            status = 'FAILURE: Check logs in S3 log bucket or on the Boot node EC2 instance in /ibm/logs/bootstrap.log /ibm/logs/icp4s_install.log and /ibm/logs/cp4s_install_logs.log'
             TR.info(methodName,"FAILED END CP4S Install AWS ICP4S Quickstart.  Elapsed time (hh:mm:ss): %d:%02d:%02d" % (eth,etm,ets))
-
+            # # TODO update this later
+            self.updateStatus(status)
+           
         #endIf 
         try:
             data = "%s: IBM Cloud Pak installation elapsed time: %d:%02d:%02d" % (status,eth,etm,ets)    
