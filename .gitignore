@@ -1,6 +1,8 @@
 .DS_Store
 *.txt
+.taskcat_overrides.yml
 .taskcat/
 taskcat_outputs/
 index.html
 docs/index.html
+.idea

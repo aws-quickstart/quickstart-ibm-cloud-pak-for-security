@@ -28,7 +28,7 @@ tests:
     parameters:
       AvailabilityZones: $[taskcat_genaz_3]
       NumberOfAZs: '3'
-      BootNodeAccessCIDR: '0.0.0.0/0'
+      BootNodeAccessCIDR: override
       KeyPairName: $[taskcat_getkeypair]
       ClusterName: cp4s-$[taskcat_random-string]
       RedhatPullSecret: override
@@ -48,5 +48,6 @@ tests:
       QSS3KeyPrefix: "quickstart-ibm-cloud-pak-for-security/"
     regions:
     - us-east-1
+    - eu-west-1
     s3_bucket: ''
     template: templates/ibm-cloudpak-root.template.yaml
