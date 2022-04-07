@@ -28,7 +28,7 @@ tests:
     parameters:
       AvailabilityZones: $[taskcat_genaz_3]
       NumberOfAZs: '3'
-      BootNodeAccessCIDR: '0.0.0.0/0'
+      BootNodeAccessCIDR: override
       KeyPairName: $[taskcat_getkeypair]
       ClusterName: cp4s-$[taskcat_random-string]
       RedhatPullSecret: override
