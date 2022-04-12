@@ -11,7 +11,7 @@ set_case_version() {
       printf "\nCurrently only IBM Cloud Pak for Security version 1.9 is available through AWS Quick Start.\n"
       exit 1;
    fi
-   printf "\nIBM Cloud Pak for Security Version: $CP4S_VERSION\nCASE Version: $CASE_VERSION\n"
+   printf "IBM Cloud Pak for Security Version: $CP4S_VERSION\nCASE Version: $CASE_VERSION\n"
    return
 }
 
@@ -28,7 +28,7 @@ check_exit_status() {
    fi
 }
 
-#Function to validate Domain Name and TLS Certificate & Key
+#Function to validate CP4S FQDN, TLS Certificate & Key
 check_dns() {
 #Checking whether fully qualified domain name (FQDN) is provided or not
   if [  -z "$CP4SFQDN" ]; then
@@ -40,7 +40,7 @@ check_dns() {
   fi
 
   printf "The fully qualified domain name (FQDN) for IBM Cloud Pak for Security is $CP4SFQDN"
-  printf "\n[INFO] - Validating certificates and keys needed for the platform fully qualified domain name (FQDN).\n"
+  printf "\n[INFO] - Validating certificates and keys needed for CP4S FQDN.\n"
   if [ -z "$DOMAIN_CERTIFICATE_PATH" ]; then
     if [ -n "$CUSTOM_CA_FILE_PATH" ]; then
        printf "[ERROR] Custom CA is provided but no certificate\n"
@@ -73,7 +73,6 @@ check_dns() {
      printf "[ERROR] CA certificate file $CUSTOM_CA_FILE_PATH not found. Make sure to upload the custom ca crt file into the 'dns' folder inside the 'QSS3KeyPrefix' folder of your S3 bucket.\n"
      exit 1
   fi
-  printf "[SUCCESS] Certificates and keys needed for the platform fully qualified domain name (FQDN) found.\n"
   return
 }
 
@@ -81,10 +80,12 @@ check_dns() {
 create_secret() {
    if [[ -n $(oc get secret $CUSTOMER_LICENSE_SECRET -n $CP4S_NAMESPACE --no-headers) ]]
    then
+      printf "\n"
       echo "Secret '$CUSTOMER_LICENSE_SECRET' already exists."
       echo "[INFO] - Updating secret '$CUSTOMER_LICENSE_SECRET'."
       oc create secret generic -n $CP4S_NAMESPACE $CUSTOMER_LICENSE_SECRET --from-file=/ibm/license.key --dry-run=client -o yaml | oc replace -f -
    else
+      printf "\n"
       echo "Secret '$CUSTOMER_LICENSE_SECRET' is not created yet."
       echo "[INFO] - Creating secret '$CUSTOMER_LICENSE_SECRET'."
       oc create secret generic -n $CP4S_NAMESPACE $CUSTOMER_LICENSE_SECRET --from-file=/ibm/license.key
