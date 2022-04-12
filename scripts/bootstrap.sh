@@ -5,15 +5,23 @@ echo $SCRIPT
 source /etc/profile.d/cp4s_install.sh
 source ${P}
 
-#Checking AWS cli version
+# Function to signal the wait condition handle (ICP4SInstallationCompletedURL) status from cfn-init
+cfn_init_status() {
+    /usr/bin/cfn-signal -s false -r "FAILURE: Bootstrap action failed. Error executing bootstrap script. ${failure_msg}" $ICP4SInstallationCompletedURL
+    sleep 300
+    aws ssm put-parameter --name $AWS_STACKNAME"_CleanupStatus" --type "String" --value "READY" --overwrite
+    exit 1
+}
+
+# Checking AWS cli version
 aws --version
 
-#Enable EPEL repo
+# Enable EPEL repo
 qs_enable_epel &> /var/log/userdata.qs_enable_epel.log
 
 cd /tmp
 
-#Installing AWS SSH agent
+# Installing AWS SSH agent
 qs_retry_command 10 wget https://s3-us-west-1.amazonaws.com/amazon-ssm-us-west-1/latest/linux_amd64/amazon-ssm-agent.rpm
 qs_retry_command 10 yum install -y ./amazon-ssm-agent.rpm
 systemctl start amazon-ssm-agent
@@ -24,12 +32,12 @@ if [ ! -d "/usr/local/bin/" ]; then
   mkdir /usr/local/bin/
   rc=$?
   if [ "$rc" != "0" ]; then
-    echo "Creating /usr/local/bin/ directory failed.  Exiting..."
-    exit 1
+    failure_msg="[Error] Couldn't create /usr/local/bin/ directory."
+    cfn_init_status "$failure_msg"
   fi
 fi
 
-#Installing Red Hat Openshift CLI
+# Installing Red Hat Openshift CLI
 qs_retry_command 10 wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.8/openshift-client-linux.tar.gz
 tar -xvf openshift-client-linux.tar.gz
 chmod 755 oc
@@ -37,7 +45,7 @@ mv oc /usr/local/bin/oc
 rm -rf kubectl
 rm -f openshift-client-linux.tar.gz
 
-#Installing Red Hat Openshift installer
+# Installing Red Hat Openshift installer
 qs_retry_command 10 wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.8/openshift-install-linux.tar.gz
 tar -xvf openshift-install-linux.tar.gz
 chmod 755 openshift-install
@@ -46,74 +54,84 @@ rm -f openshift-install-linux.tar.gz
 
 cd ..
 
-#Installing docker engine
+# Installing docker engine
 wget https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz
 tar -xvf docker-19.03.9.tgz 
 cp docker/* /usr/local/bin/
 dockerd &> /dev/null &
 rm -f ./docker-19.03.9.tgz
 
-#Testing docker
+# Testing docker
 ps -ef |grep docker
 docker run hello-world
 
-#Installing cloudctl
+# Installing cloudctl
 curl -L https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz -o cloudctl-linux-amd64.tar.gz
 tar -xvf cloudctl-linux-amd64.tar.gz
 chmod 755 cloudctl-linux-amd64
 mv cloudctl-linux-amd64 /usr/local/bin/cloudctl
 rm -f cloudctl-linux-amd64.tar.gz
 
-#Installing jq
+# Installing jq
 wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O /usr/local/bin/jq
 chmod 755 /usr/local/bin/jq
 
-#Installing yq
+# Installing yq
 wget https://github.com/mikefarah/yq/releases/download/3.4.0/yq_linux_386 -O /usr/local/bin/yq
 chmod 755  /usr/local/bin/yq
 
-#Installing certauth
-pip3 install certauth
-
-#Installed boto3
+# Installed boto3
 qs_retry_command 10 pip install boto3 &> /var/log/userdata.boto3_install.log
 
-#Downloading quick start assets from s3 bucket
+# Downloading Quick Start assets from s3 bucket
 
 if [ -n "$CP4S_QS_S3URI" ]; then
-  printf "\nDownloading scripts from S3 bucket...\n"
+  # Downloading Quick Start scripts from S3 bucket
   aws s3 cp ${CP4S_QS_S3URI}scripts/ /ibm/ --recursive
+  rc=$?
+  if [ "$rc" != "0" ]; then
+    failure_msg="[Error] Quick Start scripts couldn't be downloaded from S3 bucket. Invalid S3 endpoint URI."
+    cfn_init_status "$failure_msg"
+  fi
 fi
+
 if [ -n "$DOMAIN_CERTIFICATE_S3URI" ]; then
-  printf "\nDownloading TLS certificate from S3 bucket...\n"
+  # Downloading TLS certificate from S3 bucket
   aws s3 cp ${DOMAIN_CERTIFICATE_S3URI} /ibm/tls/tls.crt
-  if [ ! -f "/ibm/tls/tls.crt" ]; then
-    printf "\nFailed to download TLS certificate from S3 bucket. Invalid S3 Endpoint URI. Exiting...\n"
-    exit 1
+  rc=$?
+  if [ "$rc" != "0" ]; then
+    failure_msg="[Error] TLS certificate couldn't be downloaded from S3 bucket. Invalid S3 endpoint URI."
+    cfn_init_status "$failure_msg"
   fi
 fi
+
 if [ -n "$DOMAIN_CERTIFICATE_KEY_S3URI" ]; then
-  printf "\nDownloading TLS certificate key from S3 bucket...\n"
+  # Downloading TLS certificate key from S3 bucket
   aws s3 cp ${DOMAIN_CERTIFICATE_KEY_S3URI} /ibm/tls/tls.key
-  if [ ! -f "/ibm/tls/tls.key" ]; then
-    printf "\nFailed to download TLS certificate key from S3 bucket. Invalid S3 Endpoint URI. Exiting...\n"
-    exit 1
+  rc=$?
+  if [ "$rc" != "0" ]; then
+    failure_msg="[Error] TLS certificate key couldn't be downloaded from S3 bucket. Invalid S3 endpoint URI."
+    cfn_init_status "$failure_msg"
   fi
 fi
+
 if [ -n "$CUSTOM_CA_FILE_S3URI" ]; then
-  printf "\nDownloading custom TLS certificate from S3 bucket...\n"
+  # Downloading custom TLS certificate from S3 bucket
   aws s3 cp ${CUSTOM_CA_FILE_S3URI} /ibm/tls/ca.crt
-  if [ ! -f "/ibm/tls/ca.crt" ]; then
-    printf "\nFailed to download custom TLS certificate from S3 bucket. Invalid S3 Endpoint URI. Exiting...\n"
-    exit 1
+  rc=$?
+  if [ "$rc" != "0" ]; then
+    failure_msg="[Error] Custom TLS certificate couldn't be downloaded from S3 bucket. Invalid S3 endpoint URI."
+    cfn_init_status "$failure_msg"
   fi
 fi
+
 if [ -n "$SOAR_ENTITLEMENT" ]; then
-  printf "\nDownloading SOAR entitlement from S3 bucket...\n"
+  # Downloading SOAR entitlement from S3 bucket
   aws s3 cp ${SOAR_ENTITLEMENT} /ibm/license.key
-  if [ ! -f "/ibm/license.key" ]; then
-    printf "\nFailed to download SOAR entitlement from S3 bucket. Invalid S3 Endpoint URI. Exiting...\n"
-    exit 1
+  rc=$?
+  if [ "$rc" != "0" ]; then
+    failure_msg="[Error] SOAR Entitlement couldn't be downloaded from S3 bucket. Invalid S3 endpoint URI."
+    cfn_init_status "$failure_msg"
   fi
 fi
 
@@ -122,8 +140,8 @@ if [ ! -d "${PWD}/logs" ]; then
   mkdir logs
   rc=$?
   if [ "$rc" != "0" ]; then
-    echo "Creating ${PWD}/logs directory failed.  Exiting..."
-    exit 1
+    failure_msg="[Error] Couldn't create ${PWD}/logs directory."
+    cfn_init_status "$failure_msg"
   fi
 fi
 
