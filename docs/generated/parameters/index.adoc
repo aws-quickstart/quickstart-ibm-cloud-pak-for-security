@@ -1,1 +1,5 @@
-// placeholder
+=== Parameters for deploying {partner-product-name} into a new VPC
+include::ibm-cloudpak-root.template.adoc[]
+
+=== Parameters for deploying {partner-product-name} into an existing VPC
+include::ibm-cloudpak-security.template.adoc[]

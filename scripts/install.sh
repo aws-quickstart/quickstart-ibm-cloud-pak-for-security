@@ -1,122 +1,172 @@
-exec > cp4s_install_logs.log
+#!/bin/bash
 
-ENTITLED_REGISTRY_PASSWORD=$1
-CP4S_FQDN=$2
-OCP_URL=$3
-LDAP_PASS=$4
+log_file="/ibm/logs/cp4s_install_logs.log--`date +'%Y-%m-%d_%H-%M-%S'`"
+exec &> >(tee -a "$log_file")
 
-python3 /ibm/pyca/ca.py $CP4S_FQDN
-cloudctl case save --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.9.tgz --outputdir .
-tar xvf ibm-cp-security-1.0.9.tgz
+export CP4SFQDN=$1
+export OCP_SERVER_URL=$2
+export OCP_PASSWORD=$3
+export ADMIN_USER=$4
+export STORAGE_CLASS=$5
+export BACKUP_STORAGE_CLASS=$6
+export BACKUP_STORAGE_SIZE=$7
+export IMAGE_PULL_POLICY=$8
+export REPOSITORY_PASSWORD=$9
+export DEPLOY_DRC=${10}
+export DEPLOY_RISK_MANAGER=${11}
+export DEPLOY_THREAT_INVESTIGATOR=${12}
+export CP4S_VERSION=${13}
+export CP4S_NAMESPACE=${14}
+export OCP_USERNAME="kubeadmin"
+export ACCEPT_LICENSE="true"
+export DOMAIN_CERTIFICATE_PATH="/ibm/tls/tls.crt"
+export DOMAIN_CERTIFICATE_KEY_PATH="/ibm/tls/tls.key"
+export CUSTOM_CA_FILE_PATH="/ibm/tls/ca.crt"
+export CUSTOMER_LICENSE_SECRET="isc-cases-customer-license"
 
-cat << EOF  > ibm-cp-security/inventory/installProduct/files/values.conf
+[[ $CP4SFQDN == "-" ]] && export CP4SFQDN=''
+[[ $STORAGE_CLASS == "-" ]] && export STORAGE_CLASS=''
+[[ $BACKUP_STORAGE_CLASS == "-" ]] && export BACKUP_STORAGE_CLASS=''
+[[ $BACKUP_STORAGE_SIZE == "-" ]] && export BACKUP_STORAGE_SIZE=''
 
-# Admin User ID (Required)
-adminUserId="platform-admin" 
+source install_utils.sh
+#Set CASE version
+set_case_version
 
-#Cluster type e.g aws,ibmcloud, ocp (Required)
-cloudType="aws"
+#Logging in to the OCP cluster
+printf "\n"
+echo "-------------------------"
+echo "LOGGING IN TO THE CLUSTER"
+echo "-------------------------"
+printf "\n"
+oc login $OCP_SERVER_URL -u $OCP_USERNAME -p $OCP_PASSWORD --insecure-skip-tls-verify
+#Checking login status
+CURRENT_USER="$(oc whoami)"
+if [  -z "$CURRENT_USER" ]; then
+    printf "[ERROR] OpenShift Container Platform server Login Failed.\n"
+    exit 1
+fi
 
-# CP4S FQDN domain(Required)
-cp4sapplicationDomain="$CP4S_FQDN"
+#Install the OpenShift Serverless operator
+printf "\n"
+echo "----------------------------------------"
+echo "INSTALLING OPENSHIFT SERVERLESS OPERATOR"
+echo "----------------------------------------"
+printf "\n"
+oc apply -f oc/yaml/namespace.yaml
+oc apply -f oc/yaml/operator-group.yaml
+[[ ! $(oc apply -f oc/yaml/operator-group.yaml) ]] && { exit 1; }
+oc apply -f ./oc/yaml/subscription.yaml
+[[ ! $(oc apply -f oc/yaml/subscription.yaml) ]] && { exit 1; }
+#Validate Openshift Serverless Operator installation
+oc/scripts/serverless_status_check.sh
 
-# e.g ./path-to-cert/cert.crt (Required)
-cp4sdomainCertificatePath="/ibm/cert.crt" 
+#Installing Knative Serving
+printf "\n"
+echo "--------------------------"
+echo "INSTALLING KNATIVE SERVING"
+echo "--------------------------"
+printf "\n"
+oc apply -f oc/yaml/serving.yaml
+printf "[info] - Waiting for Knative namespace and CRD to be created...\n"
+sleep 30
+#Validate Knative Serving installation
+oc/scripts/knative_status_check.sh
 
-## Path to domain certificate key ./path-to-key/cert.key (Required)
-cp4sdomainCertificateKeyPath="/ibm/private.key"  
+#Validating domain name and TLS certificate & key
+printf "\n"
+echo "------------------------------------------------"
+echo "VALIDATING DOMAIN NAME AND TLS CERTIFICATE & KEY"
+echo "------------------------------------------------"
+printf "\n"
+#Validate domain name and TLS certificate & key
+check_dns
 
-# Path to custom ca cert e.g <path-to-cert>/ca.crt (Only required if using custom/self signed certificate)
-cp4scustomcaFilepath="/ibm/ca.crt" 
+cd /cp4s_install
 
-# Set image pullpolicy  e.g Always,IfNotPresent, default is IfNotPresent (Optional)
-cp4simagePullPolicy="IfNotPresent"
+#Downloading and extracting the IBM Cloud Pak for Security archive file
+printf "\n"
+echo "------------------------------------------------------------------"
+echo "DOWNLOADING AND EXTRACTING THE CLOUD PAK FOR SECURITY ARCHIVE FILE"
+echo "------------------------------------------------------------------"
+printf "\n"
+cloudctl case save \
+  --repo https://github.com/IBM/cloud-pak/raw/master/repo/case \
+  --case ibm-cp-security \
+  --version $CASE_VERSION \
+  --outputdir /cp4s_install \
+  && tar -xf /cp4s_install/ibm-cp-security-$CASE_VERSION.tgz
+printf "\n"
+#Checking for CASE 'ibm-cp-security'
+[ -d /cp4s_install/ibm-cp-security/ ] || { printf "[ERROR] Downloading and extracting the Cloud Pak for Security archive file failed. Check logs in S3 log bucket or on the Boot node EC2 instance in /ibm/logs/cp4s_install_logs.log.\n"; exit 1; }
 
-# Default Account name, default is "Cloud Pak For Security" (Optional)
-#defaultAccountName="Cloud Pak For Security" 
+#Configure parameters for the IBM Cloud Pak for Security installation
+printf "\n"
+echo "------------------------------------------------------------------"
+echo "CONFIGURING PARAMETERS FOR THE CLOUD PAK FOR SECURITY INSTALLATION"
+echo "------------------------------------------------------------------"
+printf "\n"
+[ -f /cp4s_install/ibm-cp-security/inventory/ibmSecurityOperatorSetup/files/values.conf ] || { printf "[ERROR] IBM Cloud Pak for Security Installation Configuration File Not Found.\n"; exit 1; }
+/ibm/cp4s_parameters.sh "$ADMIN_USER" "$CP4SFQDN" "$DOMAIN_CERTIFICATE_PATH" "$DOMAIN_CERTIFICATE_KEY_PATH" "$CUSTOM_CA_FILE_PATH" "$STORAGE_CLASS" "$BACKUP_STORAGE_CLASS" "$BACKUP_STORAGE_SIZE" "$IMAGE_PULL_POLICY" "$REPOSITORY_PASSWORD" "$DEPLOY_DRC" "$DEPLOY_RISK_MANAGER" "$DEPLOY_THREAT_INVESTIGATOR"
+printf "[SUCCESS] Configuring parameters for the IBM Cloud Pak for Security installation is complete.\n"
 
-# set to "true" to enable CSA Adapter (Optional)
-enableCloudSecurityAdvisor="false" 
+#Install IBM Cloud Pak for Security
+printf "\n"
+echo "------------------------------------------------"
+echo "INSTALLING IBM CLOUD PAK FOR SECURITY USING CASE"
+echo "------------------------------------------------"
+printf "\n"
+cloudctl case launch -t 1 \
+  --case ibm-cp-security \
+  --namespace $CP4S_NAMESPACE \
+  --inventory ibmSecurityOperatorSetup \
+  --action install --args "--acceptLicense $ACCEPT_LICENSE --inputDir /cp4s_install" 
+#Checking exit status
+rc=$?
+success_msg="[SUCCESS] IBM Cloud Pak for Security Installation Using Case is Complete."
+error_msg="[ERROR] IBM Cloud Pak for Security Installation Using Case Failed. Check logs in S3 log bucket or on the Boot node EC2 instance in /ibm/logs/cp4s_install_logs.log."
+check_exit_status "$rc" "$success_msg" "$error_msg"
+sleep 60
 
-## Only Required for online install 
-entitledRegistryUrl="cp.icr.io"
+#Validate IBM Cloud Pak for Security installation
+printf "\n"
+echo "--------------------------------------------------"
+echo "VALIDATING IBM CLOUD PAK FOR SECURITY INSTALLATION"
+echo "--------------------------------------------------"
+printf "\n"
+cloudctl case launch -t 1 \
+  --case ibm-cp-security \
+  --namespace $CP4S_NAMESPACE \
+  --inventory ibmSecurityOperatorSetup \
+  --action validate
+#Checking exit status
+rc=$?
+success_msg="[SUCCESS] IBM Cloud Pak for Security Validation Complete."
+error_msg="[ERROR] IBM Cloud Pak for Security Validation Failed. Check logs in S3 log bucket or on the Boot node EC2 instance in /ibm/logs/cp4s_install_logs.log"
+check_exit_status "$rc" "$success_msg" "$error_msg"
+sleep 30
 
-## Only Required for online install 
-entitledRegistryPassword="$ENTITLED_REGISTRY_PASSWORD" 
+#Configure license for Orchestration & Automation
+printf "\n"
+echo "--------------------------------------------------"
+echo "CONFIGURING LICENSE FOR ORCHESTRATION & AUTOMATION"
+echo "--------------------------------------------------"
+printf "\n"
+#Create or update secret if SOAR entitlement is provided.
+if [ -f "/ibm/license.key" ]; then
+  create_secret
+fi
+#Checking exit status
+rc=$?
+success_msg="[SUCCESS] Configuration license for Orchestration & Automation is complete."
+error_msg="[ERROR] Configuring License for Orchestration and Automation Failed. Check logs in S3 log bucket or on the Boot node EC2 instance in /ibm/logs/cp4s_install_logs.log"
+check_exit_status "$rc" "$success_msg" "$error_msg"
+sleep 30
 
-## Only Required for online install 
-entitledRegistryUsername="cp" 
+printf "\n"
+printf "\nIBM CLOUD PAK FOR SECURITY DEPLOYMENT IS COMPLETE\n"
+printf "\n============= Postinstallation Steps ============\n"
+printf "Configuring LDAP Authentication - IBM Cloud Pak for Security has a simple static LDAP-configured (openLDAP and phpLDAPadmin) user system. Connect your own LDAP server to IBM Common Services to better support your long-term use of the product. For more information, see https://ibm.biz/BdfWwY \n"
+printf "\nNote: IBM Cloud Pak for Security connects to various data sources using data connectors. Ensure that only trusted priveleged users have access to both the data sources on the IBM Cloud Pak for Security console or the OpenShift console.\n\n"
 
-# Only required for airgap install
-localDockerRegistry="" 
-
-# Only required for airgap install
-localDockerRegistryUsername=""
-
-# Only required for airgap install
-localDockerRegistryPassword=""
-
-#Entitled by default,set to <local> for airgap install 
-registryType="entitled"
-
-# Block storage (Required)
-storageClass="gp2"
-
-# Set storage fs group. Default is 26 (Optional)
-storageClassFsGroup="26"
-
-# Set storage class supplemental groups (Optional)
-storageClassSupplementalGroups="" 
-
-# set seperate storageclass for toolbox (Optional)
-toolboxStorageClass="" 
-
-# set custom storage size for toolbox,default is 100Gi (Optional)
-toolboxStorageSize="100Gi" 
-
-EOF
-
-cat patch.sh > /ibm/ibm-cp-security/inventory/installProduct/files/launch.sh
-
-cloudctl case launch --case ibm-cp-security --namespace cp4s  --inventory installProduct --action install --args "--license accept --helm3 /usr/local/bin/helm3 --inputDir /ibm" --tolerance 1
-CP_RESULT=${?}
-
-CP_PASSWORD=$(oc get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' -n ibm-common-services | base64 -d)
-CP_ROUTE=$(oc get route cp-console -n ibm-common-services|awk 'FNR == 2 {print $2}')
-SERVER="$(cut -d':' -f1 <<<"$OCP_URL")"
-PORT="$(cut -d':' -f2 <<<"$OCP_URL")"
-
-cd /ibm
-unzip cp4s-openldap-master.zip
-cd cp4s-openldap-master
-
-cat << EOF > playbook.yml
-
----
-- hosts: local
-  gather_facts: true
-  any_errors_fatal: true
-  roles:
-    - roles/secops.ibm.icp.login
-    - roles/secops.ibm.icp.openldap.deploy
-    - roles/secops.ibm.icp.openldap.register
-
-  vars:
-    icp:        
-        console_url: "${CP_ROUTE}"
-        ibm_cloud_server: "" # Only Applicable for IBMCloud Deployment
-        ibm_cloud_port: ""   # Only Applicable for IBMCloud Deployment
-        username: "admin"
-        password: "${CP_PASSWORD}"
-        account: "id-mycluster-account"
-        namespace: "default"
-
-    
-    openldap:
-        adminPassword: "${LDAP_PASS}"
-        initialPassword: "${LDAP_PASS}"
-        userlist: "isc-demo,isc-test,platform-admin"
-
-EOF
-
-ansible-playbook -i hosts playbook.yml
+cleanup_secrets

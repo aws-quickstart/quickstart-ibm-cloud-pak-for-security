@@ -3,9 +3,9 @@
 
 This Quick Start assumes familiarity with {partner-product-name} and Red Hat OpenShift.
 
-For Red Hat OpenShift installation requirements, see https://docs.openshift.com/container-platform/4.4/welcome/index.html[OpenShift Container Platform 4.4 Documentation^].
+For Red Hat OpenShift installation requirements, see https://docs.openshift.com/container-platform/4.8/welcome/index.html[OpenShift Container Platform 4.8 Documentation^].
 
-For {partner-product-short-name} requirements, see https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/sysreq.html[System requirements for {partner-product-short-name}^].
-https://access.redhat.com/documentation/en-us/openshift_container_platform/4.4/html/architecture/architecture-rhcos[Red Hat Enterprise Linux CoreOS (RHCOS)^] is used for the OpenShift EC2 instances in this deployment.
+For {partner-product-name} requirements, see https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-system-requirements[System requirements for {partner-product-name}^].
+https://access.redhat.com/documentation/en-us/openshift_container_platform/4.8/html/architecture/architecture-rhcos[Red Hat Enterprise Linux CoreOS (RHCOS)^] is used for the OpenShift EC2 instances in this deployment.
 
-For more information about {partner-product-name}, see https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/kc_welcome_scp.html[{partner-product-name} Version 1.4.0^].
+For more information about {partner-product-name}, see https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9[{partner-product-name} Version 1.9^] documentation.

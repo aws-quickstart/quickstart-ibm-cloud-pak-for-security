@@ -1,44 +1,60 @@
 // Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
 //Should any sections not be applicable, remove them
 
-== Create DNS record
-Before you can test the deployment, add one DNS record to your hosted zone in Amazon Route 53:
-. Go to Amazon Route 53 console.
-. Choose the hosted zone that corresponds to the domain name that you specified as the `DomainName` parameter. . .. Choose *Create Record*.
-. Pick the Simple routing policy, and then choose *Define simple record*, as shown in <<postDeploy1>>.
-. Confirm that the record name matches the `CPSFQDN` parameter input that you passed when creating the stack.
-. Confirm that the record type is CNAME.
-. For the value of the record, specify `cp-console.apps.ClusterName.DomainName`, where `ClusterName` and `DomainName` were passed as input parameters.
-+
-:xrefstyle: short
-[#postDeploy1]
-.Create DNS record for `CPSFQDN` parameter
-[link=images/create-dns-record.png]
-image::../images/create-dns-record.png[DNS Record,width=648,height=439]
+== Post deployment steps 
 
-== Test the deployment
+=== Configuring Identity Provider authentication
 
-. After you have completed the link:#_create_dns_record[create DNS record step] above, navigate to the *CP4SWebClientURL* output of the root stack, as shown in <<cfn_outputs>>.
-. A new tab opens in your browser. You see either the {partner-product-short-name} web client login page or a warning from your browser that the HTTPS connection is not safe. By default, the public key infrastructure (PKI) certificate that is created for the {partner-product-short-name} cluster is self-signed, which causes the unsafe connection warning from your browser.
-. Log in to the {partner-product-short-name} web client by choosing *Default authentication*, and then entering the default user `platform-admin` and the admin password that you supplied when creating the stack. If you did not supply a password, you can retrieve it from the *CP4SSecret* secret stored in AWS Secrets Manager.
-. After you log in, the welcome page opens, as shown in <<testStep1>>.
-+
-:xrefstyle: short
-[#testStep1]
+To log in to {partner-product-name}, you must configure at least one Identity Provider (IDP). The *CP4SAdminUser*, shown in <<_cfn_outputs>>, that you provided while creating the stack must exist in the choosen Identity Provider (IDP). This *CP4SAdminUser* is the initial user who can log in and add other users. Use the password that you specified for the user when you configured the Identity Provider (IDP). To know more details on configuring Identity Provider (IDP) authentication, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=postinstallation-configuring-identity-providers[Configuring Identity Provider Authentication^].
+
+=== Login into {partner-product-name}
+
+After configuring at least one Identity Provider (IDP) navigate to the *CP4SWebClientURL* output of the root stack, shown in <<_cfn_outputs>>.
+
+Log in to the {partner-product-name} web client by choosing *Enterprise LDAP* authentication, and then enter the *CP4SAdminUser* value and the admin password that you supplied while configuring LDAP authentication during post installation.
+
+[#_icp4s_login_page]
+.Login page for {partner-product-short-name} web client
+[link=images/ibm-cloud-pak-for-security-login-page.png]
+image::../images/ibm-cloud-pak-for-security-login-page.png[.Login page for {partner-product-name} web client,width=1920,height=auto]
+
+{empty} +
+Upon logging in to the {partner-product-name} web client URL, the welcome page opens for the System Administrator account, as shown in <<_icp4s_welcome_page>>.
+
+[#_icp4s_welcome_page]
 .Welcome page for {partner-product-short-name} web client
-[link=images/cloud-pak-security-welcome-page.png]
-image::../images/cloud-pak-security-welcome-page.png[CP4S welcome page,width=972,height=702]
+[link=images/ibm-cloud-pak-security-admin-welcome-page.png]
+image::../images/ibm-cloud-pak-for-security-admin-welcome-page.png[CP4S welcome page,width=1922,height=auto]
 
-== Post deployment steps
+=== Create accounts in {partner-product-name}
 
-Before using {partner-product-short-name}, define users and connect the platform to data sources in your environment, following the instructions in the https://www.ibm.com/support/knowledgecenter/SSTDPP_1.1.0/docs/security-pak/postinstallation.html[IBM Knowledge Center^].
+As a system administrator, you can create Standard or Provider accounts in IBM Cloud Pak for Security, or delete existing accounts. You must be working in the System Administration account and have the required permission to manage accounts. For more details, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=administration-creating-deleting-accounts[Creating or Deleting Accounts^].
 
-== Security
-// Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
+=== Configure a data source connection
 
-{partner-product-name} connects to various data sources using data connectors. Ensure that only trusted priveleged users have access to both the data sources on the {partner-product-short-name} console or the OpenShift console.
+To begin working with applications, enable {partner-product-name} to connect with data sources. For more details, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=configuring-universal-data-insights-connectors[Configuring a Data Source Connection^].
+
 
 == Other useful information
-//Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
-{partner-product-name} has a simple static LDAP-configured (openLDAP and phpLDAPadmin) user system. Connect your own LDAP server to IBM Common Services to better support your long-term use of the product. For more information, see https://www.ibm.com/support/knowledgecenter/en/SSTDPP_1.4.0/platform/docs/security-pak/ldap-connect.html[Configuration LDAP authentication^].
+=== Manage your cluster using the Red Hat OpenShift web console
+
+To access the Red Hat Openshift Container Platform web console, navigate to the *OpenshiftWebConsoleURL* in the `Outputs` tab of the root stack. See, <<_cfn_outputs>>.
+
+Log in to the Openshift web console by using use the default OpenShift administrator *kubeadmin*. The password can be obtained from the *OpenShiftSecret* resource from the `Resources` tab of IBM Cloud Pak for Security stack.
+
+.OpenShift secret resource
+[link=images/oc-secret-resource.png]
+image::../images/oc-secret-resource.png[OpenShift secret resource]
+
+{empty} +
+You can retrieve the secret value by choosing `Retrieve secret value`, as shown in the figure below. Use this secret value as OpenShift console administrative password.
+
+.Retrieve secret value for console password
+[link=images/retrieve-secret.png]
+image::../images/retrieve-secret.png[Retrieve secret value for console password]
+
+=== Accessing Red Hat OpenShift cluster from the command-line interface
+
+In your Red Hat OpenShift web console, click your profile name and then click `Copy Login`.
+Click `Display Token`, copy the oc login command, and paste the command into your command line.

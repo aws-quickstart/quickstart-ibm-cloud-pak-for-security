@@ -100,9 +100,8 @@ class S3Helper(object):
   
   def createBucket(self,bucketName,region=None):
     """
-      Return an instance of S3 bucket either for a bucket that already
-      exists or for a newly created bucket in the given region.
-      
+      Return an instance of S3 bucket either for a bucket that already exists or for a newly created bucket in the given region.
+      If a region is not specified, the bucket is created in the S3 default region (us-east-1).
       NOTE: Region is required, either on the method call or to the S3Helper instance. 
       
     """
@@ -112,12 +111,10 @@ class S3Helper(object):
     if (self.bucketExists(bucketName)):
       bucket = self.s3Resource.Bucket(bucketName)
     else:
-      if (region):
-        response = self.s3Client.create_bucket(Bucket=bucketName,
-                                               CreateBucketConfiguration={'LocationConstraint': region})
+      if (self.region is None) or (self.region == 'us-east-1'):
+        response = self.s3Client.create_bucket(Bucket=bucketName)
       elif (self.region):
-        response = self.s3Client.create_bucket(Bucket=bucketName,
-                                               CreateBucketConfiguration={'LocationConstraint': self.region})
+        response = self.s3Client.create_bucket(Bucket=bucketName, CreateBucketConfiguration={'LocationConstraint': self.region})
       else:
         raise MissingArgumentException("The AWS region name for the bucket must be provided either to the S3Helper instance or in the createBucket() arguments.")
       #endIf
