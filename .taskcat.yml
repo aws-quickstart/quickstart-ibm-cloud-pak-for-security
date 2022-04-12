@@ -26,28 +26,45 @@ project:
 tests:
   3AZ-cp4s:
     parameters:
-      AvailabilityZones: $[taskcat_genaz_3]
-      NumberOfAZs: '3'
+      # Override these values in .taskcat_overrides.yml
       BootNodeAccessCIDR: override
-      KeyPairName: $[taskcat_getkeypair]
-      ClusterName: cp4s-$[taskcat_random-string]
+      KeyPairName: override
       RedhatPullSecret: override
       DomainName: override
-      Namespace: 'cp4s'
+      RepositoryPassword: override
+      # Defaults
+      AvailabilityZones: $[taskcat_genaz_3]
+      NumberOfAZs: '3'
+      ClusterName: cp4s-$[taskcat_random-string]
       CP4SDeploymentLogsBucketName: $[taskcat_autobucket]
       LicenseAgreement: 'I agree'
       AdminUser: $[taskcat_random-string]
-      CPSFQDN: override
-      DomainCertificate: override
-      DomainCertificateKey: override
-      CustomCaFile: override
-      RepositoryPassword: override
-      SOAREntitlement: override
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
       QSS3KeyPrefix: "quickstart-ibm-cloud-pak-for-security/"
     regions:
     - us-east-1
-    - eu-west-1
+    s3_bucket: ''
+    template: templates/ibm-cloudpak-root.template.yaml
+  1AZ-cp4s:
+    parameters:
+      # Override these values in .taskcat_overrides.yml
+      BootNodeAccessCIDR: override
+      KeyPairName: override
+      RedhatPullSecret: override
+      DomainName: override
+      RepositoryPassword: override
+      # Defaults
+      AvailabilityZones: $[taskcat_genaz_1]
+      NumberOfAZs: '1'
+      ClusterName: cp4s-$[taskcat_random-string]
+      CP4SDeploymentLogsBucketName: $[taskcat_autobucket]
+      LicenseAgreement: 'I agree'
+      AdminUser: $[taskcat_random-string]
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+      QSS3KeyPrefix: "quickstart-ibm-cloud-pak-for-security/"
+    regions:
+    - us-west-1
     s3_bucket: ''
     template: templates/ibm-cloudpak-root.template.yaml
