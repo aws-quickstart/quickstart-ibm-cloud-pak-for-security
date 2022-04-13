@@ -5,10 +5,9 @@
 // Space needed to maintain table headers
 |VPCs |1
 |Elastic IP addresses |3
-|AWS Identity and Access Management (IAM) security groups |6
-|IAM users |1
-|IAM roles |4
 |Classic Load Balancers |1
 |Network Load Balancers |2
-|EC2 Instances |8
+|Master Node Instances(m5.xlarge)|3
+|Compute Node Instances(m5.2xlarge)|4
+|Boot Node Instances(i3.large) |1
 |===

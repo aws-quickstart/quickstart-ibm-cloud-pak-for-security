@@ -1,5 +1,0 @@
-{
-	"CERT_AUTH_STORAGE_PATH":"./tmp/certs",
-	"CERT_AUTH_NAME":"QuickStart Test CertAuth",
-	"CERT_AUTH_ROOT_FILE":"py-ca.pem"
-}

@@ -1,16 +1,22 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Root template for an IBM Cloud Pak for Security deployment. This is the root template for a collection of nested stacks that make up the full Cloud Pak for Security deployment. **WARNING** This template creates EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1r9m3n6hh)'
+Description: 'Template for IBM Cloud Pak for Security deployment into a new VPC. This is the root template for a collection of nested stacks that make up the full IBM Cloud Pak for Security deployment. **WARNING** This template creates EC2 instances and related resources. You will be billed for the AWS resources used if you create a stack from this template. (qs-1r9m3n6hh)'
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Parameters for deploying into a new VPC"
-    Order: "1"
+    EntrypointName: 'Launch IBM Cloud Pak for Security into a new VPC on AWS'
+    Order: '1'
+  cfn-lint:
+    config:
+      ignore_checks: [E9007]
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
-          default: VPC network configuration
+          default: Availability Zone configuration
         Parameters:
           - NumberOfAZs
           - AvailabilityZones
+      - Label:
+          default: Network configuration
+        Parameters:
           - VPCCIDR
           - PrivateSubnet1CIDR
           - PrivateSubnet2CIDR
@@ -23,42 +29,52 @@ Metadata:
           default: DNS configuration
         Parameters:
           - DomainName
-          - CPSFQDN
       - Label:
           default: Amazon EC2 configuration
         Parameters:
           - KeyPairName
       - Label:
-          default: OpenShift hosts configuration
+          default: Red Hat subscription information
+        Parameters:
+          - RedhatPullSecret
+      - Label:
+          default: Red Hat OpenShift hosts configuration
         Parameters:
           - NumberOfMaster
           - NumberOfCompute
           - MasterInstanceType
           - ComputeInstanceType
           - ClusterName
-          - EnableFips
-      - Label:
-          default: Red Hat subscription information
-        Parameters:
-          - RedhatPullSecret
       - Label:
           default: IBM Cloud Pak for Security configuration
         Parameters:
-          - CP4SVersion
-          - APIUsername
-          - APIKey
           - LicenseAgreement
+          - CP4SVersion
           - Namespace
-          - AdminPassword
+          - AdminUser
+          - RepositoryPassword
+          - CP4SDeploymentLogsBucketName
+      - Label:
+          default: (Optional) IBM Cloud Pak for Security configuration
+        Parameters:
+          - CP4SFQDN
+          - DomainCertificate
+          - DomainCertificateKey
+          - CustomCaFile
+          - StorageClass
+          - BackupStorageClass
+          - BackupStorageSize
+          - ImagePullPolicy
+          - DeployDRC
+          - DeployRiskManager
+          - DeployThreatInvestigator
+          - SOAREntitlement
       - Label:
           default: AWS Quick Start configuration
         Parameters:
           - QSS3BucketName
           - QSS3BucketRegion
           - QSS3KeyPrefix
-          - CP4SDeploymentLogsBucketName
-
-
     ParameterLabels:
       NumberOfAZs:
         default: Number of Availability Zones
@@ -82,261 +98,340 @@ Metadata:
         default: Boot node external access CIDR
       DomainName:
         default: Domain name
-      CPSFQDN:
-        default: CP4S FQDN
       KeyPairName:
         default: Key pair name
+      RedhatPullSecret:
+        default: Red Hat OpenShift pull secret
       NumberOfMaster:
         default: Number of master nodes
       NumberOfCompute:
         default: Number of compute nodes
       MasterInstanceType:
-        default: Master instance type
+        default: Master node instance type
       ComputeInstanceType:
-        default: Compute instance type
+        default: Compute node instance type
       ClusterName:
         default: Cluster name
-      EnableFips:
-        default: Enable FIPS
-      RedhatPullSecret:
-        default: Red Hat pull secret
-      CP4SVersion:
-        default: IBM Cloud Pak for Security version
-      APIUsername:
-        default: IBM Cloud Pak for Security API user name
-      APIKey:
-        default: IBM Cloud Pak for Security entitlement key (APIKey)
       LicenseAgreement:
         default: License agreement
+      CP4SVersion:
+        default: IBM Cloud Pak for Security version
       Namespace:
-        default: OpenShift project
-      AdminPassword:
-        default: IBM Cloud Pak for Security UI password
+        default: Red Hat OpenShift project
+      AdminUser:
+        default: CP4S admin user
+      RepositoryPassword:
+        default: Repository password
+      CP4SDeploymentLogsBucketName:
+        default: Output S3 bucket name
+      CP4SFQDN:
+        default: CP4S FQDN
+      DomainCertificate:
+        default: TLS certificate
+      DomainCertificateKey:
+        default: TLS key
+      CustomCaFile:
+        default: Custom TLS certificate
+      StorageClass:
+        default: Storage class
+      BackupStorageClass:
+        default: Backup storage class
+      BackupStorageSize:
+        default: Backup storage size
+      ImagePullPolicy:
+        default: Image pull policy
+      DeployDRC:
+        default: IBM Security Detection and Response Center Deployment
+      DeployRiskManager:
+        default: IBM Security Risk Manager Deployment
+      DeployThreatInvestigator:
+        default: IBM Security Threat Investigator Deployment
+      SOAREntitlement:
+        default: SOAR Entitlement
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3BucketRegion:
         default: Quick Start S3 bucket Region
       QSS3KeyPrefix:
         default: Quick Start S3 key prefix
-      CP4SDeploymentLogsBucketName:
-        default: Output S3 bucket name
-
-
 Parameters:
   NumberOfAZs:
-    Description: >-
-      The number of Availability Zones used for the deployment. Some Regions might be limited to two Availability Zones. For a single Cloud Pak for Security cluster to be highly available, three Availability Zones are required to avoid a single point of failure when using three, five or seven master nodes.  With fewer than three Availability Zones, one of the zones will have more master nodes.
-    Type: Number
-    Default: 3
-    # For now, only 1 or 3 AZs can be used.
     AllowedValues:
-      - 1
-      - 3
+      - '1'
+      - '3'
+    Default: '3'
+    Description: >-
+      The number of Availability Zones used for the deployment. Some Regions might be limited to two Availability Zones. 
+      For a single IBM Cloud Pak for Security cluster to be highly available, three Availability Zones are required to avoid a single point of failure when using three nodes. 
+      With fewer than three Availability Zones, one of the zones will have more master nodes.
+    Type: String
   AvailabilityZones:
     Description: The list of Availability Zones to use for the subnets in the VPC. The Quick Start uses one or three Availability Zones and preserves the logical order that you specify.
     Type: List<AWS::EC2::AvailabilityZone::Name>
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.0.0/16
+    Default: '10.0.0.0/16'
     Description: CIDR block for the VPC.
     Type: String
   PrivateSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.0.0/19
+    Default: '10.0.0.0/19'
     Description: The CIDR block for the private subnet located in Availability Zone 1.
     Type: String
   PrivateSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.32.0/19
+    Default: '10.0.32.0/19'
     Description: The CIDR block for the private subnet located in Availability Zone 2.
     Type: String
   PrivateSubnet3CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.64.0/19
+    Default: '10.0.64.0/19'
     Description: The CIDR block for the private subnet located in Availability Zone 3.
     Type: String
   PublicSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.128.0/20
+    Default: '10.0.128.0/20'
     Description: The CIDR block for the public subnet located in Availability Zone 1.
     Type: String
   PublicSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.144.0/20
+    Default: '10.0.144.0/20'
     Description: The CIDR block for the public subnet located in Availability Zone 2.
     Type: String
   PublicSubnet3CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
-    Default: 10.0.160.0/20
+    Default: '10.0.160.0/20'
     Description: The CIDR block for the public subnet located in Availability Zone 3.
     Type: String
   BootNodeAccessCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x.
-    Description: The CIDR IP range that is permitted to access the boot node instance. Set this value to a trusted IP range. The value `0.0.0.0/0` permits access to all IP addresses. Additional values can be added post-deployment from the Amazon EC2 console.
+    Description:  The CIDR IP range that is permitted to access the boot node instance. Set this value to a trusted IP range. The value `0.0.0.0/0` permits access to all IP addresses. Additional values can be added post-deployment from the Amazon EC2 console.
     Type: String
   DomainName:
-    Description: 'Amazon Route 53 base domain configured for your OpenShift Container Platform cluster. Name must consist of lowercase alphanumeric characters and must start and end with an alphanumeric character.'
-    Type: String
-  CPSFQDN:
-    Description: 'Any fully qualified domain name configured for the Cloud Pak for Security application.'
+    AllowedPattern: ^(\S+)$
+    ConstraintDescription: Must contain a valid base domain.
+    Description: Amazon Route 53 base domain configured for your Red Hat OpenShift Container Platform cluster. Must be a valid base domain (e.g., example.com).
     Type: String
   KeyPairName:
-    Description: The name of an existing public/private key pair, which allows you
-      to securely connect to your instance after it launches.
+    Description: Name of an existing public/private key pair, which allows you to securely connect to your instance after it launches. If you do not have one in this AWS Region, please create it before continuing.
     Type: AWS::EC2::KeyPair::KeyName
-  NumberOfMaster:
-    Default: '3'
-    Description: The desired capacity for the OpenShift master instances. The value must be an odd number. For a development deployment, 1 is sufficient. For production deployments, a minimum of 3 is required.
+  RedhatPullSecret:
+    AllowedPattern: ^s3:\/\/+[0-9a-z-.\/]*$
+    ConstraintDescription: Must contain a valid S3 URI path of Red Hat OpenShift Installer Provisioned Infrastructure pull secret (e.g., s3://my-bucket/path/to/pull-secret).
+    Description: S3 URI path of Red Hat OpenShift Installer Provisioned Infrastructure pull secret (e.g., s3://my-bucket/path/to/pull-secret).
     Type: String
-    AllowedPattern: '^[13579]$|(^[1-9]+[13579]$)'
-  NumberOfCompute:
-    Default: '3'
-    Description: The desired capacity for the OpenShift compute instances. The minimum value required is 3 nodes. If the number of compute instances exceeds your Red Hat entitlement limits or AWS instance limits, the stack will fail. Choose a number that is within your limits.
+  NumberOfMaster:
+    ConstraintDescription: The required number of master nodes is 3.
+    Default: 3
+    Description: The desired capacity for the Red Hat Openshift Container Platform master node instances. The required number of master nodes is 3.
     Type: Number
+    MaxValue: 3
+    MinValue: 3
+  NumberOfCompute:
+    ConstraintDescription: The minimum number of compute nodes must be 4.
+    Default: 4
+    Description: 'The desired capacity for the Red Hat Openshift Container Platform compute node instances. The minimum value required is 4 nodes. Note: If the number of compute node instances exceeds your Red Hat entitlement limits or AWS instance limits, the stack will fail. Choose a number that is within your limits.'
+    Type: Number
+    MinValue: 4
   MasterInstanceType:
-    Default: m5.xlarge
     AllowedValues:
       - m5.xlarge
-      - m5.2xlarge
-      - m5d.xlarge
-      - m5d.2xlarge
-    ConstraintDescription: Must contain valid instance type.
-    Description: The EC2 instance type for the OpenShift master instances.
+    ConstraintDescription: Must contain a valid instance type. Instance must have 4 cores CPU, 16 GB RAM and 120 GB storage.
+    Default: m5.xlarge
+    Description: The EC2 instance type for the Red Hat Openshift Container Platform master node instances. Instance must have 4 cores CPU, 16 GB RAM and 120 GB storage.
     Type: String
   ComputeInstanceType:
-    Default: m5.4xlarge
     AllowedValues:
-      - m5.4xlarge
-      - m5.8xlarge
-      - m5.12xlarge
-      - m5.24xlarge
-      - m5a.4xlarge
-      - m5a.8xlarge
-      - m5a.12xlarge
-      - m5a.24xlarge
-      - c5.4xlarge
-      - c5.9xlarge
-      - c5.12xlarge
-      - c5.18xlarge
-      - c5.24xlarge
-      - r5.4xlarge
-      - r5.9xlarge
-      - r5.12xlarge
-      - r5.18xlarge
-      - r5.24xlarge
-    ConstraintDescription: Must contain valid instance type
-    Description: The EC2 instance type for the OpenShift compute instances.
+      - m5.2xlarge
+    ConstraintDescription: Must contain a valid instance type. Instance must have 8 cores CPU, 32 GB RAM and 120 GB storage.
+    Default: m5.2xlarge
+    Description: The EC2 instance type for the Red Hat Openshift Container Platform compute node instances. Instance must have 8 cores CPU, 32 GB RAM and 120 GB storage.
     Type: String
   ClusterName:
-    Description: Custom cluster name for kubernetes.io/cluster/tags.
+    AllowedPattern: ^[0-9a-z-.]*$
+    ConstraintDescription: Must contain valid cluster name. The name must start with a letter, can contain letters, numbers, periods (.), and hyphen (-).
+    Description: Name of your Red Hat Openshift Container Platform cluster. The name must start with a letter, can contain letters, numbers, periods (.), and hyphen (-). Use a name that is unique across Regions.
     Type: String
-    AllowedPattern: ^[0-9a-z-]*$
-  EnableFips:
-    Description: Enable Federal Information Processing Standards (FIPS) for OpenShift.
-    Type: String
+  LicenseAgreement:
     AllowedValues:
-      - "False"
-      - "True"
-    Default: "False"
-  RedhatPullSecret:
-    Description: Your Red Hat Network (RHN) pull secret (e.g., s3://my-bucket/path/to/portworxspec.yaml).
+      - 'I agree'
+      - '-'
+    ConstraintDescription: Agree to the license terms for IBM Cloud Pak for Security.
+    Default: '-' 
+    Description: By accepting the license agreement (https://ibm.biz/BdfWw8), you confirm that you read the license and accept the terms for IBM Cloud Pak for Security.
     Type: String
   CP4SVersion:
-    Description: The version of IBM Cloud Pak for Security to be deployed. Currently only 1.4.0.0 is supported.
-    Type: String
     AllowedValues:
-      - 1.4.0.0
-    Default: 1.4.0.0
-  APIUsername:
-    Description: >-
-       The IBM Cloud Pak for Security user name to access IBM Container Registry.
+      - '1.9'
+    Default: '1.9'
+    Description: The version of IBM Cloud Pak for Security to be deployed. Currently only version 1.9 is available through AWS Quick Start.
     Type: String
-    Default: "cp"
-  APIKey:
-    Description: >-
-       The IBM Cloud Pak for Security API key to access IBM Container Registry.
+  Namespace:
+    AllowedPattern: ^([0-9a-z]*(?<!openshift|kube))*?$
+    ConstraintDescription: Must contain a valid namespace. The namespace must contain only lowercase alphanumeric characters, must start and end with an alphanumeric character.
+    Default: 'cp4s'
+    Description: >- 
+      The Red hat Openshift Container Platform project that will be created for deploying IBM Cloud Pak for Security. The namespace must contain only lowercase alphanumeric characters, must start and end with an alphanumeric character. It must be a dedicated namespace for IBM Cloud Pak for Security. 
+      Must not be default, kube-*, or openshift-*. The namespace is created automatically if it does not exist.
+    Type: String
+  AdminUser:
+    AllowedPattern: ^(\S+)$
+    ConstraintDescription: Must contain a CP4S admin username. Specify a short name or an email ID for the administrator username. Admin username must have minimum 3 characters and maximum 32 characters.
+    Description: The Admin user who will be given administrative privileges in the IBM Cloud Pak for Security default account. Specify a short name or an email ID for the administrator username. For more details on the IBM Cloud Pak for Security Admin user, see https://ibm.biz/BdfWNz.
+    MaxLength: 32
+    MinLength: 3
+    Type: String 
+  RepositoryPassword:
+    AllowedPattern: ^(\S+)$
+    ConstraintDescription: Must contain password to access IBM Entitled Registry.
+    Description: The password to access IBM Entitled Registry.
     Type: String 
     NoEcho: 'true'
-  LicenseAgreement:
+  CP4SDeploymentLogsBucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: The IBM Cloud Pak for Security deployment logs bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-) and must be between 3 (min) and 63 (max) characters long. It cannot start or end with a hyphen (-).
     Description: >-
-      I have read and agree to the license terms for IBM Cloud Pak for Security (https://ibm.biz/BdqtpK).
+      The name of the S3 bucket where IBM Cloud Pak for Security deployment logs are to be exported. This S3 bucket will be created during the stack creation process. The deployment logs provide a record of the boot strap scripting actions and are useful for problem determination if the deployment fails in some way. 
+      This name can include numbers, lowercase letters, uppercase letters, and hyphens, but do not start or end with a hyphen (-). Bucket names must be between 3 (min) and 63 (max) characters long.
+    MaxLength: 63
+    MinLength: 3
     Type: String
-    Default: '-' 
+  CP4SFQDN:
+    Default: ''
+    Description: >-
+      The fully qualified domain name (FQDN) created for IBM Cloud Pak for Security. When the domain is not specified, it will be generated as cp4s.<cluster_ingress_subdomain>.
+      For more information on the IBM Cloud Pak for Security FQDN requirements, see https://ibm.biz/BdfWNR.
+    Type: String
+  DomainCertificate:
+    AllowedPattern: ^(|s3:\/\/+[0-9a-z-.\/]*)$
+    ConstraintDescription: Must be a valid S3 URI path of the domain certificate file that is associated with the IBM Cloud Pak for Security domain (e.g., s3://my-bucket/path/to/cert).
+    Default: ''
+    Description: >-
+      S3 URI path of the domain certificate file that is associated with the IBM Cloud Pak for Security domain (e.g., s3://my-bucket/path/to/cert). Update only if you specified your own FQDN for IBM Cloud Pak for Security. 
+      If the domain is not specified, the Red Hat OpenShift cluster certificates are used. For more information on TLS certificate, see https://ibm.biz/BdfWNR.
+    Type: String
+  DomainCertificateKey:
+    AllowedPattern: ^(|s3:\/\/+[0-9a-z-.\/]*)$
+    ConstraintDescription: Must be a valid S3 URI path of the domain certificate key file that is associated with the IBM Cloud Pak for Security domain (e.g., s3://my-bucket/path/to/key).
+    Default: ''
+    Description: >- 
+      S3 URI path of the domain certificate key file that is associated with the IBM Cloud Pak for Security domain (e.g., s3://my-bucket/path/to/key). Update only if you specified your own FQDN for IBM Cloud Pak for Security. 
+      If the domain is not specified, the Red Hat OpenShift cluster certificates are used. For more information on TLS key, see https://ibm.biz/BdfWNR.
+    Type: String
+  CustomCaFile:
+    AllowedPattern: ^(|s3:\/\/+[0-9a-z-.\/]*)$
+    ConstraintDescription: Must be a valid S3 URI path of the custom ca certificate file that is associated with the IBM Cloud Pak for Security domain (e.g., s3://my-bucket/path/to/custom-ca-cert).
+    Default: ''
+    Description: >-
+      S3 URI path of the custom ca certificate file that is associated with the IBM Cloud Pak for Security domain (e.g., s3://my-bucket/path/to/custom-ca-cert). Update only if you are using a custom or self-signed certificate.  
+      For more information on custom TLS certificate, see https://ibm.biz/BdfWNR.
+    Type: String
+  StorageClass:
+    Default: ''
+    Description: >-
+      The provisioned block or file storage class to be used for creating all the PVCs required by IBM Cloud Pak for Security. When it is not specified, the default storage class will be used.
+      The storage class cannot be modified after installation. For more details on Storage class, see https://ibm.biz/BdfWN2.
+    Type: String
+  BackupStorageClass:
+    Default: ''
+    Description: Storage class used for creating the backup PVC. If this value is not set, IBM Cloud Pak for Security will use the same value set in 'Storage class' parameter. For more details on Backup storage class, see (https://ibm.biz/BdfWN2).
+    Type: String
+  BackupStorageSize:
+    AllowedPattern: ^(([0-9]+[G]i)|)$
+    ConstraintDescription: Must be 500Gi or higher.
+    Default: ''
+    Description: Override the default backup storage PVC size. Default value is 500Gi. Update only if you need the storage size for the backup and restore pod to be greater than 500 Gi.
+    Type: String
+  ImagePullPolicy:
     AllowedValues:
-      - I agree
-      - '-'
-    ConstraintDescription: Must answer 'I agree'
-  Namespace:
-    Description: >-
-      The OpenShift project that is created when deploying IBM Cloud Pak for Security. The value can be any lowercase string.
+      - 'Always'
+      - 'IfNotPresent'
+    Default: 'IfNotPresent'
+    Description: The pull policy for the images. When Red Hat OpenShift creates containers, it uses the ImagePullPolicy to determine whether to pull the container image from the registry before starting the container.
     Type: String
-    Default: "cp4s"
-  AdminPassword:
-    Description: The password for the IBM Cloud Pak for Security web console.
+  DeployDRC:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: Choose false to skip deployment of IBM Security Detection and Response Center (Beta). For more details on IBM Security Detection Response Center, see https://ibm.biz/BdPceZ.
     Type: String
-    MinLength: '8'
-    AllowedPattern: ^[^ \\']+$
-    NoEcho: 'true'
+  DeployRiskManager:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: Choose false to skip deployment of IBM Security Risk Manager. For more details on IBM Security Risk Manager, see https://ibm.biz/BdPcik.
+    Type: String
+  DeployThreatInvestigator:
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+    Description: Choose false to skip deployment of IBM Security Threat Investigator. For more details on IBM Threat Investigator, see https://ibm.biz/BdPceY.
+    Type: String
+  SOAREntitlement:
+    AllowedPattern: ^(|s3:\/\/+[0-9a-z-.\/]*)$
+    ConstraintDescription: Must be a valid S3 URI path of SOAR Entitlement for installing Orchestration & Automation license in IBM Cloud Pak for Security (e.g., s3://my-bucket/path/to/license-key).
+    Default: ''
+    Description: S3 URI path of SOAR Entitlement for installing Orchestration & Automation license in IBM Cloud Pak for Security (e.g., s3://my-bucket/path/to/license-key).
+    Type: String
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
+    ConstraintDescription: The Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-) and must be between 3 (min) and 63 (max) characters long. It cannot start or end with a hyphen (-).
     Default: aws-quickstart
-    Description: Name of the S3 bucket for your copy of the Quick Start assets. Keep the default name unless you are customizing the template. Changing the name updates code references to point to a new Quick Start location. This name can include numbers, lowercase letters, uppercase letters, and hyphens, but do not start or end with a hyphen (-). See https://aws-quickstart.github.io/option1.html.      
+    Description: >-
+      Name of the S3 bucket for your copy of the Quick Start assets. Do not change the default value unless you are customizing the deployment. Changing the name updates code references to point to a new Quick Start location. 
+      This name can include numbers, lowercase letters, uppercase letters, and hyphens, but do not start or end with a hyphen (-). Bucket names must be between 3 (min) and 63 (max) characters long. To know how you can customize the deployment, see https://aws-quickstart.github.io/option1.html
+    MaxLength: 63
+    MinLength: 3
     Type: String
   QSS3BucketRegion:
     Default: 'us-east-1'
-    Description: 'AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. Keep the default Region unless you are customizing the template. Changing this Region updates code references to point to a new Quick Start location. When using your own bucket, specify the Region. See https://aws-quickstart.github.io/option1.html.'
+    Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. Do not change the default value unless you are customizing the deployment. To know how you can customize the deployment, see https://aws-quickstart.github.io/option1.html
     Type: String   
   QSS3KeyPrefix:
-    AllowedPattern: ^[0-9a-zA-Z-/]*$
-    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
+    AllowedPattern: ^([0-9a-zA-Z-.]+/)*$
+    ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slashes (/).
     Default: quickstart-ibm-cloud-pak-for-security/
-    Description: S3 key prefix that is used to simulate a directory for your copy of the Quick Start assets. Keep the default prefix unless you are customizing the template. Changing this prefix updates code references to point to a new Quick Start location. This prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slashes (/). See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html and https://aws-quickstart.github.io/option1.html.
+    Description: >-
+      S3 key prefix that is used to simulate a directory for your copy of the Quick Start assets. Do not change the default value unless you are customizing the deployment. 
+      Changing this prefix updates code references to point to a new Quick Start location. This prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slashes (/). Must end with a forward slash, 
+      see https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html. To know how you can customize the deployment, see https://aws-quickstart.github.io/option1.html.
     Type: String
-  CP4SDeploymentLogsBucketName:
-    Description: 'The name of the S3 bucket where IBM Cloud Pak for Security deployment logs are to be exported. The deployment logs provide a record of the boot strap scripting actions and are useful for problem determination if the deployment fails in some way.'
-    Type: String
-
-
 Rules:
+  AdminUserRule:
+    Assertions:
+    - Assert:
+        Fn::Not : [{"Fn::Equals" : [{"Ref" : "AdminUser"}, "admin"]}]
+      AssertDescription: Value cannot be 'admin'.
   LicenseAgreementRule:
     Assertions:
     - Assert:
         Fn::Contains:
         - - I agree
         - Ref: LicenseAgreement
-      AssertDescription: User must agree to the terms of the license agreement.    
-   
-
+      AssertDescription: User must agree to the terms of the IBM Cloud Pak for Security license agreement.
 Conditions:
   3AZCondition: !Equals [!Ref NumberOfAZs, 3]
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
- 
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !If
-          - 3AZCondition
-          - !Sub
-            - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml
-            - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-              S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-          - !Sub
-            - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/aws-vpc.template.yaml
-            - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-              S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion] 
+      TemplateURL: !Sub 
+        - >- 
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/aws-vpc.template.yaml
+        - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+          S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion] 
       Parameters:
         NumberOfAZs: !Ref  NumberOfAZs      
         AvailabilityZones: !Join [ ',', !Ref 'AvailabilityZones']
@@ -344,14 +439,13 @@ Resources:
         PrivateSubnet1ACIDR: !Ref 'PrivateSubnet1CIDR'
         PrivateSubnet2ACIDR: !Ref 'PrivateSubnet2CIDR'
         PrivateSubnet3ACIDR: !Ref 'PrivateSubnet3CIDR'
-        PrivateSubnetATag2: !Sub "kubernetes.io/cluster/${AWS::StackName}-${AWS::Region}=owned"
-        PrivateSubnetATag3: "kubernetes.io/role/internal-elb="
+        PrivateSubnetATag2: !Sub 'kubernetes.io/cluster/${AWS::StackName}-${AWS::Region}=owned'
+        PrivateSubnetATag3: 'kubernetes.io/role/internal-elb='
         PublicSubnet1CIDR: !Ref 'PublicSubnet1CIDR'
         PublicSubnet2CIDR: !Ref 'PublicSubnet2CIDR'
         PublicSubnet3CIDR: !Ref 'PublicSubnet3CIDR'
-        PublicSubnetTag2: !Sub "kubernetes.io/cluster/${AWS::StackName}-${AWS::Region}=owned"
-        PublicSubnetTag3: "kubernetes.io/role/elb="
-
+        PublicSubnetTag2: !Sub 'kubernetes.io/cluster/${AWS::StackName}-${AWS::Region}=owned'
+        PublicSubnetTag3: 'kubernetes.io/role/elb='
   CloudPakSecurityStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -369,56 +463,60 @@ Resources:
         PrivateSubnet2ID: !If
           - 3AZCondition
           - !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-          - ""
+          - ''
         PrivateSubnet3ID: !If
           - 3AZCondition
           - !GetAtt 'VPCStack.Outputs.PrivateSubnet3AID'
-          - ""
+          - ''
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
         PublicSubnet2ID: !If
           - 3AZCondition
           - !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
-          - ""
+          - ''
         PublicSubnet3ID: !If
           - 3AZCondition
           - !GetAtt 'VPCStack.Outputs.PublicSubnet3ID'
-          - ""
+          - ''
         BootNodeAccessCIDR: !Ref 'BootNodeAccessCIDR'
         DomainName: !Ref 'DomainName'
-        CPSFQDN: !Ref 'CPSFQDN'
         KeyPairName: !Ref 'KeyPairName'
+        RedhatPullSecret: !Ref 'RedhatPullSecret'
         NumberOfMaster: !Ref 'NumberOfMaster'
         NumberOfCompute: !Ref 'NumberOfCompute'
         MasterInstanceType: !Ref 'MasterInstanceType'
         ComputeInstanceType: !Ref 'ComputeInstanceType'
         ClusterName: !Ref 'ClusterName'
-        EnableFips: !Ref EnableFips
-        RedhatPullSecret: !Ref 'RedhatPullSecret'
-        CP4SVersion: !Ref 'CP4SVersion'
-        APIUsername: !Ref 'APIUsername'
-        APIKey: !Ref 'APIKey'
         LicenseAgreement: !Ref 'LicenseAgreement'
+        CP4SVersion: !Ref 'CP4SVersion'
         Namespace: !Ref 'Namespace'
-        AdminPassword: !Ref 'AdminPassword'
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3BucketRegion: !Ref QSS3BucketRegion
-        QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
+        AdminUser: !Ref 'AdminUser'
+        RepositoryPassword: !Ref 'RepositoryPassword'
         CP4SDeploymentLogsBucketName: !Ref 'CP4SDeploymentLogsBucketName'
-
-
+        CP4SFQDN: !Ref 'CP4SFQDN'
+        DomainCertificate: !Ref 'DomainCertificate'
+        DomainCertificateKey: !Ref 'DomainCertificateKey'
+        CustomCaFile: !Ref 'CustomCaFile'
+        StorageClass: !Ref 'StorageClass'
+        BackupStorageClass: !Ref 'BackupStorageClass'
+        BackupStorageSize: !Ref 'BackupStorageSize'
+        ImagePullPolicy: !Ref 'ImagePullPolicy'
+        DeployDRC: !Ref 'DeployDRC'
+        DeployRiskManager: !Ref 'DeployRiskManager'
+        DeployThreatInvestigator: !Ref 'DeployThreatInvestigator'
+        SOAREntitlement: !Ref 'SOAREntitlement'
+        QSS3BucketName: !Ref 'QSS3BucketName'
+        QSS3BucketRegion: !Ref 'QSS3BucketRegion'
+        QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
 Outputs:
   BootnodePublicIp:
     Description: The boot node public IP address.
     Value: !GetAtt 'CloudPakSecurityStack.Outputs.BootnodePublicIp'
-
+  CP4SAdminUser:
+    Description: IBM CloudPak for Security Admin user in the default account.
+    Value: !GetAtt 'CloudPakSecurityStack.Outputs.CP4SAdminUser'
   CP4SWebClientURL:
     Description: IBM CloudPak for Security web client URL.
     Value: !GetAtt 'CloudPakSecurityStack.Outputs.CP4SWebClientURL'
-
-  OpenshiftPassword:
-    Description: OpenShift password secret.
-    Value: !GetAtt 'CloudPakSecurityStack.Outputs.OpenshiftPassword'
-
-  OpenShiftURLValue:
-    Description: URL for the OpenShift UI.
-    Value: !GetAtt 'CloudPakSecurityStack.Outputs.OpenshiftURLValue'
+  OpenShiftWebConsoleURL:
+    Description: Red Hat OpenShift Container platform web console URL.
+    Value: !GetAtt 'CloudPakSecurityStack.Outputs.OpenshiftWebConsoleURL'

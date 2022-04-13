@@ -1,17 +1,20 @@
+:xrefstyle: short
+
 Deploying this Quick Start for a new virtual private cloud (VPC) with
-default parameters builds the following {partner-product-short-name} environment in the
+default parameters builds the following {partner-product-name} environment in the
 AWS Cloud.
 
 // Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
-:xrefstyle: short
+
 [#architecture1]
-.Quick Start architecture for {partner-product-short-name} on AWS
-[link=images/icp-security-architecture-diagram.png]
-image::../images/icp-security-architecture-diagram.png[Architecture,width=750,height=508]
+.Quick Start architecture for {partner-product-name} on AWS
+[link=images/architecture-diagram.png]
+image::../images/architecture-diagram.png[Architecture]
 
-As shown in Figure 1, the Quick Start sets up the following:
+{empty} +
+As shown in <<architecture1>>, the Quick Start sets up the following:
 
-* A highly available architecture that spans one or three Availability Zones.*
+* A highly available architecture that spans across three Availability Zones.*
 * A VPC configured with public and private subnets, according to AWS
 best practices, to provide you with your own virtual network on AWS.*
 * In the public subnets:
@@ -19,17 +22,17 @@ best practices, to provide you with your own virtual network on AWS.*
 internet access for resources in the private subnets.*
   ** A boot node Amazon EC2 instance that also serves as a bastion host to allow inbound Secure Shell (SSH) access to EC2 instances in the private subnets.
 * In the private subnets:
-  ** OpenShift Container Platform (OCP) master nodes in up to three Availability Zones.
-  ** OCP compute nodes with OpenShift auto scaling for hosting the {partner-product-short-name} capabilities.
+  ** Red Hat OpenShift Container Platform (OCP) master nodes in up to three Availability Zones.
+  ** Red Hat OpenShift Container Platform (OCP) compute nodes with OpenShift autoscaling for hosting the {partner-product-name} capabilities.
   ** Amazon Elastic Block Storage disks that are mounted on the compute nodes for container-persistent data.
-* A Classic Load Balancer spanning the public subnets for accessing {partner-product-short-name} from a web browser.
+* A Classic Load Balancer spanning the public subnets for accessing {partner-product-name} from a web browser.
 * A Network Load Balancer spanning the public subnets for routing external OpenShift application programming interface (API) traffic to the OCP master instances.
 * A Network Load Balancer spanning the private subnets for routing internal OpenShift API traffic to the OCP master instances.
-* Amazon Route 53 as your public Domain Name System (DNS) for resolving domain names of the IBM {partner-product-short-name} management console and applications deployed on the cluster.
-* Amazon S3 bucket used for OpenShift image registry.
+* https://docs.openshift.com/container-platform/4.8/machine_management/applying-autoscaling.html[OpenShift autoscaling^] for the OCP compute nodes.
+* Amazon Route 53 as your public Domain Name System (DNS) for resolving domain names of the {partner-product-name} management console and applications deployed on the cluster.
+* Amazon S3 for storing the pull secret, TLS certificate and key, SOAR Entitlement  and OpenShift image registry. 
+* AWS Secrets Manager to encrypt, store, and retrieve credentials and secrets for your {partner-product-name} deployment.
 
-*The template that deploys the Quick Start into an existing VPC skips
-the components marked by asterisks and prompts you for your existing VPC
-configuration.
+The {partner-product-name} components run as containers on the OpenShift compute nodes, and build on a range of common platform and operational services that underpin all IBM Cloud Paks.
 
-The {partner-product-short-name} components run as containers on the OpenShift compute nodes, and build on a range of common platform and operational services that underpin all IBM Cloud Paks.
+[.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#

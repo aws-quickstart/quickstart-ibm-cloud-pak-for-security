@@ -1,38 +1,70 @@
 project:
   name: quickstart-ibm-cloud-pak-for-security
+  owner: quickstart-eng@amazon.com
   shorten_stack_name: true
   s3_regional_buckets: true
   package_lambda: false
-  s3_bucket: ''
   regions:
   - us-east-1
+  - us-east-2
   - us-west-1
   - us-west-2
-  
+  - eu-west-1
+  - eu-west-2
+  - eu-west-3
+  - eu-central-1
+  - eu-north-1
+  - ap-northeast-1
+  - ap-northeast-2
+  - ap-northeast-3
+  - ap-southeast-1
+  - ap-southeast-2
+  - ap-south-1
+  - sa-east-1
+  - ca-central-1
+  s3_bucket: ''
 tests:
-
-  cp4s-3AZ:
+  3AZ-cp4s:
     parameters:
-      #override these values in .taskcat_overrides.yml
-      APIKey: override
-      AdminPassword: override
+      # Override these values in .taskcat_overrides.yml
       BootNodeAccessCIDR: override
-      CPSFQDN: override
-      DomainName: override
-      CP4SDeploymentLogsBucketName: override
       KeyPairName: override
       RedhatPullSecret: override
+      DomainName: override
+      RepositoryPassword: override
       # Defaults
-      APIUsername: "cp"
       AvailabilityZones: $[taskcat_genaz_3]
+      NumberOfAZs: '3'
       ClusterName: cp4s-$[taskcat_random-string]
-      Namespace: cp4s-$[taskcat_random-string]
-      LicenseAgreement: "I agree"
-      NumberOfAZs: "3"
+      CP4SDeploymentLogsBucketName: $[taskcat_autobucket]
+      LicenseAgreement: 'I agree'
+      AdminUser: $[taskcat_random-string]
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
       QSS3KeyPrefix: "quickstart-ibm-cloud-pak-for-security/"
-
     regions:
-      - us-west-2
+    - us-east-1
+    s3_bucket: ''
+    template: templates/ibm-cloudpak-root.template.yaml
+  1AZ-cp4s:
+    parameters:
+      # Override these values in .taskcat_overrides.yml
+      BootNodeAccessCIDR: override
+      KeyPairName: override
+      RedhatPullSecret: override
+      DomainName: override
+      RepositoryPassword: override
+      # Defaults
+      AvailabilityZones: $[taskcat_genaz_1]
+      NumberOfAZs: '1'
+      ClusterName: cp4s-$[taskcat_random-string]
+      CP4SDeploymentLogsBucketName: $[taskcat_autobucket]
+      LicenseAgreement: 'I agree'
+      AdminUser: $[taskcat_random-string]
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+      QSS3KeyPrefix: "quickstart-ibm-cloud-pak-for-security/"
+    regions:
+    - us-west-1
+    s3_bucket: ''
     template: templates/ibm-cloudpak-root.template.yaml
