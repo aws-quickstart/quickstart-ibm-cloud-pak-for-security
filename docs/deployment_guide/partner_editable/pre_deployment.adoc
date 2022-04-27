@@ -22,9 +22,9 @@ Upload the https://console.redhat.com/openshift/install/aws/installer-provisione
 
 * The Quick Start requires an entitlement key to access the {partner-product-name} content.
   ** You can acquire your IBM entitlement key from https://myibm.ibm.com/products-services/containerlibrary[IBM Container Library^].
-  ** During stack creation you will need to pass the IBM entitlement key as the link:#_icp4s_parameters[RepositoryPassword] parameter.
+  ** During stack creation you will need to pass the IBM entitlement key as the `RepositoryPassword` parameter.
 
-* The Quick Start uses link:#_icp4s_optional_parameters[SOAR Entitlement] for Orchestration & Automation application on {partner-product-name}.
+* The Quick Start uses an optional `SOAR Entitlement` for Orchestration & Automation application on {partner-product-name}.
   ** To know how to acquire your SOAR Entitlement, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-licensing-entitlement[Licensing and Entitlement^].
   ** Upload the SOAR Entitlement to your S3 bucket. The Quick Start pulls this SOAR Entitlement from the specified S3 bucket location for configuring Orchestration & Automation.
 
@@ -32,7 +32,7 @@ Upload the https://console.redhat.com/openshift/install/aws/installer-provisione
 
 Confirm that you have a domain name to use for OpenShift in Amazon Route 53. If you do not have a domain name, see the AWS documentation on https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html[Registering a new domain^].
 
-NOTE: {partner-product-name} can be installed using the FQDN and TLS certificates of the Red Hat® OpenShift® Container Platform by not passing in an FQDN in the link:#_icp4s_optional_parameters[CP4SFQDN] parameter during installation. If you choose this method, you don't have to create your own fully qualified domain name.
+NOTE: {partner-product-name} can be installed using the FQDN and TLS certificates of the Red Hat® OpenShift® Container Platform by not passing in an FQDN in the optional `CP4SFQDN` parameter during installation. If you choose this method, you don't have to create your own fully qualified domain name.
 
 If you wish to create your own FQDN for the {partner-product-name}, add a DNS record to your hosted zone in Amazon Route 53.
 
@@ -41,12 +41,12 @@ The following procedure explains how to create records using the Amazon Route 53
 . Go to Amazon Route 53 console. https://us-east-1.console.aws.amazon.com/route53[Click here^].
 . Choose the hosted zone that corresponds to the domain name you will use when creating the stack.
 . Choose *Create Record*.
-. Enter a value for record name, this record will be used for the {partner-product-name} link:#_icp4s_optional_parameters[CP4SFQDN] parameter value when creating the stack.
+. Enter a value for record name, this record will be used for the {partner-product-name} `CP4SFQDN` parameter value when creating the stack.
 +
 WARNING: Make sure that your FQDN must not be the same as the Red Hat OpenShift Container Platform cluster FQDN, or any other FQDN associated with the Red Hat OpenShift Container Platform cluster.
 +
 . Confirm that the record type is `CNAME`.
-. For the value of the record, specify `console-openshift-console.apps.ClusterName.DomainName`, where link:#_cluster_name_parameter[ClusterName] and link:#_domain_name_parameter[DomainName] are the respective input parameters used when creating the stack.
+. For the value of the record, specify `console-openshift-console.apps.ClusterName.DomainName`, where `ClusterName` and `DomainName` are the respective input parameters used when creating the stack.
 . For the routing policy, pick `Simple routing`, and then choose *Create record*, as shown in <<_create_dns_record>>.
 
 [#_create_dns_record]
@@ -55,6 +55,6 @@ WARNING: Make sure that your FQDN must not be the same as the Red Hat OpenShift 
 image::../docs/deployment_guide/images/create-dns-record.png[DNS Record]
 
 {empty} +
-If you are using your own FQDN, you must provide a link:#_icp4s_optional_parameters[TLS certificate] and link:#_icp4s_optional_parameters[TLS key], that use keys that are signed by a trusted certificate authority (CA). A link:#_icp4s_optional_parameters[custom TLS certificate] is required, if the provided server keys are not signed by a trusted certificate authority. For more information, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-domain-name-tls-certificates[Domain Name and TLS Certificates^].
+If you are using your own FQDN, you must provide an optional `TLS certificate` and `TLS key`, that use keys that are signed by a trusted certificate authority (CA). A custom TLS certificate is required, if the provided server keys are not signed by a trusted certificate authority. For more information, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-domain-name-tls-certificates[Domain Name and TLS Certificates^].
 
 Upload the TLS certificate, TLS key and custom TLS certificate to your S3 bucket. The Quick Start pulls these certificates and keys from your S3 bucket location for {partner-product-name} deployment.
