@@ -859,6 +859,7 @@ p.footer-text a{color:#d7d8d8}
 </ul>
 </li>
 <li><a href="#_troubleshooting">Troubleshooting</a></li>
+<li><a href="#_resources">Resources</a></li>
 <li><a href="#_feedback">Feedback</a></li>
 <li><a href="#_notices">Notices</a></li>
 </ul>
@@ -906,6 +907,40 @@ Refer to the <a href="https://github.com/aws-quickstart/quickstart-ibm-cloud-pak
 <div class="sectionbody">
 <div class="paragraph">
 <p>This Quick Start deploys IBM Cloud Pak for Security on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>IBM Cloud Pak for Security can connect disparate data sources - to uncover hidden threats and make better risk-based decisions - while the data stays where it is.
+By using open standards and IBM innovations, IBM Cloud Pak for Security can securely access IBM and third-party tools to search for threat indicators across any cloud or on-premises location.
+Connect your workflows with a unified interface so you can respond faster to security incidents.
+Use IBM Cloud Pak for Security to orchestrate and automate your security response so that you can better prioritize your team&#8217;s time.</p>
+</div>
+<div class="paragraph">
+<p>IBM Cloud Pak for Security deploys the following applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><a href="https://www.ibm.com/docs/en/SSTDPP_1.9/docs/data-explorer/overview.html" target="_blank" rel="noopener">IBM® Security Data Explorer</a></strong> is a new application that enables customers to do federated search and investigation across their hybrid, multi-cloud environment in a single interface and workflow.</p>
+</li>
+<li>
+<p><strong><a href="https://www.ibm.com/docs/en/SSTDPP_1.9/docs/threat-intelligence-insights/overview.html" target="_blank" rel="noopener">IBM® Security Threat Intelligence Insights</a></strong> is an application that delivers unique, actionable, and timely threat intelligence.</p>
+</li>
+<li>
+<p><strong><a href="https://www.ibm.com/docs/en/SSTDPP_1.9/orchestration/Resilient_SOAR.html" target="_blank" rel="noopener">IBM® Security QRadar SOAR</a></strong> for IBM Cloud Pak for Security provides organizations with the ability to track, manage, and resolve cybersecurity incidents.</p>
+</li>
+<li>
+<p><strong><a href="https://www.ibm.com/docs/en/SSTDPP_1.9/datariskmanager/welcome.html" target="_blank" rel="noopener">IBM® Security Risk Manager</a></strong> for IBM Cloud Pak for Security is an application that automatically collects, correlates, and contextualizes risk insights across the IT and security ecosystem of your organization.</p>
+</li>
+<li>
+<p><strong><a href="https://www.ibm.com/docs/en/SSTDPP_1.9/investigator/investigator_intro.html" target="_blank" rel="noopener">IBM® Security Threat Investigator</a></strong> automatically analyzes and investigates cases to help you make more informed decisions. By showing potential threats and the assets that are impacted, Threat Investigator can help determine the criticality of exposure, how many systems are at risk, and the level of remediation effort that is required.</p>
+</li>
+<li>
+<p><strong><a href="https://www.ibm.com/docs/en/SSTDPP_1.9/docs/drc/c_DRC_intro.html" target="_blank" rel="noopener">IBM® Detection and Response Center (Beta)</a></strong> provides an overview of your organization&#8217;s security posture through the security use cases available from IBM QRadar and the Sigma community tools. IBM Security Threat Investigator uses these security use cases in its investigations.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information on IBM Cloud Pak for Security, see the <a href="https://ibm.biz/Bdf8VX" target="_blank" rel="noopener">IBM Cloud Pak for Security Documentation</a>.</p>
 </div>
 </div>
 </div>
@@ -1305,7 +1340,21 @@ Click <code>Display Token</code>, copy the oc login command, and paste the comma
 <h2 id="_troubleshooting">Troubleshooting</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>Make notes of the the log files that are generated:
+* /ibm/logs/icp4s_install.log - STDOUT of the deployment of Red Hat OpenShift Container Platform using IPI.
+* /ibm/logs/cp4s_install_logs.log - STDOUT of the deployment of IBM Cloud Pak for Security including the validation of the installation and deployment of SOAR Entitlement.
+* /ibm/logs/bootstrap.log - STDOUT of the high overview of the events during deployment of Red Hat OpenShift Container Platform and IBM Cloud Pak for Security.</p>
+</div>
+<div class="paragraph">
 <p>For troubleshooting common Quick Start issues, refer to the <a href="https://fwd.aws/rA69w?" target="_blank" rel="noopener">AWS Quick Start General Information Guide</a> and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html" target="_blank" rel="noopener">Troubleshooting CloudFormation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For troubleshooting IBM Cloud Pak for Security related issues, refer to the <a href="https://www.ibm.com/docs/en/SSTDPP_1.9/docs/scp-core/support.html" target="_blank" rel="noopener">IBM Cloud Pak for Security Troubleshooting and Support Guide</a>.</p>
 </div>
 </div>
 </div>
@@ -1357,7 +1406,7 @@ Click <code>Display Token</code>, copy the oc login command, and paste the comma
 </html>
 <!--
 repo commit:
-66fa0a8c045d2222bc2ead896d78200b7e08fdbd
+85137321e035c94286df44b656ae61e8ad3aa1a6
 
 submodule config:
  4ef16b77d6020a462feba269030c80f9088e6d1b docs/boilerplate (heads/main)
