@@ -3,3 +3,19 @@ This Quick Start deploys {partner-product-name} on the AWS Cloud. If you are unf
 // For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
 // For information about using this Quick Start for migrations, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/migration/index.html[Migration Guide^].
+
+{partner-product-name} can connect disparate data sources - to uncover hidden threats and make better risk-based decisions - while the data stays where it is. 
+By using open standards and IBM innovations, {partner-product-name} can securely access IBM and third-party tools to search for threat indicators across any cloud or on-premises location. 
+Connect your workflows with a unified interface so you can respond faster to security incidents. 
+Use {partner-product-name} to orchestrate and automate your security response so that you can better prioritize your team's time.
+
+{partner-product-name} deploys the following applications:
+
+    - *https://www.ibm.com/docs/en/SSTDPP_1.9/docs/data-explorer/overview.html[IBM® Security Data Explorer^]* is a new application that enables customers to do federated search and investigation across their hybrid, multi-cloud environment in a single interface and workflow.
+    - *https://www.ibm.com/docs/en/SSTDPP_1.9/docs/threat-intelligence-insights/overview.html[IBM® Security Threat Intelligence Insights^]* is an application that delivers unique, actionable, and timely threat intelligence. 
+    - *https://www.ibm.com/docs/en/SSTDPP_1.9/orchestration/Resilient_SOAR.html[IBM® Security QRadar SOAR^]* for {partner-product-name} provides organizations with the ability to track, manage, and resolve cybersecurity incidents.
+    - *https://www.ibm.com/docs/en/SSTDPP_1.9/datariskmanager/welcome.html[IBM® Security Risk Manager^]* for {partner-product-name} is an application that automatically collects, correlates, and contextualizes risk insights across the IT and security ecosystem of your organization.
+    - *https://www.ibm.com/docs/en/SSTDPP_1.9/investigator/investigator_intro.html[IBM® Security Threat Investigator^]* automatically analyzes and investigates cases to help you make more informed decisions. By showing potential threats and the assets that are impacted, Threat Investigator can help determine the criticality of exposure, how many systems are at risk, and the level of remediation effort that is required.
+    - *https://www.ibm.com/docs/en/SSTDPP_1.9/docs/drc/c_DRC_intro.html[IBM® Detection and Response Center (Beta)^]* provides an overview of your organization's security posture through the security use cases available from IBM QRadar and the Sigma community tools. IBM Security Threat Investigator uses these security use cases in its investigations.
+
+For more information on {partner-product-name}, see the https://ibm.biz/Bdf8VX[IBM Cloud Pak for Security Documentation^].
