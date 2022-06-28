@@ -952,7 +952,7 @@ Use IBM Cloud Pak for Security to orchestrate and automate your security respons
 </div>
 <div class="paragraph">
 <p>For IBM Cloud Pak for Security product and pricing information, or to use your existing entitlements, contact your IBM sales representative at +1 (877) 426-3774 or online at <a href="https://www.ibm.com/products/cloud-pak-for-security" target="_blank" rel="noopener">IBM Cloud Pak for Security</a>.
-For more information about licensing terms, see the IBM Cloud Pak for Security <a href="https://ibm.biz/BdfWw8" target="_blank" rel="noopener">Software License Agreement</a>.</p>
+For more information about licensing terms, see the IBM Cloud Pak for Security <a href="https://www-40.ibm.com/software/sla/sladb.nsf/displaylis/E6838BD64BD91846002587A3007EEAC7?OpenDocument" target="_blank" rel="noopener">software license agreement</a>.</p>
 </div>
 <div class="paragraph">
 <p>Depending on your purchase of IBM Cloud Pak for Security, you can additionally choose to install the Orchestration &amp; Automation application on IBM Cloud Pak for Security platform, you must accquire a license key to access its capabilities in conjunction with IBM Cloud Pak for Security license. For more information on the Orchestration &amp; Automation license, see the IBM Cloud Pak for Security documentation on <a href="https://ibm.biz/BdfWNf" target="_blank" rel="noopener">Licensing and Entitlement</a>.</p>
@@ -968,7 +968,7 @@ AWS Cloud.</p>
 </div>
 <div id="architecture1" class="imageblock">
 <div class="content">
-<img src="docs/deployment_guide/images/architecture_diagram.png" alt="Architecture">
+<img src="docs/deployment_guide/images/icp-security-architecture-diagram.png" alt="Architecture">
 </div>
 <div class="title">Figure 1. Quick Start architecture for IBM Cloud Pak for Security on AWS</div>
 </div>
@@ -1305,7 +1305,7 @@ Upon logging in to the IBM Cloud Pak for Security web client URL, the welcome pa
 <div class="sect2">
 <h3 id="_manage_your_cluster_using_the_red_hat_openshift_web_console">Manage your cluster using the Red Hat OpenShift web console</h3>
 <div class="paragraph">
-<p>To access the Red Hat Openshift Container Platform web console, navigate to the <strong>OpenshiftWebConsoleURL</strong> in the <code>Outputs</code> tab of the root stack. See, <a href="#_cfn_outputs">Figure 3</a>.</p>
+<p>To access the Red Hat Openshift Container Platform web console, navigate to the <strong>OpenshiftWebConsoleURL</strong> in the <strong>Outputs</strong> tab of the root stack. See, <a href="#_cfn_outputs">Figure 3</a>.</p>
 </div>
 <div class="paragraph">
 <p>Log in to the Openshift web console by using use the default OpenShift administrator <strong>kubeadmin</strong>. The password can be obtained from the <strong>OpenShiftSecret</strong> resource from the <code>Resources</code> tab of IBM Cloud Pak for Security stack.</p>
@@ -1318,7 +1318,7 @@ Upon logging in to the IBM Cloud Pak for Security web client URL, the welcome pa
 </div>
 <div class="paragraph">
 <p><br>
-You can retrieve the secret value by choosing <code>Retrieve secret value</code>, as shown in the figure below. Use this secret value as OpenShift console administrative password.</p>
+You can retrieve the secret value by choosing <strong>Retrieve secret value</strong>, as shown in the following figure. Use this secret value as OpenShift console administrative password.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1329,9 +1329,15 @@ You can retrieve the secret value by choosing <code>Retrieve secret value</code>
 </div>
 <div class="sect2">
 <h3 id="_accessing_red_hat_openshift_cluster_from_the_command_line_interface">Accessing Red Hat OpenShift cluster from the command-line interface</h3>
-<div class="paragraph">
-<p>In your Red Hat OpenShift web console, click your profile name and then click <code>Copy Login</code>.
-Click <code>Display Token</code>, copy the oc login command, and paste the command into your command line.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In your Red Hat OpenShift web console, choose your profile name and then select <strong>Copy Login</strong>.</p>
+</li>
+<li>
+<p>Choose <strong>Display Token</strong>, copy the oc login command, and paste the command into your command line.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
