@@ -20,15 +20,14 @@ internet access for resources in the private subnets.*
 ** A boot node Amazon EC2 instance that also serves as a bastion host to allow inbound Secure Shell (SSH) access to EC2 instances in the private subnets.
 * In the private subnets:
 ** Red Hat OpenShift Container Platform (OCP) master nodes in up to three Availability Zones.
-** Red Hat OpenShift Container Platform (OCP) compute nodes with OpenShift autoscaling for hosting the {partner-product-name} capabilities.
-** Amazon Elastic Block Storage disks that are mounted on the compute nodes for container-persistent data.
+** OCP compute nodes with OpenShift autoscaling for hosting the {partner-product-short-name} capabilities. Amazon EBS disks are mounted on the compute nodes for container-persistent data.
 // Add bullet points for any additional components that are included in the deployment. Ensure that the additional components are shown in the architecture diagram. End each bullet with a period.
 * A Classic Load Balancer spanning the public subnets for accessing {partner-product-name} from a web browser.
 * A Network Load Balancer spanning the public subnets for routing external OpenShift application programming interface (API) traffic to the OCP master instances.
 * A Network Load Balancer spanning the private subnets for routing internal OpenShift API traffic to the OCP master instances.
 * https://docs.openshift.com/container-platform/4.8/machine_management/applying-autoscaling.html[OpenShift autoscaling^] for the OCP compute nodes.
 * Amazon Route 53 as your public Domain Name System (DNS) for resolving domain names of the {partner-product-name} management console and applications deployed on the cluster.
-* Amazon S3 for storing the pull secret, TLS certificate and key, SOAR Entitlement  and OpenShift image registry.
+* Amazon Simple Storage Service (Amazon S3) for storing the pull secret, TLS certificate and key, SOAR Entitlement  and OpenShift image registry.
 * AWS Secrets Manager to encrypt, store, and retrieve credentials and secrets for your {partner-product-name} deployment.
 
 The {partner-product-name} components run as containers on the OpenShift compute nodes, and build on a range of common platform and operational services that underpin all IBM Cloud Paks.
