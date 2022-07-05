@@ -1,36 +1,40 @@
 #!/bin/bash
 
-#Function to set CASE version
+# Function to set CASE version
 set_case_version() {
    source case_versions.conf
    if [ "$CP4S_VERSION" = "1.9" ]
    then
       export CASE_VERSION=${case_versions_for_cp4s_1dot9[-1]}
+   elif [ "$CP4S_VERSION" = "1.10" ]
+   then
+      export CASE_VERSION=${case_versions_for_cp4s_1dot10[-1]}
    else
-      #export CASE_VERSION = ${case_versions_for_cp4s_1dot10[-1]}
-      printf "\nCurrently only IBM Cloud Pak for Security version 1.9 is available through AWS Quick Start.\n"
+      printf "\nCase version not found.\n"
       exit 1;
    fi
    printf "IBM Cloud Pak for Security Version: $CP4S_VERSION\nCASE Version: $CASE_VERSION\n"
    return
 }
 
-#Function to check exit status
+# Function to check exit status
 check_exit_status() {
    printf "\n"
    if [ "$rc" != "0" ];
    then
       echo $error_msg
+      printf "\n"
       exit 1
    else
       echo $success_msg
+      printf "\n"
       return
    fi
 }
 
-#Function to validate CP4S FQDN, TLS Certificate & Key
+# Function to validate CP4S FQDN, TLS Certificate & Key
 check_dns() {
-#Checking whether fully qualified domain name (FQDN) is provided or not
+# Checking whether fully qualified domain name (FQDN) is provided or not
   if [  -z "$CP4SFQDN" ]; then
     printf "The fully qualified domain name (FQDN) for IBM Cloud Pak for Security is not specified. Using OpenShift cluster domain instead for installation.\n"
     export DOMAIN_CERTIFICATE_PATH=''
@@ -76,7 +80,7 @@ check_dns() {
   return
 }
 
-#Function to create or update a secret
+# Function to create or update a secret
 create_secret() {
    if [[ -n $(oc get secret $CUSTOMER_LICENSE_SECRET -n $CP4S_NAMESPACE --no-headers) ]]
    then
@@ -84,16 +88,18 @@ create_secret() {
       echo "Secret '$CUSTOMER_LICENSE_SECRET' already exists."
       echo "[INFO] - Updating secret '$CUSTOMER_LICENSE_SECRET'."
       oc create secret generic -n $CP4S_NAMESPACE $CUSTOMER_LICENSE_SECRET --from-file=/ibm/license.key --dry-run=client -o yaml | oc replace -f -
+      printf "\n[SUCCESS] Configuring license for Orchestration & Automation is complete.\n"
    else
       printf "\n"
       echo "Secret '$CUSTOMER_LICENSE_SECRET' is not created yet."
       echo "[INFO] - Creating secret '$CUSTOMER_LICENSE_SECRET'."
       oc create secret generic -n $CP4S_NAMESPACE $CUSTOMER_LICENSE_SECRET --from-file=/ibm/license.key
+      printf "\n[SUCCESS] Configuring license for Orchestration & Automation is complete.\n"
    fi
    return
 }
 
-#Function to delete all secrets after stack completion
+# Function to delete all secrets after stack completion
 cleanup_secrets() {
    if [ -f "/ibm/license.key" ]; then
       sudo rm -f /ibm/license.key
