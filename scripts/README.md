@@ -64,8 +64,8 @@ When bootstrapping is complete all depndencies needed to run automation to deplo
 
 Check logs in output s3 bucket or in the Boot node EC2 instance.
 
-**/ibm/logs/icp4s_install.log** - STDOUT of the deployment of Red Hat OpenShift Container Platform using IPI.
+**/ibm/logs/ocp_install.log** - STDOUT of the deployment of Red Hat OpenShift Container Platform using IPI.
 
-**/ibm/logs/cp4s_install_logs.log** - STDOUT of the deployment of IBM Cloud Pak for Security including the validation of the installation and deployment of SOAR entitlement.
+**/ibm/logs/cp4s_install.log** - STDOUT of the deployment of IBM Cloud Pak for Security including the validation of the installation and deployment of SOAR entitlement.
 
 **/ibm/logs/bootstrap.log** - STDOUT of the high overview of the events during deployment of Red Hat OpenShift Container Platform and IBM Cloud Pak for Security.  
