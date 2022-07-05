@@ -12,15 +12,15 @@ do
       fi
       if [[ $status != "Succeeded" ]]; then
         if [[ $retry -eq ${maxRetry} ]]; then 
-          printf "[ERROR] Openshift-serverless CSV was not created.\n"
+          printf "\n[ERROR] Openshift-serverless CSV was not created.\n\n"
           exit 1
         else
           sleep 60
-          printf "INFO - Waiting for openshift-serverless CSV to be created.\n"
+          printf "[info] - Waiting for openshift-serverless CSV to be created.\n"
           continue
         fi
       else
-        printf "\n[SUCCESS] CSV openshift-serverless is created.\n"
+        printf "\n[SUCCESS] CSV openshift-serverless is created.\n\n"
         break
       fi
  done
