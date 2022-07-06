@@ -8,7 +8,7 @@ from os import chmod, environ
 import shutil
 import socket
 import stat
-from subprocess import call, check_output, check_call, CalledProcessError
+from subprocess import check_call, check_output, CalledProcessError
 import sys
 import time
 
@@ -201,7 +201,7 @@ class CP4SecurityInstall(object):
         data = "301_AWS_STACKNAME=" + self.stackName + ",Status=" + status
         updateStatus = "curl -X POST https://un6laaf4v0.execute-api.us-west-2.amazonaws.com/testtracker --data " + data
         try:
-            call(updateStatus, shell=True)
+            check_call(['bash', '-c', updateStatus])
             TR.info(methodName, "Updated status with data %s" % data)
         except CalledProcessError as e:
             TR.error(methodName, "[ERROR] Command '{}' returned non-zero exit status {}: {}".format(e.cmd, e.returncode, e.output))
@@ -232,7 +232,7 @@ class CP4SecurityInstall(object):
         TR.info(methodName, "Creating SSH keys")
         command = "ssh-keygen -P {}  -f /root/.ssh/id_rsa".format("''")
         try:
-            call(command, shell=True, stdout=ocpInstallLogFile)
+            check_call(['bash', '-c', command], stdout=ocpInstallLogFile)
             TR.info(methodName, "Created SSH keys")
         except CalledProcessError as e:
             TR.error(methodName, "[ERROR] Command '{}' returned non-zero exit status {}: {}".format(e.cmd, e.returncode, e.output))
@@ -548,7 +548,7 @@ class CP4SecurityInstall(object):
                 s3_cp_cmd = "aws s3 cp " + self.RedhatPullSecret + " " + self.pullSecret
                 TR.info(methodName, "Copying Red Hat Pull Secret %s" % s3_cp_cmd)
                 try:
-                    call(s3_cp_cmd, shell=True, stdout=ocpInstallLogFile)
+                    check_call(['bash', '-c', s3_cp_cmd], stdout=ocpInstallLogFile)
                 except CalledProcessError as e:
                     TR.error(methodName, "[ERROR] Couldn't copy Red Hat pull secret from S3 bucket. Invalid S3 endpoint URI.")
                     raise e
@@ -596,7 +596,7 @@ class CP4SecurityInstall(object):
 
         if self.rc == 0:
             success = 'true'
-            status = 'SUCCESS: Installed IBM Cloud Pak for Security Successfully.'
+            status = 'SUCCESS'
             TR.info(methodName, "SUCCESS END CP4S Install AWS IBM Cloud Pak for Security Quick Start.  Elapsed time (hh:mm:ss): %d:%02d:%02d" % (eth, etm, ets))
             # TODO update this later
             self.updateStatus(status)
