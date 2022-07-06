@@ -8,7 +8,7 @@ from os import chmod, environ
 import shutil
 import socket
 import stat
-from subprocess import check_call, check_output, CalledProcessError
+from subprocess import check_call, check_output, CalledProcessError #nosec
 import sys
 import time
 
