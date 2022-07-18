@@ -9,9 +9,9 @@ image::../docs/deployment_guide/images/cfn-outputs.png[IBM Cloud Pak for Securit
 
 === Configuring Identity Provider authentication
 
-To log in to {partner-product-name}, you must configure at least one Identity Provider (IDP). The *CP4SAdminUser*, shown in <<_cfn_outputs>>, that you provided while creating the stack must exist in the choosen Identity Provider (IDP). This *CP4SAdminUser* is the initial user who can log in and add other users. Use the password that you specified for the user when you configured the Identity Provider (IDP). To know more details on configuring Identity Provider (IDP) authentication, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=postinstallation-configuring-identity-providers[Configuring Identity Provider Authentication^].
+To log in to {partner-product-name}, you must configure at least one Identity Provider (IDP). The *CP4SAdminUser*, shown in <<_cfn_outputs>>, that you provided while creating the stack must exist in the choosen Identity Provider (IDP). This *CP4SAdminUser* is the initial user who can log in and add other users. Use the password that you specified for the user when you configured the Identity Provider (IDP). To know more details on configuring Identity Provider (IDP) authentication, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=postinstallation-configuring-identity-providers[Configuring Identity Provider Authentication^].
 
-=== Login into {partner-product-name}
+=== Login into {partner-product-name} as the initial user
 
 After configuring at least one Identity Provider (IDP) navigate to the *CP4SWebClientURL* output of the root stack, shown in <<_cfn_outputs>>.
 
@@ -32,11 +32,11 @@ image::../docs/deployment_guide/images/ibm-cloud-pak-for-security-admin-welcome-
 
 === Create accounts in {partner-product-name}
 
-As a system administrator, you can create Standard or Provider accounts in IBM Cloud Pak for Security, or delete existing accounts. You must be working in the System Administration account and have the required permission to manage accounts. For more details, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=administration-creating-deleting-accounts[Creating or Deleting Accounts^].
+As a system administrator, you can create Standard or Provider accounts in IBM Cloud Pak for Security, or delete existing accounts. You must be working in the System Administration account and have the required permission to manage accounts. For more details, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=administration-creating-deleting-accounts[Creating or Deleting Accounts^].
 
 === Configure a data source connection
 
-To begin working with applications, enable {partner-product-name} to connect with data sources. For more details, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=configuring-universal-data-insights-connectors[Configuring a Data Source Connection^].
+To begin working with applications, enable {partner-product-name} to connect with data sources. For more details, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=connections-universal-data-insights-connectors[Configuring a Data Source Connection^].
 
 === Manage your cluster using the Red Hat OpenShift web console
 
