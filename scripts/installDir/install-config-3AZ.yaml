@@ -51,6 +51,5 @@ platform:
     - ${subnet-5}
     - ${subnet-6}
 pullSecret: '${pullSecret}'
-fips: ${FIPS}
 sshKey: |
   ${sshKey}

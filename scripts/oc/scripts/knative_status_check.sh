@@ -15,16 +15,16 @@ do
   
       if [[ $DependenciesInstalled != "True" || $DeploymentsAvailable != "True" || $Ready != "True" || $VersionMigrationEligible != "True" ]]; then
         if [[ $retry -eq ${maxRetry} ]]; then 
-          printf "[ERROR] Knative Serving Installation was not Complete.\n"
+          printf "\n[ERROR] Knative Serving Installation was not Complete.\n\n"
           exit 1
         else
-          printf "INFO - Waiting for Knative Serving to be Installed...\n"
+          printf "[info] - Waiting for Knative Serving to be Installed...\n"
           sleep 60
           continue
         fi
       else
         printf "DependenciesInstalled=$DependenciesInstalled\nDeploymentsAvailable=$DeploymentsAvailable\nInstallSucceeded=$InstallSucceeded\nReady=$Ready\nVersionMigrationEligible=$VersionMigrationEligible\n"
-        printf "\n[SUCCESS] Knative Serving Installation is Complete.\n"
+        printf "\n[SUCCESS] Knative Serving Installation is Complete.\n\n"
         break
       fi
  done
