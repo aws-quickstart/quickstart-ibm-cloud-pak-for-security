@@ -25,7 +25,7 @@ Upload the https://console.redhat.com/openshift/install/aws/installer-provisione
   ** During stack creation you will need to pass the IBM entitlement key as the `RepositoryPassword` parameter.
 
 * The Quick Start uses an optional `SOAR Entitlement` for Orchestration & Automation application on {partner-product-name}.
-  ** To know how to acquire your SOAR Entitlement, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-licensing-entitlement[Licensing and Entitlement^].
+  ** To know how to acquire your SOAR Entitlement, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=planning-licensing-entitlement[Licensing and Entitlement^].
   ** Upload the SOAR Entitlement to your S3 bucket. The Quick Start pulls this SOAR Entitlement from the specified S3 bucket location for configuring Orchestration & Automation.
 
 === Domain name and TLS certificates
@@ -55,6 +55,6 @@ WARNING: Make sure that your FQDN must not be the same as the Red Hat OpenShift 
 image::../docs/deployment_guide/images/create-dns-record.png[DNS Record]
 
 {empty} +
-If you are using your own FQDN, you must provide an optional `TLS certificate` and `TLS key`, that use keys that are signed by a trusted certificate authority (CA). A custom TLS certificate is required, if the provided server keys are not signed by a trusted certificate authority. For more information, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.9?topic=planning-domain-name-tls-certificates[Domain Name and TLS Certificates^].
+If you are using your own FQDN, you must provide an optional `TLS certificate` and `TLS key`, that use keys that are signed by a trusted certificate authority (CA). A custom TLS certificate is required, if the provided server keys are not signed by a trusted certificate authority. For more information, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=planning-domain-name-tls-certificates[Domain Name and TLS Certificates^].
 
 Upload the TLS certificate, TLS key and custom TLS certificate to your S3 bucket. The Quick Start pulls these certificates and keys from your S3 bucket location for {partner-product-name} deployment.
