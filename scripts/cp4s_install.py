@@ -195,18 +195,6 @@ class CP4SecurityInstall(object):
         return content.rstrip()
     # endDef
 
-    def updateStatus(self, status):
-        methodName = "updateStatus"
-        TR.info(methodName, "Update status of installation")
-        data = "301_AWS_STACKNAME=" + self.stackName + ",Status=" + status
-        updateStatus = "curl -X POST https://un6laaf4v0.execute-api.us-west-2.amazonaws.com/testtracker --data " + data
-        try:
-            check_call(['bash', '-c', updateStatus])
-            TR.info(methodName, "Updated status with data %s" % data)
-        except CalledProcessError as e:
-            TR.error(methodName, "[ERROR] Command '{}' returned non-zero exit status {}: {}".format(e.cmd, e.returncode, e.output))
-    # endDef
-
     def __init(self, stackId, stackName, ocpInstallLogFile):
         methodName = "_init"
         global StackParameters, StackParameterNames
@@ -598,14 +586,10 @@ class CP4SecurityInstall(object):
             success = 'true'
             status = 'SUCCESS'
             TR.info(methodName, "SUCCESS END CP4S Install AWS IBM Cloud Pak for Security Quick Start.  Elapsed time (hh:mm:ss): %d:%02d:%02d" % (eth, etm, ets))
-            # TODO update this later
-            self.updateStatus(status)
         else:
             success = 'false'
             status = 'FAILURE: Check logs in the CP4S deployment logs S3 bucket or on the Boot node EC2 instance in /ibm/logs/bootstrap.log, /ibm/logs/ocp_install.log and /ibm/logs/cp4s_install.log.'
             TR.info(methodName, "FAILED END CP4S Install AWS IBM Cloud Pak for Security Quick Start.  Elapsed time (hh:mm:ss): %d:%02d:%02d" % (eth, etm, ets))
-            # # TODO update this later
-            self.updateStatus(status)
         # endIf
 
         try:
