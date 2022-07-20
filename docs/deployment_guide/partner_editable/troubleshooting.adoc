@@ -1,5 +1,5 @@
 // Add any unique troubleshooting steps here.
-Make notes of the the log files that are generated in output s3 bucket: 
+Make notes of the the log files that are generated in the output S3 bucket: 
 
 * bootstrap.log - STDOUT of the high overview of the events during deployment of Red Hat OpenShift Container Platform and IBM Cloud Pak for Security.  
 * ocp_install.log - STDOUT of the deployment of Red Hat OpenShift Container Platform using IPI.

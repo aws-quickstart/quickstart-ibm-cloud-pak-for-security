@@ -2,9 +2,9 @@
 
 == Predeployment steps
 
-=== Create an Amazon S3 bucket
+=== Create an Amazon Simple Storage Service (Amazon S3) bucket
 
-You need to create an Amazon S3 bucket in one of the AWS Regions. See AWS documentation on how to https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html[Create your first S3 bucket^].
+You need to create an S3 bucket in one of the AWS Regions. See AWS documentation on how to https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html[Create your first S3 bucket^].
 
 To upload files into your S3 bucket, see https://docs.aws.amazon.com/AmazonS3/latest/userguide/uploading-an-object-bucket.html[Upload an object to your bucket^].
 
