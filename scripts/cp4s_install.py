@@ -455,7 +455,7 @@ class CP4SecurityInstall(object):
         methodName = "installCP4S"
 
         TR.info(methodName, "Starting installation of IBM Cloud Pak for Security %s" % self.CP4SVersion)
-        self.ocpServerURL = "api." + self.ClusterName + "." + self.DomainName + ":6443"
+        self.ocpServerURL = "api." + self.ClusterName + "." + self.DomainName + ":6443"  #nosec
         if self.CP4SFQDN == "":
             self.CP4SFQDN = "-"
         if self.StorageClass == "":
@@ -531,9 +531,9 @@ class CP4SecurityInstall(object):
                 TR.info(methodName, "Availability Zones: %s" % self.zones)
 
                 # copy Red Hat pull secret from Amazon S3
-                TR.info(methodName, "Red Hat pull secret S3 URI %s" % self.RedhatPullSecret)
-                self.pullSecret = "/ibm/pull-secret"
-                s3_cp_cmd = "aws s3 cp " + self.RedhatPullSecret + " " + self.pullSecret
+                TR.info(methodName, "Red Hat pull secret S3 URI %s" % self.RedhatPullSecret) #nosec
+                self.pullSecret = "/ibm/pull-secret"  #nosec
+                s3_cp_cmd = "aws s3 cp " + self.RedhatPullSecret + " " + self.pullSecret #nosec
                 TR.info(methodName, "Copying Red Hat Pull Secret %s" % s3_cp_cmd)
                 try:
                     check_call(['bash', '-c', s3_cp_cmd], stdout=ocpInstallLogFile)
