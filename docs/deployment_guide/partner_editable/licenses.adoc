@@ -1,6 +1,6 @@
 // Include details about any licenses and how to sign up. Provide links as appropriate.
 
-There is no cost to use this Quick Start, but you will be billed for any AWS services or resources that this Quick Start deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
+There is no cost to use this Partner Solution, but you will be billed for any AWS services or resources that this Partner Solution deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Partner Solution General Information Guide^].
 
 For {partner-product-name} product and pricing information, or to use your existing entitlements, contact your IBM sales representative at +1 (877) 426-3774 or online at https://www.ibm.com/products/cloud-pak-for-security[{partner-product-name}^].
 For more information about licensing terms, see the {partner-product-name} https://www-40.ibm.com/software/sla/sladb.nsf/displaylis/5F8ACFBF871A0E1500258868002E972B?OpenDocument[software license agreement^].

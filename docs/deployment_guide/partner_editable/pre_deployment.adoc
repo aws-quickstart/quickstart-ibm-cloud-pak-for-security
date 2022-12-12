@@ -2,9 +2,9 @@
 
 == Predeployment steps
 
-=== Create an Amazon S3 bucket
+=== Create an Amazon Simple Storage Service (Amazon S3) bucket
 
-You need to create an Amazon S3 bucket in one of the AWS Regions. See AWS documentation on how to https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html[Create your first S3 bucket^].
+You need to create an S3 bucket in one of the AWS Regions. See AWS documentation on how to https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html[Create your first S3 bucket^].
 
 To upload files into your S3 bucket, see https://docs.aws.amazon.com/AmazonS3/latest/userguide/uploading-an-object-bucket.html[Upload an object to your bucket^].
 
@@ -12,21 +12,21 @@ This S3 bucket is used for storing Red Hat OpenShift pull secret which is requir
 
 === Sign up for a Red Hat subscription
 
-This Quick Start requires a Red Hat subscription. During the deployment of the Quick Start, provide your https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift Installer Provisioned Infrastructure pull secret^].
+This Partner Solution requires a Red Hat subscription. During the deployment of the Partner Solution, provide your https://cloud.redhat.com/openshift/install/aws/installer-provisioned[OpenShift Installer Provisioned Infrastructure pull secret^].
 
 If you don’t have a Red Hat account, you can create one on the Red Hat website. Note that registration may require a non-personal email address. To get a 60-day evaluation license for OpenShift, see the instructions in https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it[Red Hat OpenShift Container Platform^].
 
-Upload the https://console.redhat.com/openshift/install/aws/installer-provisioned[OpenShift pull secret^] to your S3 bucket. The Quick Start pulls this secret from your S3 bucket location to provision the cluster.
+Upload the https://console.redhat.com/openshift/install/aws/installer-provisioned[OpenShift pull secret^] to your S3 bucket. The Partner Solution pulls this secret from your S3 bucket location to provision the cluster.
 
 === {partner-product-name} subscription
 
-* The Quick Start requires an entitlement key to access the {partner-product-name} content.
+* The Partner Solution requires an entitlement key to access the {partner-product-name} content.
   ** You can acquire your IBM entitlement key from https://myibm.ibm.com/products-services/containerlibrary[IBM Container Library^].
   ** During stack creation you will need to pass the IBM entitlement key as the `RepositoryPassword` parameter.
 
-* The Quick Start uses an optional `SOAR Entitlement` for Orchestration & Automation application on {partner-product-name}.
+* The Partner Solution uses an optional `SOAR Entitlement` for Orchestration & Automation application on {partner-product-name}.
   ** To know how to acquire your SOAR Entitlement, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=planning-licensing-entitlement[Licensing and Entitlement^].
-  ** Upload the SOAR Entitlement to your S3 bucket. The Quick Start pulls this SOAR Entitlement from the specified S3 bucket location for configuring Orchestration & Automation.
+  ** Upload the SOAR Entitlement to your S3 bucket. The Partner Solution pulls this SOAR Entitlement from the specified S3 bucket location for configuring Orchestration & Automation.
 
 === Domain name and TLS certificates
 
@@ -57,4 +57,4 @@ image::../docs/deployment_guide/images/create-dns-record.png[DNS Record]
 {empty} +
 If you are using your own FQDN, you must provide an optional `TLS certificate` and `TLS key`, that use keys that are signed by a trusted certificate authority (CA). A custom TLS certificate is required, if the provided server keys are not signed by a trusted certificate authority. For more information, see the {partner-product-name} documentation on https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=planning-domain-name-tls-certificates[Domain Name and TLS Certificates^].
 
-Upload the TLS certificate, TLS key and custom TLS certificate to your S3 bucket. The Quick Start pulls these certificates and keys from your S3 bucket location for {partner-product-name} deployment.
+Upload the TLS certificate, TLS key and custom TLS certificate to your S3 bucket. The Partner Solution pulls these certificates and keys from your S3 bucket location for {partner-product-name} deployment.
